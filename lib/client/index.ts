@@ -37,9 +37,10 @@ import { ClientDecoder } from './Decoder';
 import { ClientEncoder } from './Encoder';
 
 interface LibraLibConfig {
-  protocol?: string;
+  transferProtocol?: string; // http, https, ws, wss (default is http)
   port?: string;
   host?: string;
+  dataProtocol?: string; // grpc, grpc-web-text, grpc-web+proto, grpc-web+json, grpc-web+thrift (default is grpc)
   network?: LibraNetwork;
   faucetServerHost?: string;
   validatorSetFile?: string;
@@ -68,11 +69,11 @@ export class LibraClient {
       this.config.port = '8080';
     }
 
-    if (config.protocol === undefined) {
-      this.config.protocol = 'http';
+    if (config.transferProtocol === undefined) {
+      this.config.transferProtocol = 'http';
     }
 
-    const connectionAddress = `${this.config.protocol}://${this.config.host}:${this.config.port}`;
+    const connectionAddress = `${this.config.transferProtocol}://${this.config.host}:${this.config.port}`;
     this.client = new AdmissionControlClient(connectionAddress, null);
 
     this.decoder = new ClientDecoder();
