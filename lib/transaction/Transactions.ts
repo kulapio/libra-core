@@ -8,7 +8,7 @@ import { LibraVMStatusError } from './Errors';
 export interface LibraProgram {
   code: Uint8Array;
   arguments: LibraProgramArgument[];
-  modules: Uint8Array[];
+  modules: Array<Uint8Array | string>;
 }
 
 interface LibraProgramArgument {

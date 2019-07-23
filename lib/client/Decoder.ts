@@ -46,7 +46,7 @@ import {
   VMVerificationStatusList,
 } from '../__generated__/vm_errors_pb';
 
-var jspb = require('google-protobuf');
+import * as jspb from "google-protobuf"
 
 /**
  * Internal class used by LibraClient
@@ -128,7 +128,7 @@ export class ClientDecoder {
         value: argument.getData_asU8(),
       })),
       code: rawProgram.getCode_asU8(),
-      modules: jspb.Message.bytesListAsU8(rawProgram.getModulesList()),
+      modules: rawProgram.getModulesList(),
     };
 
     const gasContraint: LibraGasConstraint = {
@@ -143,6 +143,14 @@ export class ClientDecoder {
       rawTxn.getSenderAccount_asU8(),
       new BigNumber(rawTxn.getSequenceNumber()),
     );
+  }
+
+  public hasInvariantViolation (vmStatus: VMStatus) {
+    return jspb.Message.getField(vmStatus, 3) != null;
+  }
+
+  public hasDeserialization (vmStatus: VMStatus) {
+    return jspb.Message.getField(vmStatus, 4) != null;
   }
 
   public decodeVMStatus(vmStatus?: VMStatus): LibraVMStatusError | undefined {
@@ -176,20 +184,12 @@ export class ClientDecoder {
       });
     }
 
-    const hasInvariantViolation = function(vmStatus: VMStatus) {
-      return jspb.Message.getField(vmStatus, 3) != null;
-    };
-
-    const hasDeserialization = function(vmStatus: VMStatus) {
-      return jspb.Message.getField(vmStatus, 4) != null;
-    };
-
-    if (hasInvariantViolation(vmStatus)) {
+    if (this.hasInvariantViolation(vmStatus)) {
       const invariant = vmStatus.getInvariantViolation() as VMInvariantViolationError;
       invariantViolationError = (invariant as unknown) as LibraInvariantViolationError;
     }
 
-    if (hasDeserialization(vmStatus)) {
+    if (this.hasDeserialization(vmStatus)) {
       const deser = vmStatus.getDeserialization() as BinaryError;
       deserializationError = (deser as unknown) as LibraDeserializationError;
     }
