@@ -23,3 +23,9 @@ protoc \
   --ts_out=${GEN_OUT_DIR} \
   -I ${PROTO_IMPORT_DIR} \
   ${FILE_PATHS}
+
+# Generate JavaScript/TypeScript for gRPC-web
+protoc \
+  --grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:$GEN_OUT_DIR \
+  -I=${PROTO_IMPORT_DIR} \
+  ${FILE_PATHS} \

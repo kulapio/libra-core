@@ -1,10 +1,11 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
 import { credentials, ServiceError } from 'grpc';
+import * as grpcWeb from 'grpc-web';
 
 import SHA3 from 'sha3';
 import { AccountStateBlob, AccountStateWithProof } from '../__generated__/account_state_blob_pb';
-import { AdmissionControlClient } from '../__generated__/admission_control_grpc_pb';
+import { AdmissionControlClient } from '../__generated__/admission_control_grpc_web_pb';
 import {
   AdmissionControlStatus,
   SubmitTransactionRequest,
@@ -36,6 +37,7 @@ import { ClientDecoder } from './Decoder';
 import { ClientEncoder } from './Encoder';
 
 interface LibraLibConfig {
+  protocol?: string;
   port?: string;
   host?: string;
   network?: LibraNetwork;
@@ -63,11 +65,15 @@ export class LibraClient {
     }
 
     if (config.port === undefined) {
-      this.config.port = '80';
+      this.config.port = '8080';
     }
 
-    const connectionAddress = `${this.config.host}:${this.config.port}`;
-    this.client = new AdmissionControlClient(connectionAddress, credentials.createInsecure());
+    if (config.protocol === undefined) {
+      this.config.protocol = 'http';
+    }
+
+    const connectionAddress = `${this.config.protocol}://${this.config.host}:${this.config.port}`;
+    this.client = new AdmissionControlClient(connectionAddress, null);
 
     this.decoder = new ClientDecoder();
     this.encoder = new ClientEncoder(this);
@@ -103,7 +109,7 @@ export class LibraClient {
     });
 
     return new Promise<AccountStates>((resolve, reject) => {
-      this.client.updateToLatestLedger(request, (error, response) => {
+      this.client.updateToLatestLedger(request, undefined, (error, response) => {
         if (error) {
           return reject(error);
         }
@@ -148,7 +154,7 @@ export class LibraClient {
     request.addRequestedItems(requestItem);
 
     return new Promise<LibraSignedTransactionWithProof | null>((resolve, reject) => {
-      this.client.updateToLatestLedger(request, (error, response) => {
+      this.client.updateToLatestLedger(request, undefined, (error, response) => {
         if (error) {
           return reject(error);
         }
@@ -274,7 +280,7 @@ export class LibraClient {
 
     request.setSignedTxn(signedTransaction);
     return new Promise((resolve, reject) => {
-      this.client.submitTransaction(request, (error: ServiceError | null, response: SubmitTransactionResponse) => {
+      this.client.submitTransaction(request, undefined, (error: grpcWeb.Error | null, response: SubmitTransactionResponse) => {
         if (error) {
           // TBD: should this fail with only service error
           // or should it fail if transaction is not acknowledged

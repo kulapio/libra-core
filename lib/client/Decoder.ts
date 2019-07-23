@@ -46,6 +46,8 @@ import {
   VMVerificationStatusList,
 } from '../__generated__/vm_errors_pb';
 
+var jspb = require('google-protobuf');
+
 /**
  * Internal class used by LibraClient
  * to decode pb generated classes to Libra* Classes export by this library
@@ -126,7 +128,7 @@ export class ClientDecoder {
         value: argument.getData_asU8(),
       })),
       code: rawProgram.getCode_asU8(),
-      modules: rawProgram.getModulesList_asU8(),
+      modules: jspb.Message.bytesListAsU8(rawProgram.getModulesList()),
     };
 
     const gasContraint: LibraGasConstraint = {
@@ -174,12 +176,20 @@ export class ClientDecoder {
       });
     }
 
-    if (vmStatus.hasInvariantViolation()) {
+    const hasInvariantViolation = function(vmStatus: VMStatus) {
+      return jspb.Message.getField(vmStatus, 3) != null;
+    };
+
+    const hasDeserialization = function(vmStatus: VMStatus) {
+      return jspb.Message.getField(vmStatus, 4) != null;
+    };
+
+    if (hasInvariantViolation(vmStatus)) {
       const invariant = vmStatus.getInvariantViolation() as VMInvariantViolationError;
       invariantViolationError = (invariant as unknown) as LibraInvariantViolationError;
     }
 
-    if (vmStatus.hasDeserialization()) {
+    if (hasDeserialization(vmStatus)) {
       const deser = vmStatus.getDeserialization() as BinaryError;
       deserializationError = (deser as unknown) as LibraDeserializationError;
     }
