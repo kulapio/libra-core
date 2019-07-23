@@ -3,7 +3,12 @@ import './utils';
 
 describe('LibraClient', () => {
   it('should query account state and transfer', async () => {
-    const client = new LibraClient({ network: LibraNetwork.Testnet });
+    const client = new LibraClient({
+      transferProtocol: 'https',
+      host: 'ac-libra-testnet.kulap.io',
+      port: '443',
+      dataProtocol: 'grpc-web-text'
+    })
     const wallet = new LibraWallet({
       mnemonic:
         'lend arm arm addict trust release grid unlock exhibit surround deliver front link bean night dry tuna pledge expect net ankle process mammal great',
