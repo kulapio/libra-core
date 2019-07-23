@@ -1,4 +1,4 @@
-# Libra Core 
+# Kulap Libra
 
 Kulap Libra is a javascript library client that can be used to interact with libra nodes. It is built using typescript.
 
@@ -12,7 +12,6 @@ Usable both in node and on browser clients.
 
 <!-- toc -->
 
-- [Prepare](#prepare)
 - [Installation](#installation)
 - [Usage](#usage)
   * [Creating an Account](#creating-an-account)
