@@ -1,9 +1,5 @@
-// package: types
-// file: vm_errors.proto
+import * as jspb from "google-protobuf"
 
-/* tslint:disable */
-
-import * as jspb from 'google-protobuf';
 import * as language_storage_pb from './language_storage_pb';
 
 export class VMValidationStatus extends jspb.Message {
@@ -16,8 +12,6 @@ export class VMValidationStatus extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): VMValidationStatus.AsObject;
   static toObject(includeInstance: boolean, msg: VMValidationStatus): VMValidationStatus.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: VMValidationStatus, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): VMValidationStatus;
   static deserializeBinaryFromReader(message: VMValidationStatus, reader: jspb.BinaryReader): VMValidationStatus;
@@ -25,34 +19,29 @@ export class VMValidationStatus extends jspb.Message {
 
 export namespace VMValidationStatus {
   export type AsObject = {
-    code: VMValidationStatusCode;
-    message: string;
-  };
+    code: VMValidationStatusCode,
+    message: string,
+  }
 }
 
 export class VMVerificationStatusList extends jspb.Message {
-  clearStatusListList(): void;
   getStatusListList(): Array<VMVerificationStatus>;
   setStatusListList(value: Array<VMVerificationStatus>): void;
+  clearStatusListList(): void;
   addStatusList(value?: VMVerificationStatus, index?: number): VMVerificationStatus;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): VMVerificationStatusList.AsObject;
   static toObject(includeInstance: boolean, msg: VMVerificationStatusList): VMVerificationStatusList.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: VMVerificationStatusList, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): VMVerificationStatusList;
-  static deserializeBinaryFromReader(
-    message: VMVerificationStatusList,
-    reader: jspb.BinaryReader,
-  ): VMVerificationStatusList;
+  static deserializeBinaryFromReader(message: VMVerificationStatusList, reader: jspb.BinaryReader): VMVerificationStatusList;
 }
 
 export namespace VMVerificationStatusList {
   export type AsObject = {
-    statusListList: Array<VMVerificationStatus.AsObject>;
-  };
+    statusListList: Array<VMVerificationStatus.AsObject>,
+  }
 }
 
 export class VMVerificationStatus extends jspb.Message {
@@ -68,16 +57,14 @@ export class VMVerificationStatus extends jspb.Message {
   getMessage(): string;
   setMessage(value: string): void;
 
-  hasDependencyId(): boolean;
-  clearDependencyId(): void;
   getDependencyId(): language_storage_pb.ModuleId | undefined;
   setDependencyId(value?: language_storage_pb.ModuleId): void;
+  hasDependencyId(): boolean;
+  clearDependencyId(): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): VMVerificationStatus.AsObject;
   static toObject(includeInstance: boolean, msg: VMVerificationStatus): VMVerificationStatus.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: VMVerificationStatus, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): VMVerificationStatus;
   static deserializeBinaryFromReader(message: VMVerificationStatus, reader: jspb.BinaryReader): VMVerificationStatus;
@@ -85,14 +72,14 @@ export class VMVerificationStatus extends jspb.Message {
 
 export namespace VMVerificationStatus {
   export type AsObject = {
-    statusKind: VMVerificationStatus.StatusKind;
-    moduleIdx: number;
-    errorKind: VMVerificationErrorKind;
-    message: string;
-    dependencyId?: language_storage_pb.ModuleId.AsObject;
-  };
+    statusKind: VMVerificationStatus.StatusKind,
+    moduleIdx: number,
+    errorKind: VMVerificationErrorKind,
+    message: string,
+    dependencyId?: language_storage_pb.ModuleId.AsObject,
+  }
 
-  export enum StatusKind {
+  export enum StatusKind { 
     SCRIPT = 0,
     MODULE = 1,
     DEPENDENCY = 2,
@@ -106,8 +93,6 @@ export class AssertionFailure extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AssertionFailure.AsObject;
   static toObject(includeInstance: boolean, msg: AssertionFailure): AssertionFailure.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: AssertionFailure, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): AssertionFailure;
   static deserializeBinaryFromReader(message: AssertionFailure, reader: jspb.BinaryReader): AssertionFailure;
@@ -115,8 +100,8 @@ export class AssertionFailure extends jspb.Message {
 
 export namespace AssertionFailure {
   export type AsObject = {
-    assertionErrorCode: string;
-  };
+    assertionErrorCode: string,
+  }
 }
 
 export class ArithmeticError extends jspb.Message {
@@ -126,8 +111,6 @@ export class ArithmeticError extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ArithmeticError.AsObject;
   static toObject(includeInstance: boolean, msg: ArithmeticError): ArithmeticError.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: ArithmeticError, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ArithmeticError;
   static deserializeBinaryFromReader(message: ArithmeticError, reader: jspb.BinaryReader): ArithmeticError;
@@ -135,10 +118,10 @@ export class ArithmeticError extends jspb.Message {
 
 export namespace ArithmeticError {
   export type AsObject = {
-    errorCode: ArithmeticError.ArithmeticErrorType;
-  };
+    errorCode: ArithmeticError.ArithmeticErrorType,
+  }
 
-  export enum ArithmeticErrorType {
+  export enum ArithmeticErrorType { 
     UNKNOWNARITHMETICERROR = 0,
     UNDERFLOW = 1,
     OVERFLOW = 2,
@@ -153,8 +136,6 @@ export class DynamicReferenceError extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DynamicReferenceError.AsObject;
   static toObject(includeInstance: boolean, msg: DynamicReferenceError): DynamicReferenceError.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: DynamicReferenceError, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): DynamicReferenceError;
   static deserializeBinaryFromReader(message: DynamicReferenceError, reader: jspb.BinaryReader): DynamicReferenceError;
@@ -162,10 +143,10 @@ export class DynamicReferenceError extends jspb.Message {
 
 export namespace DynamicReferenceError {
   export type AsObject = {
-    errorCode: DynamicReferenceError.DynamicReferenceErrorType;
-  };
+    errorCode: DynamicReferenceError.DynamicReferenceErrorType,
+  }
 
-  export enum DynamicReferenceErrorType {
+  export enum DynamicReferenceErrorType { 
     UNKNOWNDYNAMICREFERENCEERROR = 0,
     MOVEOFBORROWEDRESOURCE = 1,
     GLOBALREFALREADYRELEASED = 2,
@@ -175,33 +156,29 @@ export namespace DynamicReferenceError {
 }
 
 export class ExecutionStatus extends jspb.Message {
-  hasRuntimeStatus(): boolean;
-  clearRuntimeStatus(): void;
   getRuntimeStatus(): RuntimeStatus;
   setRuntimeStatus(value: RuntimeStatus): void;
 
-  hasAssertionFailure(): boolean;
-  clearAssertionFailure(): void;
   getAssertionFailure(): AssertionFailure | undefined;
   setAssertionFailure(value?: AssertionFailure): void;
+  hasAssertionFailure(): boolean;
+  clearAssertionFailure(): void;
 
-  hasArithmeticError(): boolean;
-  clearArithmeticError(): void;
   getArithmeticError(): ArithmeticError | undefined;
   setArithmeticError(value?: ArithmeticError): void;
+  hasArithmeticError(): boolean;
+  clearArithmeticError(): void;
 
-  hasReferenceError(): boolean;
-  clearReferenceError(): void;
   getReferenceError(): DynamicReferenceError | undefined;
   setReferenceError(value?: DynamicReferenceError): void;
+  hasReferenceError(): boolean;
+  clearReferenceError(): void;
 
   getExecutionStatusCase(): ExecutionStatus.ExecutionStatusCase;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ExecutionStatus.AsObject;
   static toObject(includeInstance: boolean, msg: ExecutionStatus): ExecutionStatus.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: ExecutionStatus, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ExecutionStatus;
   static deserializeBinaryFromReader(message: ExecutionStatus, reader: jspb.BinaryReader): ExecutionStatus;
@@ -209,58 +186,48 @@ export class ExecutionStatus extends jspb.Message {
 
 export namespace ExecutionStatus {
   export type AsObject = {
-    runtimeStatus: RuntimeStatus;
-    assertionFailure?: AssertionFailure.AsObject;
-    arithmeticError?: ArithmeticError.AsObject;
-    referenceError?: DynamicReferenceError.AsObject;
-  };
+    runtimeStatus: RuntimeStatus,
+    assertionFailure?: AssertionFailure.AsObject,
+    arithmeticError?: ArithmeticError.AsObject,
+    referenceError?: DynamicReferenceError.AsObject,
+  }
 
-  export enum ExecutionStatusCase {
-    EXECUTIONSTATUS_NOT_SET = 0,
-
+  export enum ExecutionStatusCase { 
+    EXECUTION_STATUS_NOT_SET = 0,
     RUNTIME_STATUS = 1,
-
     ASSERTION_FAILURE = 2,
-
     ARITHMETIC_ERROR = 3,
-
     REFERENCE_ERROR = 4,
   }
 }
 
 export class VMStatus extends jspb.Message {
-  hasValidation(): boolean;
-  clearValidation(): void;
   getValidation(): VMValidationStatus | undefined;
   setValidation(value?: VMValidationStatus): void;
+  hasValidation(): boolean;
+  clearValidation(): void;
 
-  hasVerification(): boolean;
-  clearVerification(): void;
   getVerification(): VMVerificationStatusList | undefined;
   setVerification(value?: VMVerificationStatusList): void;
+  hasVerification(): boolean;
+  clearVerification(): void;
 
-  hasInvariantViolation(): boolean;
-  clearInvariantViolation(): void;
   getInvariantViolation(): VMInvariantViolationError;
   setInvariantViolation(value: VMInvariantViolationError): void;
 
-  hasDeserialization(): boolean;
-  clearDeserialization(): void;
   getDeserialization(): BinaryError;
   setDeserialization(value: BinaryError): void;
 
-  hasExecution(): boolean;
-  clearExecution(): void;
   getExecution(): ExecutionStatus | undefined;
   setExecution(value?: ExecutionStatus): void;
+  hasExecution(): boolean;
+  clearExecution(): void;
 
   getErrorTypeCase(): VMStatus.ErrorTypeCase;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): VMStatus.AsObject;
   static toObject(includeInstance: boolean, msg: VMStatus): VMStatus.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: VMStatus, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): VMStatus;
   static deserializeBinaryFromReader(message: VMStatus, reader: jspb.BinaryReader): VMStatus;
@@ -268,29 +235,24 @@ export class VMStatus extends jspb.Message {
 
 export namespace VMStatus {
   export type AsObject = {
-    validation?: VMValidationStatus.AsObject;
-    verification?: VMVerificationStatusList.AsObject;
-    invariantViolation: VMInvariantViolationError;
-    deserialization: BinaryError;
-    execution?: ExecutionStatus.AsObject;
-  };
+    validation?: VMValidationStatus.AsObject,
+    verification?: VMVerificationStatusList.AsObject,
+    invariantViolation: VMInvariantViolationError,
+    deserialization: BinaryError,
+    execution?: ExecutionStatus.AsObject,
+  }
 
-  export enum ErrorTypeCase {
-    ERRORTYPE_NOT_SET = 0,
-
+  export enum ErrorTypeCase { 
+    ERROR_TYPE_NOT_SET = 0,
     VALIDATION = 1,
-
     VERIFICATION = 2,
-
     INVARIANT_VIOLATION = 3,
-
     DESERIALIZATION = 4,
-
     EXECUTION = 5,
   }
 }
 
-export enum VMValidationStatusCode {
+export enum VMValidationStatusCode { 
   UNKNOWNVALIDATIONSTATUS = 0,
   INVALIDSIGNATURE = 1,
   INVALIDAUTHKEY = 2,
@@ -309,8 +271,7 @@ export enum VMValidationStatusCode {
   GASUNITPRICEBELOWMINBOUND = 15,
   GASUNITPRICEABOVEMAXBOUND = 16,
 }
-
-export enum VMVerificationErrorKind {
+export enum VMVerificationErrorKind { 
   UNKNOWNVERIFICATIONERROR = 0,
   INDEXOUTOFBOUNDS = 1,
   RANGEOUTOFBOUNDS = 2,
@@ -380,8 +341,7 @@ export enum VMVerificationErrorKind {
   MODULEADDRESSDOESNOTMATCHSENDER = 66,
   NOMODULEHANDLES = 67,
 }
-
-export enum VMInvariantViolationError {
+export enum VMInvariantViolationError { 
   UNKNOWNINVARIANTVIOLATIONERROR = 0,
   OUTOFBOUNDSINDEX = 1,
   OUTOFBOUNDSRANGE = 2,
@@ -392,8 +352,7 @@ export enum VMInvariantViolationError {
   LOCALREFERENCEERROR = 7,
   STORAGEERROR = 8,
 }
-
-export enum BinaryError {
+export enum BinaryError { 
   UNKNOWNBINARYERROR = 0,
   MALFORMED = 1,
   BADMAGIC = 2,
@@ -406,8 +365,7 @@ export enum BinaryError {
   UNEXPECTEDSIGNATURETYPE = 9,
   DUPLICATETABLE = 10,
 }
-
-export enum RuntimeStatus {
+export enum RuntimeStatus { 
   UNKNOWNRUNTIMESTATUS = 0,
   EXECUTED = 1,
   OUTOFGAS = 2,

@@ -1,9 +1,5 @@
-// package: types
-// file: transaction.proto
+import * as jspb from "google-protobuf"
 
-/* tslint:disable */
-
-import * as jspb from 'google-protobuf';
 import * as access_path_pb from './access_path_pb';
 import * as events_pb from './events_pb';
 import * as proof_pb from './proof_pb';
@@ -19,15 +15,15 @@ export class RawTransaction extends jspb.Message {
   getSequenceNumber(): string;
   setSequenceNumber(value: string): void;
 
-  hasProgram(): boolean;
-  clearProgram(): void;
   getProgram(): Program | undefined;
   setProgram(value?: Program): void;
+  hasProgram(): boolean;
+  clearProgram(): void;
 
-  hasWriteSet(): boolean;
-  clearWriteSet(): void;
   getWriteSet(): WriteSet | undefined;
   setWriteSet(value?: WriteSet): void;
+  hasWriteSet(): boolean;
+  clearWriteSet(): void;
 
   getMaxGasAmount(): string;
   setMaxGasAmount(value: string): void;
@@ -43,8 +39,6 @@ export class RawTransaction extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RawTransaction.AsObject;
   static toObject(includeInstance: boolean, msg: RawTransaction): RawTransaction.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: RawTransaction, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): RawTransaction;
   static deserializeBinaryFromReader(message: RawTransaction, reader: jspb.BinaryReader): RawTransaction;
@@ -52,20 +46,18 @@ export class RawTransaction extends jspb.Message {
 
 export namespace RawTransaction {
   export type AsObject = {
-    senderAccount: Uint8Array | string;
-    sequenceNumber: string;
-    program?: Program.AsObject;
-    writeSet?: WriteSet.AsObject;
-    maxGasAmount: string;
-    gasUnitPrice: string;
-    expirationTime: string;
-  };
+    senderAccount: Uint8Array | string,
+    sequenceNumber: string,
+    program?: Program.AsObject,
+    writeSet?: WriteSet.AsObject,
+    maxGasAmount: string,
+    gasUnitPrice: string,
+    expirationTime: string,
+  }
 
-  export enum PayloadCase {
+  export enum PayloadCase { 
     PAYLOAD_NOT_SET = 0,
-
     PROGRAM = 3,
-
     WRITE_SET = 4,
   }
 }
@@ -76,23 +68,19 @@ export class Program extends jspb.Message {
   getCode_asB64(): string;
   setCode(value: Uint8Array | string): void;
 
-  clearArgumentsList(): void;
   getArgumentsList(): Array<TransactionArgument>;
   setArgumentsList(value: Array<TransactionArgument>): void;
+  clearArgumentsList(): void;
   addArguments(value?: TransactionArgument, index?: number): TransactionArgument;
 
-  clearModulesList(): void;
   getModulesList(): Array<Uint8Array | string>;
-  getModulesList_asU8(): Array<Uint8Array>;
-  getModulesList_asB64(): Array<string>;
   setModulesList(value: Array<Uint8Array | string>): void;
-  addModules(value: Uint8Array | string, index?: number): Uint8Array | string;
+  clearModulesList(): void;
+  addModules(value: Uint8Array | string, index?: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Program.AsObject;
   static toObject(includeInstance: boolean, msg: Program): Program.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: Program, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Program;
   static deserializeBinaryFromReader(message: Program, reader: jspb.BinaryReader): Program;
@@ -100,10 +88,10 @@ export class Program extends jspb.Message {
 
 export namespace Program {
   export type AsObject = {
-    code: Uint8Array | string;
-    argumentsList: Array<TransactionArgument.AsObject>;
-    modulesList: Array<Uint8Array | string>;
-  };
+    code: Uint8Array | string,
+    argumentsList: Array<TransactionArgument.AsObject>,
+    modulesList: Array<Uint8Array | string>,
+  }
 }
 
 export class TransactionArgument extends jspb.Message {
@@ -118,8 +106,6 @@ export class TransactionArgument extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionArgument.AsObject;
   static toObject(includeInstance: boolean, msg: TransactionArgument): TransactionArgument.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: TransactionArgument, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): TransactionArgument;
   static deserializeBinaryFromReader(message: TransactionArgument, reader: jspb.BinaryReader): TransactionArgument;
@@ -127,11 +113,11 @@ export class TransactionArgument extends jspb.Message {
 
 export namespace TransactionArgument {
   export type AsObject = {
-    type: TransactionArgument.ArgType;
-    data: Uint8Array | string;
-  };
+    type: TransactionArgument.ArgType,
+    data: Uint8Array | string,
+  }
 
-  export enum ArgType {
+  export enum ArgType { 
     U64 = 0,
     ADDRESS = 1,
     STRING = 2,
@@ -158,8 +144,6 @@ export class SignedTransaction extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SignedTransaction.AsObject;
   static toObject(includeInstance: boolean, msg: SignedTransaction): SignedTransaction.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: SignedTransaction, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SignedTransaction;
   static deserializeBinaryFromReader(message: SignedTransaction, reader: jspb.BinaryReader): SignedTransaction;
@@ -167,57 +151,52 @@ export class SignedTransaction extends jspb.Message {
 
 export namespace SignedTransaction {
   export type AsObject = {
-    rawTxnBytes: Uint8Array | string;
-    senderPublicKey: Uint8Array | string;
-    senderSignature: Uint8Array | string;
-  };
+    rawTxnBytes: Uint8Array | string,
+    senderPublicKey: Uint8Array | string,
+    senderSignature: Uint8Array | string,
+  }
 }
 
 export class SignedTransactionWithProof extends jspb.Message {
   getVersion(): string;
   setVersion(value: string): void;
 
-  hasSignedTransaction(): boolean;
-  clearSignedTransaction(): void;
   getSignedTransaction(): SignedTransaction | undefined;
   setSignedTransaction(value?: SignedTransaction): void;
+  hasSignedTransaction(): boolean;
+  clearSignedTransaction(): void;
 
-  hasProof(): boolean;
-  clearProof(): void;
   getProof(): proof_pb.SignedTransactionProof | undefined;
   setProof(value?: proof_pb.SignedTransactionProof): void;
+  hasProof(): boolean;
+  clearProof(): void;
 
-  hasEvents(): boolean;
-  clearEvents(): void;
   getEvents(): events_pb.EventsList | undefined;
   setEvents(value?: events_pb.EventsList): void;
+  hasEvents(): boolean;
+  clearEvents(): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SignedTransactionWithProof.AsObject;
   static toObject(includeInstance: boolean, msg: SignedTransactionWithProof): SignedTransactionWithProof.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: SignedTransactionWithProof, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SignedTransactionWithProof;
-  static deserializeBinaryFromReader(
-    message: SignedTransactionWithProof,
-    reader: jspb.BinaryReader,
-  ): SignedTransactionWithProof;
+  static deserializeBinaryFromReader(message: SignedTransactionWithProof, reader: jspb.BinaryReader): SignedTransactionWithProof;
 }
 
 export namespace SignedTransactionWithProof {
   export type AsObject = {
-    version: string;
-    signedTransaction?: SignedTransaction.AsObject;
-    proof?: proof_pb.SignedTransactionProof.AsObject;
-    events?: events_pb.EventsList.AsObject;
-  };
+    version: string,
+    signedTransaction?: SignedTransaction.AsObject,
+    proof?: proof_pb.SignedTransactionProof.AsObject,
+    events?: events_pb.EventsList.AsObject,
+  }
 }
 
 export class SignedTransactionsBlock extends jspb.Message {
-  clearTransactionsList(): void;
   getTransactionsList(): Array<SignedTransaction>;
   setTransactionsList(value: Array<SignedTransaction>): void;
+  clearTransactionsList(): void;
   addTransactions(value?: SignedTransaction, index?: number): SignedTransaction;
 
   getValidatorPublicKey(): Uint8Array | string;
@@ -233,35 +212,28 @@ export class SignedTransactionsBlock extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SignedTransactionsBlock.AsObject;
   static toObject(includeInstance: boolean, msg: SignedTransactionsBlock): SignedTransactionsBlock.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: SignedTransactionsBlock, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SignedTransactionsBlock;
-  static deserializeBinaryFromReader(
-    message: SignedTransactionsBlock,
-    reader: jspb.BinaryReader,
-  ): SignedTransactionsBlock;
+  static deserializeBinaryFromReader(message: SignedTransactionsBlock, reader: jspb.BinaryReader): SignedTransactionsBlock;
 }
 
 export namespace SignedTransactionsBlock {
   export type AsObject = {
-    transactionsList: Array<SignedTransaction.AsObject>;
-    validatorPublicKey: Uint8Array | string;
-    validatorSignature: Uint8Array | string;
-  };
+    transactionsList: Array<SignedTransaction.AsObject>,
+    validatorPublicKey: Uint8Array | string,
+    validatorSignature: Uint8Array | string,
+  }
 }
 
 export class WriteSet extends jspb.Message {
-  clearWriteSetList(): void;
   getWriteSetList(): Array<WriteOp>;
   setWriteSetList(value: Array<WriteOp>): void;
+  clearWriteSetList(): void;
   addWriteSet(value?: WriteOp, index?: number): WriteOp;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): WriteSet.AsObject;
   static toObject(includeInstance: boolean, msg: WriteSet): WriteSet.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: WriteSet, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): WriteSet;
   static deserializeBinaryFromReader(message: WriteSet, reader: jspb.BinaryReader): WriteSet;
@@ -269,15 +241,15 @@ export class WriteSet extends jspb.Message {
 
 export namespace WriteSet {
   export type AsObject = {
-    writeSetList: Array<WriteOp.AsObject>;
-  };
+    writeSetList: Array<WriteOp.AsObject>,
+  }
 }
 
 export class WriteOp extends jspb.Message {
-  hasAccessPath(): boolean;
-  clearAccessPath(): void;
   getAccessPath(): access_path_pb.AccessPath | undefined;
   setAccessPath(value?: access_path_pb.AccessPath): void;
+  hasAccessPath(): boolean;
+  clearAccessPath(): void;
 
   getValue(): Uint8Array | string;
   getValue_asU8(): Uint8Array;
@@ -290,8 +262,6 @@ export class WriteOp extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): WriteOp.AsObject;
   static toObject(includeInstance: boolean, msg: WriteOp): WriteOp.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: WriteOp, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): WriteOp;
   static deserializeBinaryFromReader(message: WriteOp, reader: jspb.BinaryReader): WriteOp;
@@ -299,10 +269,10 @@ export class WriteOp extends jspb.Message {
 
 export namespace WriteOp {
   export type AsObject = {
-    accessPath?: access_path_pb.AccessPath.AsObject;
-    value: Uint8Array | string;
-    type: WriteOpType;
-  };
+    accessPath?: access_path_pb.AccessPath.AsObject,
+    value: Uint8Array | string,
+    type: WriteOpType,
+  }
 }
 
 export class AccountState extends jspb.Message {
@@ -319,8 +289,6 @@ export class AccountState extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccountState.AsObject;
   static toObject(includeInstance: boolean, msg: AccountState): AccountState.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: AccountState, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): AccountState;
   static deserializeBinaryFromReader(message: AccountState, reader: jspb.BinaryReader): AccountState;
@@ -328,25 +296,25 @@ export class AccountState extends jspb.Message {
 
 export namespace AccountState {
   export type AsObject = {
-    address: Uint8Array | string;
-    blob: Uint8Array | string;
-  };
+    address: Uint8Array | string,
+    blob: Uint8Array | string,
+  }
 }
 
 export class TransactionToCommit extends jspb.Message {
-  hasSignedTxn(): boolean;
-  clearSignedTxn(): void;
   getSignedTxn(): SignedTransaction | undefined;
   setSignedTxn(value?: SignedTransaction): void;
+  hasSignedTxn(): boolean;
+  clearSignedTxn(): void;
 
-  clearAccountStatesList(): void;
   getAccountStatesList(): Array<AccountState>;
   setAccountStatesList(value: Array<AccountState>): void;
+  clearAccountStatesList(): void;
   addAccountStates(value?: AccountState, index?: number): AccountState;
 
-  clearEventsList(): void;
   getEventsList(): Array<events_pb.Event>;
   setEventsList(value: Array<events_pb.Event>): void;
+  clearEventsList(): void;
   addEvents(value?: events_pb.Event, index?: number): events_pb.Event;
 
   getGasUsed(): string;
@@ -355,8 +323,6 @@ export class TransactionToCommit extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionToCommit.AsObject;
   static toObject(includeInstance: boolean, msg: TransactionToCommit): TransactionToCommit.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: TransactionToCommit, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): TransactionToCommit;
   static deserializeBinaryFromReader(message: TransactionToCommit, reader: jspb.BinaryReader): TransactionToCommit;
@@ -364,69 +330,64 @@ export class TransactionToCommit extends jspb.Message {
 
 export namespace TransactionToCommit {
   export type AsObject = {
-    signedTxn?: SignedTransaction.AsObject;
-    accountStatesList: Array<AccountState.AsObject>;
-    eventsList: Array<events_pb.Event.AsObject>;
-    gasUsed: string;
-  };
+    signedTxn?: SignedTransaction.AsObject,
+    accountStatesList: Array<AccountState.AsObject>,
+    eventsList: Array<events_pb.Event.AsObject>,
+    gasUsed: string,
+  }
 }
 
 export class TransactionListWithProof extends jspb.Message {
-  clearTransactionsList(): void;
   getTransactionsList(): Array<SignedTransaction>;
   setTransactionsList(value: Array<SignedTransaction>): void;
+  clearTransactionsList(): void;
   addTransactions(value?: SignedTransaction, index?: number): SignedTransaction;
 
-  clearInfosList(): void;
   getInfosList(): Array<transaction_info_pb.TransactionInfo>;
   setInfosList(value: Array<transaction_info_pb.TransactionInfo>): void;
+  clearInfosList(): void;
   addInfos(value?: transaction_info_pb.TransactionInfo, index?: number): transaction_info_pb.TransactionInfo;
 
-  hasEventsForVersions(): boolean;
-  clearEventsForVersions(): void;
   getEventsForVersions(): events_pb.EventsForVersions | undefined;
   setEventsForVersions(value?: events_pb.EventsForVersions): void;
+  hasEventsForVersions(): boolean;
+  clearEventsForVersions(): void;
 
-  hasFirstTransactionVersion(): boolean;
-  clearFirstTransactionVersion(): void;
   getFirstTransactionVersion(): google_protobuf_wrappers_pb.UInt64Value | undefined;
   setFirstTransactionVersion(value?: google_protobuf_wrappers_pb.UInt64Value): void;
+  hasFirstTransactionVersion(): boolean;
+  clearFirstTransactionVersion(): void;
 
-  hasProofOfFirstTransaction(): boolean;
-  clearProofOfFirstTransaction(): void;
   getProofOfFirstTransaction(): proof_pb.AccumulatorProof | undefined;
   setProofOfFirstTransaction(value?: proof_pb.AccumulatorProof): void;
+  hasProofOfFirstTransaction(): boolean;
+  clearProofOfFirstTransaction(): void;
 
-  hasProofOfLastTransaction(): boolean;
-  clearProofOfLastTransaction(): void;
   getProofOfLastTransaction(): proof_pb.AccumulatorProof | undefined;
   setProofOfLastTransaction(value?: proof_pb.AccumulatorProof): void;
+  hasProofOfLastTransaction(): boolean;
+  clearProofOfLastTransaction(): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionListWithProof.AsObject;
   static toObject(includeInstance: boolean, msg: TransactionListWithProof): TransactionListWithProof.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: TransactionListWithProof, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): TransactionListWithProof;
-  static deserializeBinaryFromReader(
-    message: TransactionListWithProof,
-    reader: jspb.BinaryReader,
-  ): TransactionListWithProof;
+  static deserializeBinaryFromReader(message: TransactionListWithProof, reader: jspb.BinaryReader): TransactionListWithProof;
 }
 
 export namespace TransactionListWithProof {
   export type AsObject = {
-    transactionsList: Array<SignedTransaction.AsObject>;
-    infosList: Array<transaction_info_pb.TransactionInfo.AsObject>;
-    eventsForVersions?: events_pb.EventsForVersions.AsObject;
-    firstTransactionVersion?: google_protobuf_wrappers_pb.UInt64Value.AsObject;
-    proofOfFirstTransaction?: proof_pb.AccumulatorProof.AsObject;
-    proofOfLastTransaction?: proof_pb.AccumulatorProof.AsObject;
-  };
+    transactionsList: Array<SignedTransaction.AsObject>,
+    infosList: Array<transaction_info_pb.TransactionInfo.AsObject>,
+    eventsForVersions?: events_pb.EventsForVersions.AsObject,
+    firstTransactionVersion?: google_protobuf_wrappers_pb.UInt64Value.AsObject,
+    proofOfFirstTransaction?: proof_pb.AccumulatorProof.AsObject,
+    proofOfLastTransaction?: proof_pb.AccumulatorProof.AsObject,
+  }
 }
 
-export enum WriteOpType {
+export enum WriteOpType { 
   WRITE = 0,
   DELETE = 1,
 }

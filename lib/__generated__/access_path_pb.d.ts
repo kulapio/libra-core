@@ -1,9 +1,4 @@
-// package: types
-// file: access_path.proto
-
-/* tslint:disable */
-
-import * as jspb from 'google-protobuf';
+import * as jspb from "google-protobuf"
 
 export class AccessPath extends jspb.Message {
   getAddress(): Uint8Array | string;
@@ -19,8 +14,6 @@ export class AccessPath extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccessPath.AsObject;
   static toObject(includeInstance: boolean, msg: AccessPath): AccessPath.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: AccessPath, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): AccessPath;
   static deserializeBinaryFromReader(message: AccessPath, reader: jspb.BinaryReader): AccessPath;
@@ -28,7 +21,8 @@ export class AccessPath extends jspb.Message {
 
 export namespace AccessPath {
   export type AsObject = {
-    address: Uint8Array | string;
-    path: Uint8Array | string;
-  };
+    address: Uint8Array | string,
+    path: Uint8Array | string,
+  }
 }
+

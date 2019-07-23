@@ -1,9 +1,5 @@
-// package: types
-// file: account_state_blob.proto
+import * as jspb from "google-protobuf"
 
-/* tslint:disable */
-
-import * as jspb from 'google-protobuf';
 import * as proof_pb from './proof_pb';
 
 export class AccountStateBlob extends jspb.Message {
@@ -15,8 +11,6 @@ export class AccountStateBlob extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccountStateBlob.AsObject;
   static toObject(includeInstance: boolean, msg: AccountStateBlob): AccountStateBlob.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: AccountStateBlob, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): AccountStateBlob;
   static deserializeBinaryFromReader(message: AccountStateBlob, reader: jspb.BinaryReader): AccountStateBlob;
@@ -24,29 +18,27 @@ export class AccountStateBlob extends jspb.Message {
 
 export namespace AccountStateBlob {
   export type AsObject = {
-    blob: Uint8Array | string;
-  };
+    blob: Uint8Array | string,
+  }
 }
 
 export class AccountStateWithProof extends jspb.Message {
   getVersion(): string;
   setVersion(value: string): void;
 
-  hasBlob(): boolean;
-  clearBlob(): void;
   getBlob(): AccountStateBlob | undefined;
   setBlob(value?: AccountStateBlob): void;
+  hasBlob(): boolean;
+  clearBlob(): void;
 
-  hasProof(): boolean;
-  clearProof(): void;
   getProof(): proof_pb.AccountStateProof | undefined;
   setProof(value?: proof_pb.AccountStateProof): void;
+  hasProof(): boolean;
+  clearProof(): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccountStateWithProof.AsObject;
   static toObject(includeInstance: boolean, msg: AccountStateWithProof): AccountStateWithProof.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: AccountStateWithProof, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): AccountStateWithProof;
   static deserializeBinaryFromReader(message: AccountStateWithProof, reader: jspb.BinaryReader): AccountStateWithProof;
@@ -54,8 +46,9 @@ export class AccountStateWithProof extends jspb.Message {
 
 export namespace AccountStateWithProof {
   export type AsObject = {
-    version: string;
-    blob?: AccountStateBlob.AsObject;
-    proof?: proof_pb.AccountStateProof.AsObject;
-  };
+    version: string,
+    blob?: AccountStateBlob.AsObject,
+    proof?: proof_pb.AccountStateProof.AsObject,
+  }
 }
+

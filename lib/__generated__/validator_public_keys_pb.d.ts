@@ -1,9 +1,4 @@
-// package: types
-// file: validator_public_keys.proto
-
-/* tslint:disable */
-
-import * as jspb from 'google-protobuf';
+import * as jspb from "google-protobuf"
 
 export class ValidatorPublicKeys extends jspb.Message {
   getAccountAddress(): Uint8Array | string;
@@ -29,8 +24,6 @@ export class ValidatorPublicKeys extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ValidatorPublicKeys.AsObject;
   static toObject(includeInstance: boolean, msg: ValidatorPublicKeys): ValidatorPublicKeys.AsObject;
-  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
-  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: ValidatorPublicKeys, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ValidatorPublicKeys;
   static deserializeBinaryFromReader(message: ValidatorPublicKeys, reader: jspb.BinaryReader): ValidatorPublicKeys;
@@ -38,9 +31,10 @@ export class ValidatorPublicKeys extends jspb.Message {
 
 export namespace ValidatorPublicKeys {
   export type AsObject = {
-    accountAddress: Uint8Array | string;
-    consensusPublicKey: Uint8Array | string;
-    networkSigningPublicKey: Uint8Array | string;
-    networkIdentityPublicKey: Uint8Array | string;
-  };
+    accountAddress: Uint8Array | string,
+    consensusPublicKey: Uint8Array | string,
+    networkSigningPublicKey: Uint8Array | string,
+    networkIdentityPublicKey: Uint8Array | string,
+  }
 }
+
