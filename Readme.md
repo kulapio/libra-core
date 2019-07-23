@@ -1,10 +1,12 @@
 # Libra Core 
 
-Libra Core is a javascript library client that can be used to interact with libra nodes. It is built using typescript.
+Kulap Libra is a javascript library client that can be used to interact with libra nodes. It is built using typescript.
+
+Kulap Libra is Libra-core compatible.
 
 > This is still under heavy testing, so please report any issues that you might encounter using it.
 
-The end goal is to make it usable both in node and on browser clients too, but currently it is mostly compatible with node.
+Usable both in node and on browser clients.
 
 ## Table of Content
 
@@ -25,19 +27,11 @@ The end goal is to make it usable both in node and on browser clients too, but c
 
 <!-- tocstop -->
 
-## Prepare
-- Node ^v12.0.0 is required for sha3-256.
-You can use nvm to download/use node v12 by following.
-```sh
-nvm install 12
-nvm use 12
-```
-
 ## Installation
 To install with npm run:
 
 ```
-npm install libra-core
+npm install kulap-libra
 ```
 
 ## Usage
@@ -45,7 +39,7 @@ npm install libra-core
 You would most likely interact with these two modules
 
 ```javascript
-import { LibraWallet, LibraClient } from 'libra-core';
+import { LibraWallet, LibraClient } from 'kulap-libra';
 ```
 
 ### Creating an Account
@@ -54,7 +48,7 @@ In order to create a libra account, you would need to instantiate the `LibraWall
 
 ```javascript
 // you may need to use require for node
-import { LibraWallet, Account as LibraAccount } from 'libra-core';
+import { LibraWallet, Account as LibraAccount } from 'kulap-libra';
 
 // please don't use this mnemonic outside of this sample code
 // also mnemonics are optional. If you don't specify one a random mnemonic is generated and used.
@@ -80,7 +74,7 @@ console.log(account.getAddress().toHex());
 To mint you need to create a `LibraClient` and use it to mint
 
 ```javascript
-import { LibraClient, LibraNetwork } from 'libra-core';
+import { LibraClient, LibraNetwork } from 'kulap-libra';
 
 async function main() {
   const client = new LibraClient({ network: LibraNetwork.Testnet });
