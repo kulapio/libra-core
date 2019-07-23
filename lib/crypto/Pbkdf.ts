@@ -1,4 +1,5 @@
-import crypto, { BinaryLike } from 'crypto';
+import crypto from 'crypto'
+import { HmacUtils } from "./HmacUtils";
 
 export class Pbkdf {
   private readonly digestAlgorithm: string;
@@ -10,8 +11,8 @@ export class Pbkdf {
     return new Uint8Array(crypto.pbkdf2Sync(Buffer.from(password), salt, iterations, outputLen, this.digestAlgorithm));
   }
 
-  public pbkdf2(password: BinaryLike, salt: Buffer, iterations: number, outputLen: number) {
-    const hmacLength = crypto.createHmac(this.digestAlgorithm, 'test').digest().length;
+  public sha3256Pbkdf2(password: Buffer, salt: Buffer, iterations: number, outputLen: number) {
+    const hmacLength = 32;
     const outputBuffer = Buffer.alloc(outputLen);
     const hmacOutput = Buffer.alloc(hmacLength);
     const block = Buffer.alloc(salt.length + 4);
@@ -20,16 +21,10 @@ export class Pbkdf {
     salt.copy(block, 0, 0, salt.length);
     for (let i = 1; i <= leftLength; i++) {
       block.writeUInt32BE(i, salt.length);
-      let hmac = crypto
-        .createHmac(this.digestAlgorithm, password)
-        .update(block)
-        .digest();
+      let hmac = Buffer.from(HmacUtils.digestSha3256Hmac(password, block))
       hmac.copy(hmacOutput, 0, 0, hmacLength);
       for (let j = 1; j < iterations; j++) {
-        hmac = crypto
-          .createHmac(this.digestAlgorithm, password)
-          .update(hmac)
-          .digest();
+        hmac = Buffer.from(HmacUtils.digestSha3256Hmac(password, hmac))
         for (let k = 0; k < hmacLength; k++) {
           // tslint:disable-next-line:no-bitwise
           hmacOutput[k] ^= hmac[k];
