@@ -30,8 +30,15 @@ export interface LibraGasConstraint {
 
 export class LibraTransaction {
   public static createTransfer(recipientAddress: string, numAccount: BigNumber): LibraTransaction {
-    const amountBuffer = Buffer.alloc(8);
-    amountBuffer.writeBigUInt64LE(BigInt(numAccount), 0);
+    const amountBuffer = Buffer.from(
+      Number(numAccount)
+        .toString(16)
+        .padStart(16, '0')
+        .slice(0, 16),
+      'hex',
+    )
+    amountBuffer.reverse()
+
     const programArguments: LibraProgramArgument[] = [
       {
         type: LibraProgramArgumentType.ADDRESS,

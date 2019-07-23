@@ -49,11 +49,18 @@ export class KeyFactory {
    *
    */
   public generateKey(childDepth: number): KeyPair {
-    const childDepthBuffer = Buffer.alloc(8);
-    childDepthBuffer.writeBigUInt64LE(BigInt(childDepth));
-    const info = Buffer.concat([
-      Uint8Array.from(Buffer.from(KeyPrefixes.DerivedKey)),
-      Uint8Array.from(childDepthBuffer),
+    const childDepthBuffer = Buffer.from(
+      Number(childDepth)
+        .toString(16)
+        .padStart(16, '0')
+        .slice(0, 16),
+      'hex',
+    )
+    childDepthBuffer.reverse()
+
+    const info = Buffer.from([
+      ...Uint8Array.from(Buffer.from(KeyPrefixes.DerivedKey)),
+      ...Uint8Array.from(childDepthBuffer),
     ]);
     const secretKey = this.hkdf.expand(this.masterPrk, info, 32);
     return KeyPair.fromSecretKey(secretKey);
