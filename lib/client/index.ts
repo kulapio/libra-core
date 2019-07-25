@@ -148,7 +148,7 @@ export class LibraClient {
     const requestItem = new RequestItem();
     const getTransactionRequest = new GetAccountTransactionBySequenceNumberRequest();
     getTransactionRequest.setAccount(accountAddress.toBytes());
-    getTransactionRequest.setSequenceNumber(parsedSequenceNumber.toString(10));
+    getTransactionRequest.setSequenceNumber(parsedSequenceNumber.toNumber());
     getTransactionRequest.setFetchEvents(fetchEvents);
     requestItem.setGetAccountTransactionBySequenceNumberRequest(getTransactionRequest);
 
