@@ -12,8 +12,8 @@ export class RawTransaction extends jspb.Message {
   getSenderAccount_asB64(): string;
   setSenderAccount(value: Uint8Array | string): void;
 
-  getSequenceNumber(): string;
-  setSequenceNumber(value: string): void;
+  getSequenceNumber(): number;
+  setSequenceNumber(value: number): void;
 
   getProgram(): Program | undefined;
   setProgram(value?: Program): void;
@@ -25,14 +25,14 @@ export class RawTransaction extends jspb.Message {
   hasWriteSet(): boolean;
   clearWriteSet(): void;
 
-  getMaxGasAmount(): string;
-  setMaxGasAmount(value: string): void;
+  getMaxGasAmount(): number;
+  setMaxGasAmount(value: number): void;
 
-  getGasUnitPrice(): string;
-  setGasUnitPrice(value: string): void;
+  getGasUnitPrice(): number;
+  setGasUnitPrice(value: number): void;
 
-  getExpirationTime(): string;
-  setExpirationTime(value: string): void;
+  getExpirationTime(): number;
+  setExpirationTime(value: number): void;
 
   getPayloadCase(): RawTransaction.PayloadCase;
 
@@ -47,12 +47,12 @@ export class RawTransaction extends jspb.Message {
 export namespace RawTransaction {
   export type AsObject = {
     senderAccount: Uint8Array | string,
-    sequenceNumber: string,
+    sequenceNumber: number,
     program?: Program.AsObject,
     writeSet?: WriteSet.AsObject,
-    maxGasAmount: string,
-    gasUnitPrice: string,
-    expirationTime: string,
+    maxGasAmount: number,
+    gasUnitPrice: number,
+    expirationTime: number,
   }
 
   export enum PayloadCase { 
@@ -158,8 +158,8 @@ export namespace SignedTransaction {
 }
 
 export class SignedTransactionWithProof extends jspb.Message {
-  getVersion(): string;
-  setVersion(value: string): void;
+  getVersion(): number;
+  setVersion(value: number): void;
 
   getSignedTransaction(): SignedTransaction | undefined;
   setSignedTransaction(value?: SignedTransaction): void;
@@ -186,7 +186,7 @@ export class SignedTransactionWithProof extends jspb.Message {
 
 export namespace SignedTransactionWithProof {
   export type AsObject = {
-    version: string,
+    version: number,
     signedTransaction?: SignedTransaction.AsObject,
     proof?: proof_pb.SignedTransactionProof.AsObject,
     events?: events_pb.EventsList.AsObject,
@@ -317,8 +317,8 @@ export class TransactionToCommit extends jspb.Message {
   clearEventsList(): void;
   addEvents(value?: events_pb.Event, index?: number): events_pb.Event;
 
-  getGasUsed(): string;
-  setGasUsed(value: string): void;
+  getGasUsed(): number;
+  setGasUsed(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionToCommit.AsObject;
@@ -333,7 +333,7 @@ export namespace TransactionToCommit {
     signedTxn?: SignedTransaction.AsObject,
     accountStatesList: Array<AccountState.AsObject>,
     eventsList: Array<events_pb.Event.AsObject>,
-    gasUsed: string,
+    gasUsed: number,
   }
 }
 

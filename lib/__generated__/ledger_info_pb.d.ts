@@ -1,8 +1,8 @@
 import * as jspb from "google-protobuf"
 
 export class LedgerInfo extends jspb.Message {
-  getVersion(): string;
-  setVersion(value: string): void;
+  getVersion(): number;
+  setVersion(value: number): void;
 
   getTransactionAccumulatorHash(): Uint8Array | string;
   getTransactionAccumulatorHash_asU8(): Uint8Array;
@@ -19,11 +19,11 @@ export class LedgerInfo extends jspb.Message {
   getConsensusBlockId_asB64(): string;
   setConsensusBlockId(value: Uint8Array | string): void;
 
-  getEpochNum(): string;
-  setEpochNum(value: string): void;
+  getEpochNum(): number;
+  setEpochNum(value: number): void;
 
-  getTimestampUsecs(): string;
-  setTimestampUsecs(value: string): void;
+  getTimestampUsecs(): number;
+  setTimestampUsecs(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): LedgerInfo.AsObject;
@@ -35,12 +35,12 @@ export class LedgerInfo extends jspb.Message {
 
 export namespace LedgerInfo {
   export type AsObject = {
-    version: string,
+    version: number,
     transactionAccumulatorHash: Uint8Array | string,
     consensusDataHash: Uint8Array | string,
     consensusBlockId: Uint8Array | string,
-    epochNum: string,
-    timestampUsecs: string,
+    epochNum: number,
+    timestampUsecs: number,
   }
 }
 

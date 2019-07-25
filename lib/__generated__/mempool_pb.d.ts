@@ -9,14 +9,14 @@ export class AddTransactionWithValidationRequest extends jspb.Message {
   hasSignedTxn(): boolean;
   clearSignedTxn(): void;
 
-  getMaxGasCost(): string;
-  setMaxGasCost(value: string): void;
+  getMaxGasCost(): number;
+  setMaxGasCost(value: number): void;
 
-  getLatestSequenceNumber(): string;
-  setLatestSequenceNumber(value: string): void;
+  getLatestSequenceNumber(): number;
+  setLatestSequenceNumber(value: number): void;
 
-  getAccountBalance(): string;
-  setAccountBalance(value: string): void;
+  getAccountBalance(): number;
+  setAccountBalance(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AddTransactionWithValidationRequest.AsObject;
@@ -29,15 +29,15 @@ export class AddTransactionWithValidationRequest extends jspb.Message {
 export namespace AddTransactionWithValidationRequest {
   export type AsObject = {
     signedTxn?: transaction_pb.SignedTransaction.AsObject,
-    maxGasCost: string,
-    latestSequenceNumber: string,
-    accountBalance: string,
+    maxGasCost: number,
+    latestSequenceNumber: number,
+    accountBalance: number,
   }
 }
 
 export class AddTransactionWithValidationResponse extends jspb.Message {
-  getCurrentVersion(): string;
-  setCurrentVersion(value: string): void;
+  getCurrentVersion(): number;
+  setCurrentVersion(value: number): void;
 
   getStatus(): mempool_status_pb.MempoolAddTransactionStatus | undefined;
   setStatus(value?: mempool_status_pb.MempoolAddTransactionStatus): void;
@@ -54,14 +54,14 @@ export class AddTransactionWithValidationResponse extends jspb.Message {
 
 export namespace AddTransactionWithValidationResponse {
   export type AsObject = {
-    currentVersion: string,
+    currentVersion: number,
     status?: mempool_status_pb.MempoolAddTransactionStatus.AsObject,
   }
 }
 
 export class GetBlockRequest extends jspb.Message {
-  getMaxBlockSize(): string;
-  setMaxBlockSize(value: string): void;
+  getMaxBlockSize(): number;
+  setMaxBlockSize(value: number): void;
 
   getTransactionsList(): Array<TransactionExclusion>;
   setTransactionsList(value: Array<TransactionExclusion>): void;
@@ -78,7 +78,7 @@ export class GetBlockRequest extends jspb.Message {
 
 export namespace GetBlockRequest {
   export type AsObject = {
-    maxBlockSize: string,
+    maxBlockSize: number,
     transactionsList: Array<TransactionExclusion.AsObject>,
   }
 }
@@ -109,8 +109,8 @@ export class TransactionExclusion extends jspb.Message {
   getSender_asB64(): string;
   setSender(value: Uint8Array | string): void;
 
-  getSequenceNumber(): string;
-  setSequenceNumber(value: string): void;
+  getSequenceNumber(): number;
+  setSequenceNumber(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionExclusion.AsObject;
@@ -123,7 +123,7 @@ export class TransactionExclusion extends jspb.Message {
 export namespace TransactionExclusion {
   export type AsObject = {
     sender: Uint8Array | string,
-    sequenceNumber: string,
+    sequenceNumber: number,
   }
 }
 
@@ -133,8 +133,8 @@ export class CommitTransactionsRequest extends jspb.Message {
   clearTransactionsList(): void;
   addTransactions(value?: CommittedTransaction, index?: number): CommittedTransaction;
 
-  getBlockTimestampUsecs(): string;
-  setBlockTimestampUsecs(value: string): void;
+  getBlockTimestampUsecs(): number;
+  setBlockTimestampUsecs(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CommitTransactionsRequest.AsObject;
@@ -147,7 +147,7 @@ export class CommitTransactionsRequest extends jspb.Message {
 export namespace CommitTransactionsRequest {
   export type AsObject = {
     transactionsList: Array<CommittedTransaction.AsObject>,
-    blockTimestampUsecs: string,
+    blockTimestampUsecs: number,
   }
 }
 
@@ -171,8 +171,8 @@ export class CommittedTransaction extends jspb.Message {
   getSender_asB64(): string;
   setSender(value: Uint8Array | string): void;
 
-  getSequenceNumber(): string;
-  setSequenceNumber(value: string): void;
+  getSequenceNumber(): number;
+  setSequenceNumber(value: number): void;
 
   getIsRejected(): boolean;
   setIsRejected(value: boolean): void;
@@ -188,7 +188,7 @@ export class CommittedTransaction extends jspb.Message {
 export namespace CommittedTransaction {
   export type AsObject = {
     sender: Uint8Array | string,
-    sequenceNumber: string,
+    sequenceNumber: number,
     isRejected: boolean,
   }
 }

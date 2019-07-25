@@ -36,6 +36,7 @@ describe('LibraClient', () => {
     // TEST TRANSFER TRANSACTION OF yAmount
     account1State = await client.getAccountState(account1Address);
     const response = await client.transferCoins(account1, account2Address, amountToTransfer);
+    console.log(response)
     expect(response.acStatus).toEqual(LibraAdmissionControlStatus.ACCEPTED);
 
     // ensure new account balance is +yAmount

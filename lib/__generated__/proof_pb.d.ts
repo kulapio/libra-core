@@ -3,8 +3,8 @@ import * as jspb from "google-protobuf"
 import * as transaction_info_pb from './transaction_info_pb';
 
 export class AccumulatorProof extends jspb.Message {
-  getBitmap(): string;
-  setBitmap(value: string): void;
+  getBitmap(): number;
+  setBitmap(value: number): void;
 
   getNonDefaultSiblingsList(): Array<Uint8Array | string>;
   setNonDefaultSiblingsList(value: Array<Uint8Array | string>): void;
@@ -21,7 +21,7 @@ export class AccumulatorProof extends jspb.Message {
 
 export namespace AccumulatorProof {
   export type AsObject = {
-    bitmap: string,
+    bitmap: number,
     nonDefaultSiblingsList: Array<Uint8Array | string>,
   }
 }
