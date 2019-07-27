@@ -9,6 +9,7 @@ describe('LibraClient', () => {
       port: '443',
       dataProtocol: 'grpc-web-text'
     })
+    // const client = new LibraClient({ network: LibraNetwork.Testnet });
     const wallet = new LibraWallet({
       mnemonic:
         'lend arm arm addict trust release grid unlock exhibit surround deliver front link bean night dry tuna pledge expect net ankle process mammal great',

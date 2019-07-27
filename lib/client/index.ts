@@ -5,7 +5,8 @@ import * as grpcWeb from 'grpc-web';
 
 import SHA3 from 'sha3';
 import { AccountStateBlob, AccountStateWithProof } from '../__generated__/account_state_blob_pb';
-import { AdmissionControlClient } from '../__generated__/admission_control_grpc_web_pb';
+import { AdmissionControlClient } from '../__generated__/admission_control_grpc_pb';
+import { AdmissionControlClient as AdmissionControlClient_Grpc_Web } from '../__generated__/admission_control_grpc_web_pb';
 import {
   AdmissionControlStatus,
   SubmitTransactionRequest,
@@ -19,6 +20,7 @@ import {
   RequestItem,
   ResponseItem,
   UpdateToLatestLedgerRequest,
+  UpdateToLatestLedgerResponse
 } from '../__generated__/get_with_proof_pb';
 import * as mempool_status_pb from '../__generated__/mempool_status_pb';
 import { RawTransaction, SignedTransaction, SignedTransactionWithProof } from '../__generated__/transaction_pb';
@@ -37,7 +39,7 @@ import { ClientDecoder } from './Decoder';
 import { ClientEncoder } from './Encoder';
 
 interface LibraLibConfig {
-  transferProtocol?: string; // http, https, ws, wss (default is http)
+  transferProtocol?: string; // http, https, socket
   port?: string;
   host?: string;
   dataProtocol?: string; // grpc, grpc-web-text, grpc-web+proto, grpc-web+json, grpc-web+thrift (default is grpc)
@@ -53,7 +55,7 @@ export enum LibraNetwork {
 
 export class LibraClient {
   private readonly config: LibraLibConfig;
-  private readonly client: AdmissionControlClient;
+  private readonly client: AdmissionControlClient | AdmissionControlClient_Grpc_Web
   private readonly decoder: ClientDecoder;
   private readonly encoder: ClientEncoder;
 
@@ -66,15 +68,23 @@ export class LibraClient {
     }
 
     if (config.port === undefined) {
-      this.config.port = '8080';
+      this.config.port = '80';
     }
 
     if (config.transferProtocol === undefined) {
       this.config.transferProtocol = 'http';
     }
 
-    const connectionAddress = `${this.config.transferProtocol}://${this.config.host}:${this.config.port}`;
-    this.client = new AdmissionControlClient(connectionAddress, null);
+    if (config.dataProtocol === undefined) {
+      this.config.dataProtocol = 'grpc';
+    }
+
+   const connectionAddress = `${this.config.dataProtocol === 'grpc' ? '' : this.config.transferProtocol + '://'}${this.config.host}:${this.config.port}`;
+    if (this.config.dataProtocol === 'grpc') {
+      this.client = new AdmissionControlClient(connectionAddress, credentials.createInsecure());
+    } else {
+      this.client = new AdmissionControlClient_Grpc_Web(connectionAddress, null);
+    }
 
     this.decoder = new ClientDecoder();
     this.encoder = new ClientEncoder(this);
@@ -110,7 +120,7 @@ export class LibraClient {
     });
 
     return new Promise<AccountStates>((resolve, reject) => {
-      this.client.updateToLatestLedger(request, undefined, (error, response) => {
+      const responseTask = (error: ServiceError | grpcWeb.Error | null, response: UpdateToLatestLedgerResponse) => {
         if (error) {
           return reject(error);
         }
@@ -128,7 +138,12 @@ export class LibraClient {
             return AccountState.default(accountAddresses[index].toHex());
           }),
         );
-      });
+      }
+      if(this.client instanceof AdmissionControlClient_Grpc_Web){
+        this.client.updateToLatestLedger(request, undefined, responseTask);
+      } else {
+        this.client.updateToLatestLedger(request, responseTask);
+      }
     });
   }
 
@@ -155,7 +170,7 @@ export class LibraClient {
     request.addRequestedItems(requestItem);
 
     return new Promise<LibraSignedTransactionWithProof | null>((resolve, reject) => {
-      this.client.updateToLatestLedger(request, undefined, (error, response) => {
+      const responseTask = (error: ServiceError | grpcWeb.Error | null, response: UpdateToLatestLedgerResponse) => {
         if (error) {
           return reject(error);
         }
@@ -169,7 +184,12 @@ export class LibraClient {
         const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
         const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
         resolve(this.decoder.decodeSignedTransactionWithProof(signedTransactionWP));
-      });
+      }
+      if(this.client instanceof AdmissionControlClient_Grpc_Web){
+        this.client.updateToLatestLedger(request, undefined, responseTask);
+      } else {
+        this.client.updateToLatestLedger(request, responseTask);
+      }
     });
   }
 
@@ -281,7 +301,7 @@ export class LibraClient {
 
     request.setSignedTxn(signedTransaction);
     return new Promise((resolve, reject) => {
-      this.client.submitTransaction(request, undefined, (error: grpcWeb.Error | null, response: SubmitTransactionResponse) => {
+      const responseTask = (error: ServiceError | grpcWeb.Error | null, response: SubmitTransactionResponse) => {
         if (error) {
           // TBD: should this fail with only service error
           // or should it fail if transaction is not acknowledged
@@ -300,7 +320,12 @@ export class LibraClient {
             vmStatus,
           ),
         );
-      });
+      }
+      if(this.client instanceof AdmissionControlClient_Grpc_Web){
+        this.client.submitTransaction(request, undefined, responseTask);
+      } else {
+        this.client.submitTransaction(request, responseTask);
+      }
     });
   }
 
