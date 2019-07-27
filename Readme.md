@@ -76,12 +76,15 @@ To mint you need to create a `LibraClient` and use it to mint
 import { LibraClient, LibraNetwork } from 'kulap-libra';
 
 async function main() {
+  // On Browser
   const client = new LibraClient({
     transferProtocol: 'https',
     host: 'ac-libra-testnet.kulap.io',
     port: '443',
     dataProtocol: 'grpc-web-text'
   })
+  // On Node
+  const client = new LibraClient({ network: LibraNetwork.Testnet })
 
   const account = wallet.newAccount();
 
@@ -97,12 +100,15 @@ await main();
 
 ```javascript
 async function main() {
+  // On Browser
   const client = new LibraClient({
     transferProtocol: 'https',
     host: 'ac-libra-testnet.kulap.io',
     port: '443',
     dataProtocol: 'grpc-web-text'
   })
+  // On Node
+  const client = new LibraClient({ network: LibraNetwork.Testnet })
 
   const accountAddress = '854563c50d20788fb6c11fac1010b553d722edb0c02f87c2edbdd3923726d13f';
   const accountState = await client.getAccountState(accountAddress);
@@ -120,12 +126,16 @@ await main();
 
 ```javascript
 async function main() {
-  const client = new new LibraClient({
+  // On Browser
+  const client = new LibraClient({
     transferProtocol: 'https',
     host: 'ac-libra-testnet.kulap.io',
     port: '443',
     dataProtocol: 'grpc-web-text'
   })
+  // On Node
+  const client = new LibraClient({ network: LibraNetwork.Testnet })
+
   const wallet = new LibraWallet({
     mnemonic:
      'lend arm arm addict trust release grid unlock exhibit surround deliver front link bean night dry tuna pledge expect net ankle process mammal great',
@@ -149,12 +159,16 @@ You are welcome to help contribute to making this documentation better.
 ### Query Transaction with Sequence Number
 ```javascript
 async function main() {
-  const client = new new LibraClient({
+  // On Browser
+  const client = new LibraClient({
     transferProtocol: 'https',
     host: 'ac-libra-testnet.kulap.io',
     port: '443',
     dataProtocol: 'grpc-web-text'
   })
+  // On Node
+  const client = new LibraClient({ network: LibraNetwork.Testnet })
+
   const accountAddress = '7f58df27522872ecfac340c5c072427e6f8083ca3c79bb748cdd1ae073dacc42';
   const sequenceNumber = 43; //can also use a string for really large sequence numbers;
 
