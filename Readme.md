@@ -77,12 +77,12 @@ import { LibraClient, LibraNetwork } from 'kulap-libra';
 
 async function main() {
   // On Browser
-  const client = new LibraClient({
-    transferProtocol: 'https',
-    host: 'ac-libra-testnet.kulap.io',
-    port: '443',
-    dataProtocol: 'grpc-web-text'
-  })
+  // const client = new LibraClient({
+  //   transferProtocol: 'https',
+  //   host: 'ac-libra-testnet.kulap.io',
+  //   port: '443',
+  //   dataProtocol: 'grpc-web-text'
+  // })
   // On Node
   const client = new LibraClient({ network: LibraNetwork.Testnet })
 
@@ -101,12 +101,12 @@ await main();
 ```javascript
 async function main() {
   // On Browser
-  const client = new LibraClient({
-    transferProtocol: 'https',
-    host: 'ac-libra-testnet.kulap.io',
-    port: '443',
-    dataProtocol: 'grpc-web-text'
-  })
+  // const client = new LibraClient({
+  //   transferProtocol: 'https',
+  //   host: 'ac-libra-testnet.kulap.io',
+  //   port: '443',
+  //   dataProtocol: 'grpc-web-text'
+  // })
   // On Node
   const client = new LibraClient({ network: LibraNetwork.Testnet })
 
@@ -127,12 +127,12 @@ await main();
 ```javascript
 async function main() {
   // On Browser
-  const client = new LibraClient({
-    transferProtocol: 'https',
-    host: 'ac-libra-testnet.kulap.io',
-    port: '443',
-    dataProtocol: 'grpc-web-text'
-  })
+  // const client = new LibraClient({
+  //   transferProtocol: 'https',
+  //   host: 'ac-libra-testnet.kulap.io',
+  //   port: '443',
+  //   dataProtocol: 'grpc-web-text'
+  // })
   // On Node
   const client = new LibraClient({ network: LibraNetwork.Testnet })
 
@@ -160,12 +160,12 @@ You are welcome to help contribute to making this documentation better.
 ```javascript
 async function main() {
   // On Browser
-  const client = new LibraClient({
-    transferProtocol: 'https',
-    host: 'ac-libra-testnet.kulap.io',
-    port: '443',
-    dataProtocol: 'grpc-web-text'
-  })
+  // const client = new LibraClient({
+  //   transferProtocol: 'https',
+  //   host: 'ac-libra-testnet.kulap.io',
+  //   port: '443',
+  //   dataProtocol: 'grpc-web-text'
+  // })
   // On Node
   const client = new LibraClient({ network: LibraNetwork.Testnet })
 
