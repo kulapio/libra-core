@@ -7,8 +7,8 @@ describe('LibraClient', () => {
       transferProtocol: 'https',
       host: 'ac-libra-testnet.kulap.io',
       port: '443',
-      dataProtocol: 'grpc-web-text'
-    })
+      dataProtocol: 'grpc-web-text',
+    });
     // const client = new LibraClient({ network: LibraNetwork.Testnet });
     const wallet = new LibraWallet({
       mnemonic:
@@ -37,7 +37,7 @@ describe('LibraClient', () => {
     // TEST TRANSFER TRANSACTION OF yAmount
     account1State = await client.getAccountState(account1Address);
     const response = await client.transferCoins(account1, account2Address, amountToTransfer);
-    console.log(response)
+    console.log(response);
     expect(response.acStatus).toEqual(LibraAdmissionControlStatus.ACCEPTED);
 
     // ensure new account balance is +yAmount

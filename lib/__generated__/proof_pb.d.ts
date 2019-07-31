@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 import * as transaction_info_pb from './transaction_info_pb';
 
@@ -21,9 +21,9 @@ export class AccumulatorProof extends jspb.Message {
 
 export namespace AccumulatorProof {
   export type AsObject = {
-    bitmap: number,
-    nonDefaultSiblingsList: Array<Uint8Array | string>,
-  }
+    bitmap: number;
+    nonDefaultSiblingsList: Array<Uint8Array | string>;
+  };
 }
 
 export class SparseMerkleProof extends jspb.Message {
@@ -52,10 +52,10 @@ export class SparseMerkleProof extends jspb.Message {
 
 export namespace SparseMerkleProof {
   export type AsObject = {
-    leaf: Uint8Array | string,
-    bitmap: Uint8Array | string,
-    nonDefaultSiblingsList: Array<Uint8Array | string>,
-  }
+    leaf: Uint8Array | string;
+    bitmap: Uint8Array | string;
+    nonDefaultSiblingsList: Array<Uint8Array | string>;
+  };
 }
 
 export class SignedTransactionProof extends jspb.Message {
@@ -74,14 +74,17 @@ export class SignedTransactionProof extends jspb.Message {
   static toObject(includeInstance: boolean, msg: SignedTransactionProof): SignedTransactionProof.AsObject;
   static serializeBinaryToWriter(message: SignedTransactionProof, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SignedTransactionProof;
-  static deserializeBinaryFromReader(message: SignedTransactionProof, reader: jspb.BinaryReader): SignedTransactionProof;
+  static deserializeBinaryFromReader(
+    message: SignedTransactionProof,
+    reader: jspb.BinaryReader,
+  ): SignedTransactionProof;
 }
 
 export namespace SignedTransactionProof {
   export type AsObject = {
-    ledgerInfoToTransactionInfoProof?: AccumulatorProof.AsObject,
-    transactionInfo?: transaction_info_pb.TransactionInfo.AsObject,
-  }
+    ledgerInfoToTransactionInfoProof?: AccumulatorProof.AsObject;
+    transactionInfo?: transaction_info_pb.TransactionInfo.AsObject;
+  };
 }
 
 export class AccountStateProof extends jspb.Message {
@@ -110,10 +113,10 @@ export class AccountStateProof extends jspb.Message {
 
 export namespace AccountStateProof {
   export type AsObject = {
-    ledgerInfoToTransactionInfoProof?: AccumulatorProof.AsObject,
-    transactionInfo?: transaction_info_pb.TransactionInfo.AsObject,
-    transactionInfoToAccountProof?: SparseMerkleProof.AsObject,
-  }
+    ledgerInfoToTransactionInfoProof?: AccumulatorProof.AsObject;
+    transactionInfo?: transaction_info_pb.TransactionInfo.AsObject;
+    transactionInfoToAccountProof?: SparseMerkleProof.AsObject;
+  };
 }
 
 export class EventProof extends jspb.Message {
@@ -142,9 +145,8 @@ export class EventProof extends jspb.Message {
 
 export namespace EventProof {
   export type AsObject = {
-    ledgerInfoToTransactionInfoProof?: AccumulatorProof.AsObject,
-    transactionInfo?: transaction_info_pb.TransactionInfo.AsObject,
-    transactionInfoToEventProof?: AccumulatorProof.AsObject,
-  }
+    ledgerInfoToTransactionInfoProof?: AccumulatorProof.AsObject;
+    transactionInfo?: transaction_info_pb.TransactionInfo.AsObject;
+    transactionInfoToEventProof?: AccumulatorProof.AsObject;
+  };
 }
-

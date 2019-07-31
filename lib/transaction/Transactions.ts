@@ -36,8 +36,8 @@ export class LibraTransaction {
         .padStart(16, '0')
         .slice(0, 16),
       'hex',
-    )
-    amountBuffer.reverse()
+    );
+    amountBuffer.reverse();
 
     const programArguments: LibraProgramArgument[] = [
       {

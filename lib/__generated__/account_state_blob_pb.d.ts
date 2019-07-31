@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 import * as proof_pb from './proof_pb';
 
@@ -18,8 +18,8 @@ export class AccountStateBlob extends jspb.Message {
 
 export namespace AccountStateBlob {
   export type AsObject = {
-    blob: Uint8Array | string,
-  }
+    blob: Uint8Array | string;
+  };
 }
 
 export class AccountStateWithProof extends jspb.Message {
@@ -46,9 +46,8 @@ export class AccountStateWithProof extends jspb.Message {
 
 export namespace AccountStateWithProof {
   export type AsObject = {
-    version: number,
-    blob?: AccountStateBlob.AsObject,
-    proof?: proof_pb.AccountStateProof.AsObject,
-  }
+    version: number;
+    blob?: AccountStateBlob.AsObject;
+    proof?: proof_pb.AccountStateProof.AsObject;
+  };
 }
-

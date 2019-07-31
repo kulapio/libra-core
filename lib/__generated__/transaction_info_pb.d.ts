@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 export class TransactionInfo extends jspb.Message {
   getSignedTransactionHash(): Uint8Array | string;
@@ -29,10 +29,9 @@ export class TransactionInfo extends jspb.Message {
 
 export namespace TransactionInfo {
   export type AsObject = {
-    signedTransactionHash: Uint8Array | string,
-    stateRootHash: Uint8Array | string,
-    eventRootHash: Uint8Array | string,
-    gasUsed: number,
-  }
+    signedTransactionHash: Uint8Array | string;
+    stateRootHash: Uint8Array | string;
+    eventRootHash: Uint8Array | string;
+    gasUsed: number;
+  };
 }
-

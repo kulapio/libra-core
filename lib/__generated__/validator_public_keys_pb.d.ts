@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 export class ValidatorPublicKeys extends jspb.Message {
   getAccountAddress(): Uint8Array | string;
@@ -31,10 +31,9 @@ export class ValidatorPublicKeys extends jspb.Message {
 
 export namespace ValidatorPublicKeys {
   export type AsObject = {
-    accountAddress: Uint8Array | string,
-    consensusPublicKey: Uint8Array | string,
-    networkSigningPublicKey: Uint8Array | string,
-    networkIdentityPublicKey: Uint8Array | string,
-  }
+    accountAddress: Uint8Array | string;
+    consensusPublicKey: Uint8Array | string;
+    networkSigningPublicKey: Uint8Array | string;
+    networkIdentityPublicKey: Uint8Array | string;
+  };
 }
-

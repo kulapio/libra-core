@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 import * as access_path_pb from './access_path_pb';
 import * as proof_pb from './proof_pb';
@@ -27,10 +27,10 @@ export class Event extends jspb.Message {
 
 export namespace Event {
   export type AsObject = {
-    accessPath?: access_path_pb.AccessPath.AsObject,
-    sequenceNumber: number,
-    eventData: Uint8Array | string,
-  }
+    accessPath?: access_path_pb.AccessPath.AsObject;
+    sequenceNumber: number;
+    eventData: Uint8Array | string;
+  };
 }
 
 export class EventWithProof extends jspb.Message {
@@ -60,11 +60,11 @@ export class EventWithProof extends jspb.Message {
 
 export namespace EventWithProof {
   export type AsObject = {
-    transactionVersion: number,
-    eventIndex: number,
-    event?: Event.AsObject,
-    proof?: proof_pb.EventProof.AsObject,
-  }
+    transactionVersion: number;
+    eventIndex: number;
+    event?: Event.AsObject;
+    proof?: proof_pb.EventProof.AsObject;
+  };
 }
 
 export class EventsList extends jspb.Message {
@@ -83,8 +83,8 @@ export class EventsList extends jspb.Message {
 
 export namespace EventsList {
   export type AsObject = {
-    eventsList: Array<Event.AsObject>,
-  }
+    eventsList: Array<Event.AsObject>;
+  };
 }
 
 export class EventsForVersions extends jspb.Message {
@@ -103,7 +103,6 @@ export class EventsForVersions extends jspb.Message {
 
 export namespace EventsForVersions {
   export type AsObject = {
-    eventsForVersionList: Array<EventsList.AsObject>,
-  }
+    eventsForVersionList: Array<EventsList.AsObject>;
+  };
 }
-

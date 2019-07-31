@@ -55,8 +55,8 @@ export class KeyFactory {
         .padStart(16, '0')
         .slice(0, 16),
       'hex',
-    )
-    childDepthBuffer.reverse()
+    );
+    childDepthBuffer.reverse();
 
     const info = Buffer.from([
       ...Uint8Array.from(Buffer.from(KeyPrefixes.DerivedKey)),

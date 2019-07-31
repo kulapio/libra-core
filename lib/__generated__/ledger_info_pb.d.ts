@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 export class LedgerInfo extends jspb.Message {
   getVersion(): number;
@@ -35,13 +35,13 @@ export class LedgerInfo extends jspb.Message {
 
 export namespace LedgerInfo {
   export type AsObject = {
-    version: number,
-    transactionAccumulatorHash: Uint8Array | string,
-    consensusDataHash: Uint8Array | string,
-    consensusBlockId: Uint8Array | string,
-    epochNum: number,
-    timestampUsecs: number,
-  }
+    version: number;
+    transactionAccumulatorHash: Uint8Array | string;
+    consensusDataHash: Uint8Array | string;
+    consensusBlockId: Uint8Array | string;
+    epochNum: number;
+    timestampUsecs: number;
+  };
 }
 
 export class LedgerInfoWithSignatures extends jspb.Message {
@@ -60,14 +60,17 @@ export class LedgerInfoWithSignatures extends jspb.Message {
   static toObject(includeInstance: boolean, msg: LedgerInfoWithSignatures): LedgerInfoWithSignatures.AsObject;
   static serializeBinaryToWriter(message: LedgerInfoWithSignatures, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): LedgerInfoWithSignatures;
-  static deserializeBinaryFromReader(message: LedgerInfoWithSignatures, reader: jspb.BinaryReader): LedgerInfoWithSignatures;
+  static deserializeBinaryFromReader(
+    message: LedgerInfoWithSignatures,
+    reader: jspb.BinaryReader,
+  ): LedgerInfoWithSignatures;
 }
 
 export namespace LedgerInfoWithSignatures {
   export type AsObject = {
-    signaturesList: Array<ValidatorSignature.AsObject>,
-    ledgerInfo?: LedgerInfo.AsObject,
-  }
+    signaturesList: Array<ValidatorSignature.AsObject>;
+    ledgerInfo?: LedgerInfo.AsObject;
+  };
 }
 
 export class ValidatorSignature extends jspb.Message {
@@ -91,8 +94,7 @@ export class ValidatorSignature extends jspb.Message {
 
 export namespace ValidatorSignature {
   export type AsObject = {
-    validatorId: Uint8Array | string,
-    signature: Uint8Array | string,
-  }
+    validatorId: Uint8Array | string;
+    signature: Uint8Array | string;
+  };
 }
-

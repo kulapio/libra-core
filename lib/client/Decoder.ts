@@ -46,7 +46,7 @@ import {
   VMVerificationStatusList,
 } from '../__generated__/vm_errors_pb';
 
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 /**
  * Internal class used by LibraClient
@@ -145,11 +145,11 @@ export class ClientDecoder {
     );
   }
 
-  public hasInvariantViolation (vmStatus: VMStatus) {
+  public hasInvariantViolation(vmStatus: VMStatus) {
     return jspb.Message.getField(vmStatus, 3) != null;
   }
 
-  public hasDeserialization (vmStatus: VMStatus) {
+  public hasDeserialization(vmStatus: VMStatus) {
     return jspb.Message.getField(vmStatus, 4) != null;
   }
 

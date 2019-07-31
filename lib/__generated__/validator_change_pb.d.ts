@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 import * as events_pb from './events_pb';
 import * as ledger_info_pb from './ledger_info_pb';
@@ -19,13 +19,15 @@ export class ValidatorChangeEventWithProof extends jspb.Message {
   static toObject(includeInstance: boolean, msg: ValidatorChangeEventWithProof): ValidatorChangeEventWithProof.AsObject;
   static serializeBinaryToWriter(message: ValidatorChangeEventWithProof, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ValidatorChangeEventWithProof;
-  static deserializeBinaryFromReader(message: ValidatorChangeEventWithProof, reader: jspb.BinaryReader): ValidatorChangeEventWithProof;
+  static deserializeBinaryFromReader(
+    message: ValidatorChangeEventWithProof,
+    reader: jspb.BinaryReader,
+  ): ValidatorChangeEventWithProof;
 }
 
 export namespace ValidatorChangeEventWithProof {
   export type AsObject = {
-    ledgerInfoWithSigs?: ledger_info_pb.LedgerInfoWithSignatures.AsObject,
-    eventWithProof?: events_pb.EventWithProof.AsObject,
-  }
+    ledgerInfoWithSigs?: ledger_info_pb.LedgerInfoWithSignatures.AsObject;
+    eventWithProof?: events_pb.EventWithProof.AsObject;
+  };
 }
-

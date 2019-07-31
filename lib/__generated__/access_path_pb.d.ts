@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 export class AccessPath extends jspb.Message {
   getAddress(): Uint8Array | string;
@@ -21,8 +21,7 @@ export class AccessPath extends jspb.Message {
 
 export namespace AccessPath {
   export type AsObject = {
-    address: Uint8Array | string,
-    path: Uint8Array | string,
-  }
+    address: Uint8Array | string;
+    path: Uint8Array | string;
+  };
 }
-

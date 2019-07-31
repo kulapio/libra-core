@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 export class ModuleId extends jspb.Message {
   getAddress(): Uint8Array | string;
@@ -19,8 +19,7 @@ export class ModuleId extends jspb.Message {
 
 export namespace ModuleId {
   export type AsObject = {
-    address: Uint8Array | string,
-    name: string,
-  }
+    address: Uint8Array | string;
+    name: string;
+  };
 }
-

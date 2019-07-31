@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 import * as validator_public_keys_pb from './validator_public_keys_pb';
 
@@ -6,7 +6,10 @@ export class ValidatorSet extends jspb.Message {
   getValidatorPublicKeysList(): Array<validator_public_keys_pb.ValidatorPublicKeys>;
   setValidatorPublicKeysList(value: Array<validator_public_keys_pb.ValidatorPublicKeys>): void;
   clearValidatorPublicKeysList(): void;
-  addValidatorPublicKeys(value?: validator_public_keys_pb.ValidatorPublicKeys, index?: number): validator_public_keys_pb.ValidatorPublicKeys;
+  addValidatorPublicKeys(
+    value?: validator_public_keys_pb.ValidatorPublicKeys,
+    index?: number,
+  ): validator_public_keys_pb.ValidatorPublicKeys;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ValidatorSet.AsObject;
@@ -18,7 +21,6 @@ export class ValidatorSet extends jspb.Message {
 
 export namespace ValidatorSet {
   export type AsObject = {
-    validatorPublicKeysList: Array<validator_public_keys_pb.ValidatorPublicKeys.AsObject>,
-  }
+    validatorPublicKeysList: Array<validator_public_keys_pb.ValidatorPublicKeys.AsObject>;
+  };
 }
-

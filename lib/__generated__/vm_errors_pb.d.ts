@@ -1,4 +1,4 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf';
 
 import * as language_storage_pb from './language_storage_pb';
 
@@ -19,9 +19,9 @@ export class VMValidationStatus extends jspb.Message {
 
 export namespace VMValidationStatus {
   export type AsObject = {
-    code: VMValidationStatusCode,
-    message: string,
-  }
+    code: VMValidationStatusCode;
+    message: string;
+  };
 }
 
 export class VMVerificationStatusList extends jspb.Message {
@@ -35,13 +35,16 @@ export class VMVerificationStatusList extends jspb.Message {
   static toObject(includeInstance: boolean, msg: VMVerificationStatusList): VMVerificationStatusList.AsObject;
   static serializeBinaryToWriter(message: VMVerificationStatusList, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): VMVerificationStatusList;
-  static deserializeBinaryFromReader(message: VMVerificationStatusList, reader: jspb.BinaryReader): VMVerificationStatusList;
+  static deserializeBinaryFromReader(
+    message: VMVerificationStatusList,
+    reader: jspb.BinaryReader,
+  ): VMVerificationStatusList;
 }
 
 export namespace VMVerificationStatusList {
   export type AsObject = {
-    statusListList: Array<VMVerificationStatus.AsObject>,
-  }
+    statusListList: Array<VMVerificationStatus.AsObject>;
+  };
 }
 
 export class VMVerificationStatus extends jspb.Message {
@@ -72,14 +75,14 @@ export class VMVerificationStatus extends jspb.Message {
 
 export namespace VMVerificationStatus {
   export type AsObject = {
-    statusKind: VMVerificationStatus.StatusKind,
-    moduleIdx: number,
-    errorKind: VMVerificationErrorKind,
-    message: string,
-    dependencyId?: language_storage_pb.ModuleId.AsObject,
-  }
+    statusKind: VMVerificationStatus.StatusKind;
+    moduleIdx: number;
+    errorKind: VMVerificationErrorKind;
+    message: string;
+    dependencyId?: language_storage_pb.ModuleId.AsObject;
+  };
 
-  export enum StatusKind { 
+  export enum StatusKind {
     SCRIPT = 0,
     MODULE = 1,
     DEPENDENCY = 2,
@@ -100,8 +103,8 @@ export class Aborted extends jspb.Message {
 
 export namespace Aborted {
   export type AsObject = {
-    abortedErrorCode: number,
-  }
+    abortedErrorCode: number;
+  };
 }
 
 export class ArithmeticError extends jspb.Message {
@@ -118,10 +121,10 @@ export class ArithmeticError extends jspb.Message {
 
 export namespace ArithmeticError {
   export type AsObject = {
-    errorCode: ArithmeticError.ArithmeticErrorType,
-  }
+    errorCode: ArithmeticError.ArithmeticErrorType;
+  };
 
-  export enum ArithmeticErrorType { 
+  export enum ArithmeticErrorType {
     UNKNOWNARITHMETICERROR = 0,
     UNDERFLOW = 1,
     OVERFLOW = 2,
@@ -143,10 +146,10 @@ export class DynamicReferenceError extends jspb.Message {
 
 export namespace DynamicReferenceError {
   export type AsObject = {
-    errorCode: DynamicReferenceError.DynamicReferenceErrorType,
-  }
+    errorCode: DynamicReferenceError.DynamicReferenceErrorType;
+  };
 
-  export enum DynamicReferenceErrorType { 
+  export enum DynamicReferenceErrorType {
     UNKNOWNDYNAMICREFERENCEERROR = 0,
     MOVEOFBORROWEDRESOURCE = 1,
     GLOBALREFALREADYRELEASED = 2,
@@ -186,13 +189,13 @@ export class ExecutionStatus extends jspb.Message {
 
 export namespace ExecutionStatus {
   export type AsObject = {
-    runtimeStatus: RuntimeStatus,
-    aborted?: Aborted.AsObject,
-    arithmeticError?: ArithmeticError.AsObject,
-    referenceError?: DynamicReferenceError.AsObject,
-  }
+    runtimeStatus: RuntimeStatus;
+    aborted?: Aborted.AsObject;
+    arithmeticError?: ArithmeticError.AsObject;
+    referenceError?: DynamicReferenceError.AsObject;
+  };
 
-  export enum ExecutionStatusCase { 
+  export enum ExecutionStatusCase {
     EXECUTION_STATUS_NOT_SET = 0,
     RUNTIME_STATUS = 1,
     ABORTED = 2,
@@ -235,14 +238,14 @@ export class VMStatus extends jspb.Message {
 
 export namespace VMStatus {
   export type AsObject = {
-    validation?: VMValidationStatus.AsObject,
-    verification?: VMVerificationStatusList.AsObject,
-    invariantViolation: VMInvariantViolationError,
-    deserialization: BinaryError,
-    execution?: ExecutionStatus.AsObject,
-  }
+    validation?: VMValidationStatus.AsObject;
+    verification?: VMVerificationStatusList.AsObject;
+    invariantViolation: VMInvariantViolationError;
+    deserialization: BinaryError;
+    execution?: ExecutionStatus.AsObject;
+  };
 
-  export enum ErrorTypeCase { 
+  export enum ErrorTypeCase {
     ERROR_TYPE_NOT_SET = 0,
     VALIDATION = 1,
     VERIFICATION = 2,
@@ -252,7 +255,7 @@ export namespace VMStatus {
   }
 }
 
-export enum VMValidationStatusCode { 
+export enum VMValidationStatusCode {
   UNKNOWNVALIDATIONSTATUS = 0,
   INVALIDSIGNATURE = 1,
   INVALIDAUTHKEY = 2,
@@ -271,7 +274,7 @@ export enum VMValidationStatusCode {
   GASUNITPRICEBELOWMINBOUND = 15,
   GASUNITPRICEABOVEMAXBOUND = 16,
 }
-export enum VMVerificationErrorKind { 
+export enum VMVerificationErrorKind {
   UNKNOWNVERIFICATIONERROR = 0,
   INDEXOUTOFBOUNDS = 1,
   RANGEOUTOFBOUNDS = 2,
@@ -341,7 +344,7 @@ export enum VMVerificationErrorKind {
   MODULEADDRESSDOESNOTMATCHSENDER = 66,
   NOMODULEHANDLES = 67,
 }
-export enum VMInvariantViolationError { 
+export enum VMInvariantViolationError {
   UNKNOWNINVARIANTVIOLATIONERROR = 0,
   OUTOFBOUNDSINDEX = 1,
   OUTOFBOUNDSRANGE = 2,
@@ -353,7 +356,7 @@ export enum VMInvariantViolationError {
   STORAGEERROR = 8,
   INTERNALTYPEERROR = 9,
 }
-export enum BinaryError { 
+export enum BinaryError {
   UNKNOWNBINARYERROR = 0,
   MALFORMED = 1,
   BADMAGIC = 2,
@@ -366,7 +369,7 @@ export enum BinaryError {
   UNEXPECTEDSIGNATURETYPE = 9,
   DUPLICATETABLE = 10,
 }
-export enum RuntimeStatus { 
+export enum RuntimeStatus {
   UNKNOWNRUNTIMESTATUS = 0,
   EXECUTED = 1,
   OUTOFGAS = 2,

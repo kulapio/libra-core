@@ -20,7 +20,7 @@ import {
   RequestItem,
   ResponseItem,
   UpdateToLatestLedgerRequest,
-  UpdateToLatestLedgerResponse
+  UpdateToLatestLedgerResponse,
 } from '../__generated__/get_with_proof_pb';
 import * as mempool_status_pb from '../__generated__/mempool_status_pb';
 import { RawTransaction, SignedTransaction, SignedTransactionWithProof } from '../__generated__/transaction_pb';
@@ -28,7 +28,8 @@ import HashSaltValues from '../constants/HashSaltValues';
 import ServerHosts from '../constants/ServerHosts';
 import { KeyPair, Signature } from '../crypto/Eddsa';
 import {
-  LibraAdmissionControlStatus, LibraMempoolTransactionStatus,
+  LibraAdmissionControlStatus,
+  LibraMempoolTransactionStatus,
   LibraSignedTransaction,
   LibraSignedTransactionWithProof,
   LibraTransaction,
@@ -55,7 +56,7 @@ export enum LibraNetwork {
 
 export class LibraClient {
   private readonly config: LibraLibConfig;
-  private readonly client: AdmissionControlClient | AdmissionControlClient_Grpc_Web
+  private readonly client: AdmissionControlClient | AdmissionControlClient_Grpc_Web;
   private readonly decoder: ClientDecoder;
   private readonly encoder: ClientEncoder;
 
@@ -79,7 +80,9 @@ export class LibraClient {
       this.config.dataProtocol = 'grpc';
     }
 
-   const connectionAddress = `${this.config.dataProtocol === 'grpc' ? '' : this.config.transferProtocol + '://'}${this.config.host}:${this.config.port}`;
+    const connectionAddress = `${this.config.dataProtocol === 'grpc' ? '' : this.config.transferProtocol + '://'}${
+      this.config.host
+    }:${this.config.port}`;
     if (this.config.dataProtocol === 'grpc') {
       this.client = new AdmissionControlClient(connectionAddress, credentials.createInsecure());
     } else {
@@ -138,8 +141,8 @@ export class LibraClient {
             return AccountState.default(accountAddresses[index].toHex());
           }),
         );
-      }
-      if(this.client instanceof AdmissionControlClient_Grpc_Web){
+      };
+      if (this.client instanceof AdmissionControlClient_Grpc_Web) {
         this.client.updateToLatestLedger(request, undefined, responseTask);
       } else {
         this.client.updateToLatestLedger(request, responseTask);
@@ -184,8 +187,8 @@ export class LibraClient {
         const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
         const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
         resolve(this.decoder.decodeSignedTransactionWithProof(signedTransactionWP));
-      }
-      if(this.client instanceof AdmissionControlClient_Grpc_Web){
+      };
+      if (this.client instanceof AdmissionControlClient_Grpc_Web) {
         this.client.updateToLatestLedger(request, undefined, responseTask);
       } else {
         this.client.updateToLatestLedger(request, responseTask);
@@ -314,14 +317,16 @@ export class LibraClient {
             new LibraSignedTransaction(transaction, sender.keyPair.getPublicKey(), senderSignature),
             response.getValidatorId_asU8(),
             response.hasAcStatus()
-              ? (response.getAcStatus() as AdmissionControlStatus).getCode() : LibraAdmissionControlStatus.UNKNOWN,
+              ? (response.getAcStatus() as AdmissionControlStatus).getCode()
+              : LibraAdmissionControlStatus.UNKNOWN,
             response.hasMempoolStatus()
-              ? (response.getMempoolStatus() as mempool_status_pb.MempoolAddTransactionStatus).getCode() : LibraMempoolTransactionStatus.UNKNOWN,
+              ? (response.getMempoolStatus() as mempool_status_pb.MempoolAddTransactionStatus).getCode()
+              : LibraMempoolTransactionStatus.UNKNOWN,
             vmStatus,
           ),
         );
-      }
-      if(this.client instanceof AdmissionControlClient_Grpc_Web){
+      };
+      if (this.client instanceof AdmissionControlClient_Grpc_Web) {
         this.client.submitTransaction(request, undefined, responseTask);
       } else {
         this.client.submitTransaction(request, responseTask);
