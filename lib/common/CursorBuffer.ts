@@ -61,7 +61,7 @@ export class CursorBuffer {
   }
 
   /**
-   * Reads 1 byte
+   * Read bool as 1 byte
    *
    */
   public readBool(): boolean {
