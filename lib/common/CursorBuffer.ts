@@ -59,4 +59,18 @@ export class CursorBuffer {
 
     return value;
   }
+
+  /**
+   * Reads 1 byte
+   *
+   */
+  public readBool(): boolean {
+    const value = this.dataView.getUint8(this.bytePositon);
+    console.log(`readBool ${value}`)
+    this.bytePositon += 1;
+    if(value !== 0 && value !== 1) {
+      throw(`bool must be 0 or 1, found ${value}`)
+    }
+    return value !== 0;
+  }
 }
