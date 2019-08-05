@@ -10,10 +10,7 @@ import {
   UpdateToLatestLedgerResponse
 } from '../__generated__/get_with_proof_pb';
 
-import { LibraLibConfig } from '.';
-
-export function initAdmissionControlClient(config: LibraLibConfig) {
-  const connectionAddress = `${config.dataProtocol === 'grpc' ? '' : config.transferProtocol + '://'}${config.host}:${config.port}`;
+export function initAdmissionControlClient(connectionAddress: string) {
   return new AdmissionControlClient(connectionAddress, credentials.createInsecure());
 }
 

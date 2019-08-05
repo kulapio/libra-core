@@ -1,14 +1,13 @@
 import { initAdmissionControlClient, updateToLatestLedger, submitTransaction } from './Node';
-
+import { 
+  initAdmissionControlClient as initAdmissionControlClientBrowser, 
+  updateToLatestLedger as updateToLatestLedgerBrowser,
+  submitTransaction as submitTransactionBrowser } from './Browser';
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-// import { credentials, ServiceError } from 'grpc';
-// import * as grpcWeb from 'grpc-web';
 
 import SHA3 from 'sha3';
 import { AccountStateBlob, AccountStateWithProof } from '../__generated__/account_state_blob_pb';
-// import { AdmissionControlClient } from '../__generated__/admission_control_grpc_pb';
-// import { AdmissionControlClient as AdmissionControlClient_Grpc_Web } from '../__generated__/admission_control_grpc_web_pb';
 import {
   AdmissionControlStatus,
   SubmitTransactionRequest,
@@ -40,7 +39,7 @@ import { Account, AccountAddress, AccountAddressLike, AccountState, AccountState
 import { ClientDecoder } from './Decoder';
 import { ClientEncoder } from './Encoder';
 
-export interface LibraLibConfig {
+interface LibraLibConfig {
   transferProtocol?: string; // http, https, socket
   port?: string;
   host?: string;
@@ -82,11 +81,11 @@ export class LibraClient {
     }
 
    const connectionAddress = `${this.config.dataProtocol === 'grpc' ? '' : this.config.transferProtocol + '://'}${this.config.host}:${this.config.port}`;
-    // if (this.config.dataProtocol === 'grpc') {
-      this.acClient = initAdmissionControlClient(config);
-    // } else {
-    //   this.acClient = new AdmissionControlClient_Grpc_Web(connectionAddress, null);
-    // }
+    if (this.config.dataProtocol === 'grpc') {
+      this.acClient = initAdmissionControlClient(connectionAddress);
+    } else {
+      this.acClient = initAdmissionControlClientBrowser(connectionAddress);
+    }
 
     this.decoder = new ClientDecoder();
     this.encoder = new ClientEncoder(this);
@@ -121,7 +120,12 @@ export class LibraClient {
       request.addRequestedItems(requestItem);
     });
 
-    const response = await updateToLatestLedger(this.acClient, request);
+    let response: UpdateToLatestLedgerResponse
+    if (this.config.dataProtocol === 'grpc') {
+      response = await updateToLatestLedger(this.acClient, request);
+    } else {
+      response = await updateToLatestLedgerBrowser(this.acClient, request);
+    }
 
     return response.getResponseItemsList().map((item: ResponseItem, index: number) => {
       const stateResponse = item.getGetAccountStateResponse() as GetAccountStateResponse;
@@ -158,7 +162,12 @@ export class LibraClient {
 
     request.addRequestedItems(requestItem);
 
-    const response = await updateToLatestLedger(this.acClient, request);
+    let response: UpdateToLatestLedgerResponse
+    if (this.config.dataProtocol === 'grpc') {
+      response = await updateToLatestLedger(this.acClient, request);
+    } else {
+      response = await updateToLatestLedgerBrowser(this.acClient, request);
+    }
 
     const responseItems = response.getResponseItemsList();
 
@@ -279,7 +288,12 @@ export class LibraClient {
 
     request.setSignedTxn(signedTransaction);
 
-    const response = await submitTransaction(this.acClient, request);
+    let response: SubmitTransactionResponse
+    if (this.config.dataProtocol === 'grpc') {
+      response = await submitTransaction(this.acClient, request);
+    } else {
+      response = await submitTransactionBrowser(this.acClient, request);
+    }
 
     const vmStatus = this.decoder.decodeVMStatus(response.getVmStatus());
     return new LibraTransactionResponse(
