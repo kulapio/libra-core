@@ -1,12 +1,8 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-import { credentials, ServiceError } from 'grpc';
-import * as grpcWeb from 'grpc-web';
 
 import SHA3 from 'sha3';
 import { AccountStateBlob, AccountStateWithProof } from '../__generated__/account_state_blob_pb';
-import { AdmissionControlClient } from '../__generated__/admission_control_grpc_pb';
-import { AdmissionControlClient as AdmissionControlClient_Grpc_Web } from '../__generated__/admission_control_grpc_web_pb';
 import {
   AdmissionControlStatus,
   SubmitTransactionRequest,
@@ -48,6 +44,12 @@ interface LibraLibConfig {
   validatorSetFile?: string;
 }
 
+interface LibraAdmissionControlClientProxy {
+  initAdmissionControlClient(connectionAddress: string): any;
+  updateToLatestLedger(acClient: any, request: UpdateToLatestLedgerRequest): Promise<UpdateToLatestLedgerResponse>
+  submitTransaction(acClient: any, request: SubmitTransactionRequest): Promise<SubmitTransactionResponse>
+}
+
 export enum LibraNetwork {
   Testnet = 'testnet',
   // Mainnet = 'mainnet'
@@ -55,7 +57,8 @@ export enum LibraNetwork {
 
 export class LibraClient {
   private readonly config: LibraLibConfig;
-  private readonly client: AdmissionControlClient | AdmissionControlClient_Grpc_Web
+  private readonly admissionControlProxy: LibraAdmissionControlClientProxy;
+  private readonly acClient: any; // Admission Control Client (grpc / grpcWeb)
   private readonly decoder: ClientDecoder;
   private readonly encoder: ClientEncoder;
 
@@ -79,12 +82,15 @@ export class LibraClient {
       this.config.dataProtocol = 'grpc';
     }
 
-   const connectionAddress = `${this.config.dataProtocol === 'grpc' ? '' : this.config.transferProtocol + '://'}${this.config.host}:${this.config.port}`;
+    // Init Admission Controller Proxy
     if (this.config.dataProtocol === 'grpc') {
-      this.client = new AdmissionControlClient(connectionAddress, credentials.createInsecure());
+      this.admissionControlProxy = require('./Node')
     } else {
-      this.client = new AdmissionControlClient_Grpc_Web(connectionAddress, null);
+      this.admissionControlProxy = require('./Browser')
     }
+
+    const connectionAddress = `${this.config.dataProtocol === 'grpc' ? '' : this.config.transferProtocol + '://'}${this.config.host}:${this.config.port}`;
+    this.acClient = this.admissionControlProxy.initAdmissionControlClient(connectionAddress);
 
     this.decoder = new ClientDecoder();
     this.encoder = new ClientEncoder(this);
@@ -119,32 +125,19 @@ export class LibraClient {
       request.addRequestedItems(requestItem);
     });
 
-    return new Promise<AccountStates>((resolve, reject) => {
-      const responseTask = (error: ServiceError | grpcWeb.Error | null, response: UpdateToLatestLedgerResponse) => {
-        if (error) {
-          return reject(error);
-        }
+    const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
 
-        resolve(
-          response.getResponseItemsList().map((item: ResponseItem, index: number) => {
-            const stateResponse = item.getGetAccountStateResponse() as GetAccountStateResponse;
-            const stateWithProof = stateResponse.getAccountStateWithProof() as AccountStateWithProof;
-            if (stateWithProof.hasBlob()) {
-              const stateBlob = stateWithProof.getBlob() as AccountStateBlob;
-              const blob = stateBlob.getBlob_asU8();
-              return this.decoder.decodeAccountStateBlob(blob);
-            }
+    return response.getResponseItemsList().map((item: ResponseItem, index: number) => {
+      const stateResponse = item.getGetAccountStateResponse() as GetAccountStateResponse;
+      const stateWithProof = stateResponse.getAccountStateWithProof() as AccountStateWithProof;
+      if (stateWithProof.hasBlob()) {
+        const stateBlob = stateWithProof.getBlob() as AccountStateBlob;
+        const blob = stateBlob.getBlob_asU8();
+        return this.decoder.decodeAccountStateBlob(blob);
+      }
 
-            return AccountState.default(accountAddresses[index].toHex());
-          }),
-        );
-      }
-      if(this.client instanceof AdmissionControlClient_Grpc_Web){
-        this.client.updateToLatestLedger(request, undefined, responseTask);
-      } else {
-        this.client.updateToLatestLedger(request, responseTask);
-      }
-    });
+      return AccountState.default(accountAddresses[index].toHex());
+    })
   }
 
   /**
@@ -169,28 +162,17 @@ export class LibraClient {
 
     request.addRequestedItems(requestItem);
 
-    return new Promise<LibraSignedTransactionWithProof | null>((resolve, reject) => {
-      const responseTask = (error: ServiceError | grpcWeb.Error | null, response: UpdateToLatestLedgerResponse) => {
-        if (error) {
-          return reject(error);
-        }
+    const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
 
-        const responseItems = response.getResponseItemsList();
+    const responseItems = response.getResponseItemsList();
 
-        if (responseItems.length === 0) {
-          return resolve(null);
-        }
+    if (responseItems.length === 0) {
+      return null;
+    }
 
-        const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
-        const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
-        resolve(this.decoder.decodeSignedTransactionWithProof(signedTransactionWP));
-      }
-      if(this.client instanceof AdmissionControlClient_Grpc_Web){
-        this.client.updateToLatestLedger(request, undefined, responseTask);
-      } else {
-        this.client.updateToLatestLedger(request, responseTask);
-      }
-    });
+    const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
+    const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
+    return this.decoder.decodeSignedTransactionWithProof(signedTransactionWP);
   }
 
   /**
@@ -300,33 +282,19 @@ export class LibraClient {
     signedTransaction.setSenderSignature(senderSignature);
 
     request.setSignedTxn(signedTransaction);
-    return new Promise((resolve, reject) => {
-      const responseTask = (error: ServiceError | grpcWeb.Error | null, response: SubmitTransactionResponse) => {
-        if (error) {
-          // TBD: should this fail with only service error
-          // or should it fail if transaction is not acknowledged
-          return reject(error);
-        }
 
-        const vmStatus = this.decoder.decodeVMStatus(response.getVmStatus());
-        resolve(
-          new LibraTransactionResponse(
-            new LibraSignedTransaction(transaction, sender.keyPair.getPublicKey(), senderSignature),
-            response.getValidatorId_asU8(),
-            response.hasAcStatus()
-              ? (response.getAcStatus() as AdmissionControlStatus).getCode() : LibraAdmissionControlStatus.UNKNOWN,
-            response.hasMempoolStatus()
-              ? (response.getMempoolStatus() as mempool_status_pb.MempoolAddTransactionStatus).getCode() : LibraMempoolTransactionStatus.UNKNOWN,
-            vmStatus,
-          ),
-        );
-      }
-      if(this.client instanceof AdmissionControlClient_Grpc_Web){
-        this.client.submitTransaction(request, undefined, responseTask);
-      } else {
-        this.client.submitTransaction(request, responseTask);
-      }
-    });
+    const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
+
+    const vmStatus = this.decoder.decodeVMStatus(response.getVmStatus());
+    return new LibraTransactionResponse(
+      new LibraSignedTransaction(transaction, sender.keyPair.getPublicKey(), senderSignature),
+      response.getValidatorId_asU8(),
+      response.hasAcStatus()
+        ? (response.getAcStatus() as AdmissionControlStatus).getCode() : LibraAdmissionControlStatus.UNKNOWN,
+      response.hasMempoolStatus()
+        ? (response.getMempoolStatus() as mempool_status_pb.MempoolAddTransactionStatus).getCode() : LibraMempoolTransactionStatus.UNKNOWN,
+      vmStatus,
+    )
   }
 
   private signRawTransaction(rawTransaction: RawTransaction, keyPair: KeyPair): Signature {
@@ -340,4 +308,7 @@ export class LibraClient {
   }
 }
 
+exports.LibraNetwork = LibraNetwork
+
 export default LibraClient;
+
