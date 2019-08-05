@@ -1,8 +1,3 @@
-import { initAdmissionControlClient, updateToLatestLedger, submitTransaction } from './Node';
-import { 
-  initAdmissionControlClient as initAdmissionControlClientBrowser, 
-  updateToLatestLedger as updateToLatestLedgerBrowser,
-  submitTransaction as submitTransactionBrowser } from './Browser';
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
 
@@ -49,6 +44,12 @@ interface LibraLibConfig {
   validatorSetFile?: string;
 }
 
+interface LibraAdmissionControlClientProxy {
+  initAdmissionControlClient(connectionAddress: string): any;
+  updateToLatestLedger(acClient: any, request: UpdateToLatestLedgerRequest): Promise<UpdateToLatestLedgerResponse>
+  submitTransaction(acClient: any, request: SubmitTransactionRequest): Promise<SubmitTransactionResponse>
+}
+
 export enum LibraNetwork {
   Testnet = 'testnet',
   // Mainnet = 'mainnet'
@@ -56,7 +57,8 @@ export enum LibraNetwork {
 
 export class LibraClient {
   private readonly config: LibraLibConfig;
-  private readonly acClient: any // Admission Control Client (grpc / grpcWeb)
+  private readonly admissionControlProxy: LibraAdmissionControlClientProxy;
+  private readonly acClient: any; // Admission Control Client (grpc / grpcWeb)
   private readonly decoder: ClientDecoder;
   private readonly encoder: ClientEncoder;
 
@@ -80,12 +82,15 @@ export class LibraClient {
       this.config.dataProtocol = 'grpc';
     }
 
-   const connectionAddress = `${this.config.dataProtocol === 'grpc' ? '' : this.config.transferProtocol + '://'}${this.config.host}:${this.config.port}`;
+    // Init Admission Controller Proxy
     if (this.config.dataProtocol === 'grpc') {
-      this.acClient = initAdmissionControlClient(connectionAddress);
+      this.admissionControlProxy = require('./Node')
     } else {
-      this.acClient = initAdmissionControlClientBrowser(connectionAddress);
+      this.admissionControlProxy = require('./Browser')
     }
+
+    const connectionAddress = `${this.config.dataProtocol === 'grpc' ? '' : this.config.transferProtocol + '://'}${this.config.host}:${this.config.port}`;
+    this.acClient = this.admissionControlProxy.initAdmissionControlClient(connectionAddress);
 
     this.decoder = new ClientDecoder();
     this.encoder = new ClientEncoder(this);
@@ -120,12 +125,7 @@ export class LibraClient {
       request.addRequestedItems(requestItem);
     });
 
-    let response: UpdateToLatestLedgerResponse
-    if (this.config.dataProtocol === 'grpc') {
-      response = await updateToLatestLedger(this.acClient, request);
-    } else {
-      response = await updateToLatestLedgerBrowser(this.acClient, request);
-    }
+    const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
 
     return response.getResponseItemsList().map((item: ResponseItem, index: number) => {
       const stateResponse = item.getGetAccountStateResponse() as GetAccountStateResponse;
@@ -162,12 +162,7 @@ export class LibraClient {
 
     request.addRequestedItems(requestItem);
 
-    let response: UpdateToLatestLedgerResponse
-    if (this.config.dataProtocol === 'grpc') {
-      response = await updateToLatestLedger(this.acClient, request);
-    } else {
-      response = await updateToLatestLedgerBrowser(this.acClient, request);
-    }
+    const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
 
     const responseItems = response.getResponseItemsList();
 
@@ -288,12 +283,7 @@ export class LibraClient {
 
     request.setSignedTxn(signedTransaction);
 
-    let response: SubmitTransactionResponse
-    if (this.config.dataProtocol === 'grpc') {
-      response = await submitTransaction(this.acClient, request);
-    } else {
-      response = await submitTransactionBrowser(this.acClient, request);
-    }
+    const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
 
     const vmStatus = this.decoder.decodeVMStatus(response.getVmStatus());
     return new LibraTransactionResponse(

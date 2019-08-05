@@ -10,7 +10,7 @@ import {
   UpdateToLatestLedgerResponse
 } from '../__generated__/get_with_proof_pb';
 
-export function initAdmissionControlClient(connectionAddress: string) {
+export function initAdmissionControlClient(connectionAddress: string): AdmissionControlClient {
   return new AdmissionControlClient(connectionAddress, credentials.createInsecure());
 }
 

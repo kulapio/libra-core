@@ -8,7 +8,7 @@ import {
   UpdateToLatestLedgerResponse
 } from '../__generated__/get_with_proof_pb';
 
-export function initAdmissionControlClient(connectionAddress: string) {
+export function initAdmissionControlClient(connectionAddress: string) : AdmissionControlClientGrpcWeb {
   return new AdmissionControlClientGrpcWeb(connectionAddress, null);
 }
 
