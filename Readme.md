@@ -2,7 +2,7 @@
 
 Kulap Libra is a javascript library client that can be used to interact with libra nodes. It is built using typescript.
 
-Kulap Libra is <a href="https://github.com/perfectmak/libra-core">Libra-core</a> compatible.
+Kulap Libra is <a href="https://github.com/perfectmak/libra-core">Libra-core</a> compatible, and this project's forked from there.
 
 > This is still under heavy testing, so please report any issues that you might encounter using it.
 
