@@ -45,10 +45,10 @@ describe('LibraClient', () => {
     const amountToTransfer = 1e6;
 
     // TEST MINITNG Amount
-    await client.mintWithFaucetService(account1Address, amountToTransfer + 1e6);
+    await client.mintWithFaucetService(account1Address, amountToTransfer);
     const newAccount1State = await client.getAccountState(account1Address);
     // ensure its balance is +xAmount
-    // expect(newAccount1State.balance.toString(10)).toEqual(account1State.balance.plus(amountToTransfer).toString(10));
+    expect(newAccount1State.balance.toString(10)).toEqual(account1State.balance.plus(amountToTransfer).toString(10));
 
     // TEST TRANSFER TRANSACTION OF yAmount
     account1State = await client.getAccountState(account1Address);
