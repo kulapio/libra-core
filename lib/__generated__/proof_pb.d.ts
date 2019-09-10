@@ -58,6 +58,36 @@ export namespace SparseMerkleProof {
   }
 }
 
+export class AccumulatorConsistencyProof extends jspb.Message {
+  getFrozenSubtreeRootsList(): Array<Uint8Array | string>;
+  setFrozenSubtreeRootsList(value: Array<Uint8Array | string>): void;
+  clearFrozenSubtreeRootsList(): void;
+  addFrozenSubtreeRoots(value: Uint8Array | string, index?: number): void;
+
+  getNumSiblings(): number;
+  setNumSiblings(value: number): void;
+
+  getNonDefaultSiblingsList(): Array<Uint8Array | string>;
+  setNonDefaultSiblingsList(value: Array<Uint8Array | string>): void;
+  clearNonDefaultSiblingsList(): void;
+  addNonDefaultSiblings(value: Uint8Array | string, index?: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AccumulatorConsistencyProof.AsObject;
+  static toObject(includeInstance: boolean, msg: AccumulatorConsistencyProof): AccumulatorConsistencyProof.AsObject;
+  static serializeBinaryToWriter(message: AccumulatorConsistencyProof, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AccumulatorConsistencyProof;
+  static deserializeBinaryFromReader(message: AccumulatorConsistencyProof, reader: jspb.BinaryReader): AccumulatorConsistencyProof;
+}
+
+export namespace AccumulatorConsistencyProof {
+  export type AsObject = {
+    frozenSubtreeRootsList: Array<Uint8Array | string>,
+    numSiblings: number,
+    nonDefaultSiblingsList: Array<Uint8Array | string>,
+  }
+}
+
 export class SignedTransactionProof extends jspb.Message {
   getLedgerInfoToTransactionInfoProof(): AccumulatorProof | undefined;
   setLedgerInfoToTransactionInfoProof(value?: AccumulatorProof): void;

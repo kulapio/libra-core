@@ -97,20 +97,13 @@ export class ClientDecoder {
     if (signedTransactionWP.hasEvents()) {
       const events = signedTransactionWP.getEvents() as EventsList;
       eventsList = events.getEventsList().map(event => {
-        let address: AccountAddress | undefined;
-        let path: Uint8Array | undefined;
-
-        if (event.hasAccessPath()) {
-          const accessPath = event.getAccessPath() as AccessPath;
-          address = new AccountAddress(accessPath.getAddress_asU8());
-          path = accessPath.getPath_asU8();
-        }
+        let key: Uint8Array | undefined;
+        key = event.getKey_asU8();
 
         return new LibraTransactionEvent(
           event.getEventData_asU8(),
           new BigNumber(event.getSequenceNumber()),
-          address,
-          path,
+          key
         );
       });
     }
