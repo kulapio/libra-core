@@ -1,5 +1,7 @@
 import * as jspb from "google-protobuf"
 
+import * as validator_set_pb from './validator_set_pb';
+
 export class LedgerInfo extends jspb.Message {
   getVersion(): number;
   setVersion(value: number): void;
@@ -25,6 +27,11 @@ export class LedgerInfo extends jspb.Message {
   getTimestampUsecs(): number;
   setTimestampUsecs(value: number): void;
 
+  getNextValidatorSet(): validator_set_pb.ValidatorSet | undefined;
+  setNextValidatorSet(value?: validator_set_pb.ValidatorSet): void;
+  hasNextValidatorSet(): boolean;
+  clearNextValidatorSet(): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): LedgerInfo.AsObject;
   static toObject(includeInstance: boolean, msg: LedgerInfo): LedgerInfo.AsObject;
@@ -41,6 +48,7 @@ export namespace LedgerInfo {
     consensusBlockId: Uint8Array | string,
     epochNum: number,
     timestampUsecs: number,
+    nextValidatorSet?: validator_set_pb.ValidatorSet.AsObject,
   }
 }
 
