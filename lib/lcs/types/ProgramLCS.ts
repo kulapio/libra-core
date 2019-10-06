@@ -1,5 +1,5 @@
 import { TransactionArgumentLCS } from "./TransactionArgumentLCS"
-import { Buffer } from 'safe-buffer'
+//import { Buffer } from 'safe-buffer'
 import {EOL} from 'os'
 
 export class ProgramLCS {

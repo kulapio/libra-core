@@ -1,4 +1,4 @@
-import {Buffer} from 'safe-buffer'
+//import {Buffer} from 'safe-buffer'
 import {TransactionArgument} from '../../__generated__/transaction_pb'
 import { AddressLCS } from './AddressLCS'
 import {BigNumber} from 'bignumber.js'

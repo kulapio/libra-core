@@ -1,7 +1,7 @@
 import {AddressLCS} from './types/AddressLCS'
 import {ProgramLCS} from './types/ProgramLCS'
 import {TransactionArgumentLCS} from './types/TransactionArgumentLCS'
-import { Buffer } from 'safe-buffer'
+//import { Buffer } from 'safe-buffer'
 import { Uint64LE } from 'int64-buffer'
 import { TransactionArgument } from '../__generated__/transaction_pb'
 import BigNumber from 'bignumber.js'

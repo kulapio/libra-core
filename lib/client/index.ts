@@ -19,9 +19,15 @@ import {
 } from '../__generated__/account_state_blob_pb'
 import ServerHosts from '../constants/ServerHosts';
 import { Account, AccountAddress, AccountState, AccountStates, AccountAddressLike} from '../wallet/Accounts';
-import { LibraTransaction } from '../transaction';
+import { LibraTransaction, LibraSignedTransaction } from '../transaction';
 import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
 import { ClientDecoder } from './Decoder';
+import { KeyPair, Signature } from '../crypto/Eddsa';
+import SHA3 from 'sha3';
+import HashSaltValues from '../constants/HashSaltValues';
+import { LCSSerialization } from '../lcs/serialization';
+//import {Buffer} from 'safe-buffer'
+import { SignedTransaction } from '../__generated__/transaction_pb';
 
 
 interface LibraLibConfig {
@@ -183,15 +189,53 @@ export class LibraClient {
     recipientAddress: string,
     numCoins: number | string | BigNumber,
   ): Promise<boolean> {
-    return this.execute(LibraTransaction.createTransfer(recipientAddress, new BigNumber(numCoins)), sender);
+    const state = await this.getAccountState(sender.getAddress().toHex())
+    return await this.execute(LibraTransaction.createTransfer(sender, recipientAddress, new BigNumber(numCoins), state.sequenceNumber), sender);
   }
 
   /**
    * Execute a transaction by sender.
    *
    */
-  public async execute(transaction: RawTransactionLCS, sender: Account): Promise<boolean> {
-    return true
+  public async execute(transaction: RawTransactionLCS, sender:Account): Promise<boolean> {
+    
+    const request = new SubmitTransactionRequest()
+    const senderSignature = await this.signTransaction(transaction, sender.keyPair)
+    const publicKeyLen = Buffer.from(sender.keyPair.getPublicKey().length.toString())
+    const signatureLen = Buffer.from(senderSignature.signature.length.toString())
+    const rawTxn = LCSSerialization.rawTransactionToByte(transaction)
+    let signedTxn = Buffer.concat([rawTxn, publicKeyLen])
+    signedTxn = Buffer.concat([signedTxn, signatureLen])
+    signedTxn = Buffer.concat([signedTxn, senderSignature.signature])
+
+    let signedTransaction = new SignedTransaction()
+    signedTransaction.setSignedTxn(Uint8Array.from(signedTxn))
+    request.setSignedTxn(signedTransaction)
+    const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
+    console.log(response)
+    return false
+  }
+
+  /**
+   * Sign the transaction with keyPair and returns a promise that resolves to a LibraSignedTransaction
+   *
+   *
+   */
+  public async signTransaction(transaction: RawTransactionLCS, keyPair: KeyPair): Promise<LibraSignedTransaction> {
+    const rawTxn = LCSSerialization.rawTransactionToByte(transaction)
+    const signature = this.signRawTransaction(rawTxn, keyPair);
+
+    return new LibraSignedTransaction(transaction, keyPair.getPublicKey(), signature);
+  }
+
+
+  private signRawTransaction(rawTransaction: Buffer, keyPair: KeyPair): Signature {
+    const hash = new SHA3(256)
+      .update(HashSaltValues.rawTransactionHashSalt,'hex')
+      .update(rawTransaction.toString(), 'hex')
+      .digest();
+
+    return keyPair.sign(hash);
   }
 }
 

@@ -12,7 +12,7 @@ describe('LibraClient', () => {
     //   port: '443',
     //   dataProtocol: 'grpc-web-text'
     // })
-    client = new LibraClient({ network: LibraNetwork.Testnet });
+    client = new LibraClient({ network: LibraNetwork.Testnet, port: '8000' });
     // client = new LibraClient({ port: '8000' });
   })
 
@@ -37,7 +37,6 @@ describe('LibraClient', () => {
     expect(account1State.balance.toString()).toBe('0')
   }, 5000);
 
-  /*
   it('should transfer coin correctly', async () => {
     const wallet = new LibraWallet({
       mnemonic:
@@ -48,10 +47,8 @@ describe('LibraClient', () => {
     const account1 = wallet.newAccount();
     const account1Address = account1.getAddress().toHex();
     console.log('Account 1 address', account1Address);
-    let account1State = await client.getAccountState(account1Address);
-    console.log(account1State)
+    await client.transferCoins(account1, 'c4d04d41ea1453db808e2e3a559f49a39d78fcefd6b87ebd41a0440b6017ff79', 10)
   }, 5000);
-  */
 
   /*
   it('should query account state and transfer', async () => {

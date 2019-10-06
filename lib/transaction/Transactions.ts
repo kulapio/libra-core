@@ -5,12 +5,12 @@ import ProgamBase64Codes from '../constants/ProgamBase64Codes';
 import { AccountAddress } from '../wallet/Accounts';
 import { LibraVMStatusError } from './Errors';
 import { ProgramLCS } from '../lcs/types/ProgramLCS';
-import { Buffer } from 'safe-buffer'
+//import { Buffer } from 'safe-buffer'
 import { TransactionArgumentLCS } from '../lcs/types/TransactionArgumentLCS';
 import { AddressLCS } from '../lcs/types/AddressLCS';
-import { program } from '@babel/types';
 import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
 import { TransactionPayloadLCS } from '../lcs/types/TransactionPayloadLCS';
+import {Account} from '../wallet/Accounts'
 
 
 export interface LibraGasConstraint {
@@ -21,7 +21,7 @@ export interface LibraGasConstraint {
 export class LibraTransaction {
 
 
-  static createTransfer(recipientAddress: string, numAccount: BigNumber): RawTransactionLCS {
+  static createTransfer(sender: Account, recipientAddress: string, numAccount: BigNumber, sequence: BigNumber): RawTransactionLCS {
     // construct program
     let prog = new ProgramLCS()
     prog.setCodeFromBuffer(Buffer.from(ProgamBase64Codes.peerToPeerTxn,'base64'))
@@ -31,7 +31,7 @@ export class LibraTransaction {
     // construct payload
     let payload = TransactionPayloadLCS.fromProgram(prog)
     // raw transaction
-    let transaction = new RawTransactionLCS('','-1',payload)
+    let transaction = new RawTransactionLCS(sender.getAddress().toHex(), sequence.toString(), payload)
     return transaction
   }
 }
@@ -84,11 +84,11 @@ export enum LibraMempoolTransactionStatus {
   UNKNOWN = -1,
 }
 export class LibraSignedTransaction {
-  public readonly transaction: LibraTransaction;
+  public readonly transaction: RawTransactionLCS;
   public readonly publicKey: Uint8Array;
   public readonly signature: Uint8Array;
 
-  constructor(transaction: LibraTransaction, publicKey: Uint8Array, signature: Uint8Array) {
+  constructor(transaction: RawTransactionLCS, publicKey: Uint8Array, signature: Uint8Array) {
     this.transaction = transaction;
     this.publicKey = publicKey;
     this.signature = signature;
