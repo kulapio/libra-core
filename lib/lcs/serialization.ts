@@ -6,6 +6,7 @@ import { Uint64LE } from 'int64-buffer'
 import { TransactionArgument } from '../__generated__/transaction_pb'
 import BigNumber from 'bignumber.js'
 import { TransactionPayloadLCS, TransactionPayloadType } from './types/TransactionPayloadLCS'
+import { RawTransactionLCS } from './types/RawTransactionLCS'
 
 export class LCSSerialization {
 
@@ -53,6 +54,21 @@ export class LCSSerialization {
             return Buffer.concat([code, data])
         }
         return Buffer.from('')
+    }
+
+    static rawTransactionToByte(source: RawTransactionLCS): Buffer {
+        const sender = this.addressToByte(source.sender)
+        const sequence = this.uint64ToByte(source.sequenceNumber)
+        let result = Buffer.concat([sender, sequence])
+        const payload = this.transactionPayloadToByte(source.payload)
+        result = Buffer.concat([result, payload])
+        const maxGasAmount = this.uint64ToByte(source.maxGasAmount)
+        result = Buffer.concat([result, maxGasAmount])
+        const gas = this.uint64ToByte(source.gasUnitPrice)
+        result = Buffer.concat([result, gas])
+        const expire = this.uint64ToByte(source.expirtationTime)
+        result = Buffer.concat([result, expire])
+        return result
     }
 
     static listByteArrayToByte(sources: Buffer[]): Buffer {

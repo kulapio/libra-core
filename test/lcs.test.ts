@@ -4,6 +4,8 @@ import {Buffer} from 'safe-buffer'
 import { TransactionArgumentLCS } from '../lib/lcs/types/TransactionArgumentLCS'
 import { TransactionPayloadLCS } from '../lib/lcs/types/TransactionPayloadLCS'
 import { ProgramLCS } from '../lib/lcs/types/ProgramLCS';
+import { RawTransactionLCS } from '../lib/lcs/types/RawTransactionLCS'
+import BigNumber from 'bignumber.js'
 
 describe('LCS', () => {
     beforeAll(() => {
@@ -62,6 +64,24 @@ describe('LCS', () => {
         prog.addModule('0D')
         const payload = TransactionPayloadLCS.fromProgram(prog)
         const actual = LCSSerialization.transactionPayloadToByte(payload)
+        expect(actual.toString()).toBe(expected)
+    });
+
+    it('should serialize RawTransactionWithProgram correctly', () => {
+        const expected = '200000003A24A61E05D129CACE9E0EFC8BC9E33831FEC9A9BE66F50FD352A2638A49B9EE200000000000000000000000040000006D6F766502000000020000000900000043414645204430304402000000090000006361666520643030640300000001000000CA02000000FED0010000000D1027000000000000204E0000000000008051010000000000'.toLowerCase()
+        let prog = new ProgramLCS()
+        prog.setCode('move')
+        prog.addTransactionArg(TransactionArgumentLCS.fromString('CAFE D00D'))
+        prog.addTransactionArg(TransactionArgumentLCS.fromString('cafe d00d'))
+        prog.addModule('CA')
+        prog.addModule('FED0')
+        prog.addModule('0D')
+        let payload = TransactionPayloadLCS.fromProgram(prog)
+        let transaction = new RawTransactionLCS('3a24a61e05d129cace9e0efc8bc9e33831fec9a9be66f50fd352a2638a49b9ee', '32', payload)
+        transaction.maxGasAmount = new BigNumber(10000)
+        transaction.gasUnitPrice = new BigNumber(20000)
+        transaction.expirtationTime = new BigNumber(86400)
+        const actual = LCSSerialization.rawTransactionToByte(transaction)
         expect(actual.toString()).toBe(expected)
     });
 });

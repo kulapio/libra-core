@@ -17,6 +17,10 @@ export class ProgramLCS {
         this.code = Buffer.from(code)
     }
 
+    setCodeFromBuffer(code: Buffer) {
+        this.code = code
+    }
+
     addTransactionArg(arg:TransactionArgumentLCS) {
         this.transactionArgs.push(arg)
     }

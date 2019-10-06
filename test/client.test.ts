@@ -16,6 +16,7 @@ describe('LibraClient', () => {
     // client = new LibraClient({ port: '8000' });
   })
 
+  /*
   it('should use minter address and sanity test calling getAccountTransaction()', async () => {
     const account1Address = AccountAddress.default().toHex();
 
@@ -24,7 +25,35 @@ describe('LibraClient', () => {
     expect(trans!.signedTransaction.transaction.sendersAddress.toString()).toEqual(account1Address);
 
   }, 5000);
+  */
 
+  it('should get accountState correctly', async () => {
+    const wallet = new LibraWallet();
+    
+    // TEST ACCOUNT CREATION
+    const account1 = wallet.generateAccount(10)
+    const account1Address = account1.getAddress().toHex();
+    let account1State = await client.getAccountState(account1Address);
+    expect(account1State.balance.toString()).toBe('0')
+  }, 5000);
+
+  /*
+  it('should transfer coin correctly', async () => {
+    const wallet = new LibraWallet({
+      mnemonic:
+        'lend arm arm addict trust release grid unlock exhibit surround deliver front link bean night dry tuna pledge expect net ankle process mammal great',
+    });
+    
+    // TEST ACCOUNT CREATION
+    const account1 = wallet.newAccount();
+    const account1Address = account1.getAddress().toHex();
+    console.log('Account 1 address', account1Address);
+    let account1State = await client.getAccountState(account1Address);
+    console.log(account1State)
+  }, 5000);
+  */
+
+  /*
   it('should query account state and transfer', async () => {
     const wallet = new LibraWallet({
       mnemonic:
@@ -69,4 +98,5 @@ describe('LibraClient', () => {
     expect(lastTransaction!.signedTransaction.transaction.sequenceNumber).toEqual(account1State.sequenceNumber);
     // // TODO test events from transactions queried
   }, 50000);
+  */
 });
