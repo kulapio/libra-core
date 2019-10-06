@@ -5,12 +5,9 @@ import { Buffer } from 'safe-buffer'
 import { Uint64LE } from 'int64-buffer'
 import { TransactionArgument } from '../__generated__/transaction_pb'
 import BigNumber from 'bignumber.js'
+import { TransactionPayloadLCS, TransactionPayloadType } from './types/TransactionPayloadLCS'
 
 export class LCSSerialization {
-
-    static serialize<T>(input:T):string {
-        return 'hello world'
-    }
 
     static addressToByte(source:AddressLCS): Buffer {
         const len = this.uint32ToByte(source.length)
@@ -47,6 +44,15 @@ export class LCSSerialization {
         const moduleData = this.listByteArrayToByte(source.modules)
         result = Buffer.concat([result, moduleData])
         return result
+    }
+
+    static transactionPayloadToByte(source: TransactionPayloadLCS): Buffer {
+        const code = this.uint32ToByte(source.payloadType)
+        if(source.payloadType === TransactionPayloadType.Program) {
+            const data = this.programToByte(source.program)
+            return Buffer.concat([code, data])
+        }
+        return Buffer.from('')
     }
 
     static listByteArrayToByte(sources: Buffer[]): Buffer {
