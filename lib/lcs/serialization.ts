@@ -1,4 +1,5 @@
 import {AddressLCS} from './types/AddressLCS'
+import {ProgramLCS} from './types/ProgramLCS'
 import {TransactionArgumentLCS} from './types/TransactionArgumentLCS'
 import { Buffer } from 'safe-buffer'
 import { Uint64LE } from 'int64-buffer'
@@ -18,20 +19,52 @@ export class LCSSerialization {
     }
 
     static transactionArgumentToByte(source:TransactionArgumentLCS): Buffer {
+        const type = this.uint32ToByte(source.type)
         if(source.type === TransactionArgument.ArgType.ADDRESS) {
-            const type = this.uint32ToByte(source.type)
             const data = this.addressToByte(source.address)
             return Buffer.concat([type, data])
         } else if(source.type === TransactionArgument.ArgType.U64) {
-            const type = this.uint32ToByte(source.type)
             const data = this.uint64ToByte(source.u64)
             return Buffer.concat([type, data])
         } else if(source.type === TransactionArgument.ArgType.STRING) {
-            const type = this.uint32ToByte(source.type)
             const data = this.stringToByte(source.string)
+            return Buffer.concat([type, data])
+        } else if(source.type === TransactionArgument.ArgType.BYTEARRAY) {
+            const data = this.byteArrayToByte(source.byteArray)
             return Buffer.concat([type, data])
         }
         return Buffer.from('')
+    }
+
+    static programToByte(source: ProgramLCS): Buffer {
+        const code = this.byteArrayToByte(source.code)
+        const argLen = this.uint32ToByte(source.transactionArgs.length)
+        let result = Buffer.concat([code, argLen])
+        source.transactionArgs.forEach(x => {
+            const argData = this.transactionArgumentToByte(x)
+            result = Buffer.concat([result, argData])
+        })
+        const moduleData = this.listByteArrayToByte(source.modules)
+        result = Buffer.concat([result, moduleData])
+        return result
+    }
+
+    static listByteArrayToByte(sources: Buffer[]): Buffer {
+        const len = this.uint32ToByte(sources.length)
+        let result = Buffer.concat([len])
+        sources.forEach(x => {
+            const len = this.uint32ToByte(x.length)
+            const data = Buffer.from(x.toString('hex'))
+            result = Buffer.concat([result, len, data])
+        })
+        return result
+    }
+
+    static byteArrayToByte(source:Buffer): Buffer {
+        const len = this.uint32ToByte(source.length)
+        const buffer = Buffer.from(source)
+        const data = Buffer.from(buffer.toString('hex'))
+        return Buffer.concat([len, data])
     }
 
     static stringToByte(source:string): Buffer {
@@ -52,4 +85,6 @@ export class LCSSerialization {
         let buffer = Buffer.from(u64.toArrayBuffer())
         return Buffer.from(buffer.toString('hex'))
     }
+
+    
 }

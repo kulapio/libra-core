@@ -1,6 +1,8 @@
 import {LCSSerialization} from '../lib/lcs/serialization'
 import {AddressLCS} from '../lib/lcs/types/AddressLCS'
+import {Buffer} from 'safe-buffer'
 import { TransactionArgumentLCS } from '../lib/lcs/types/TransactionArgumentLCS';
+import { ProgramLCS } from '../lib/lcs/types/ProgramLCS';
 
 describe('LCS', () => {
     beforeAll(() => {
@@ -34,5 +36,21 @@ describe('LCS', () => {
         const actual = LCSSerialization.transactionArgumentToByte(arg)
         expect(actual.toString()).toBe(expected)
     });
+
+    it('should serialize Program correctly', () => {
+        const expected = '040000006D6F766502000000020000000900000043414645204430304402000000090000006361666520643030640300000001000000CA02000000FED0010000000D'.toLowerCase()
+        let prog = new ProgramLCS()
+        prog.setCode('move')
+        prog.addTransactionArg(TransactionArgumentLCS.fromString('CAFE D00D'))
+        prog.addTransactionArg(TransactionArgumentLCS.fromString('cafe d00d'))
+        prog.addModule('CA')
+        prog.addModule('FED0')
+        prog.addModule('0D')
+        const actual = LCSSerialization.programToByte(prog)
+        expect(actual.toString()).toBe(expected)
+        console.log(prog.toString())
+    });
+
+
 });
   

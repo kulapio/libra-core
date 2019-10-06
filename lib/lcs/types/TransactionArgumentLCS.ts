@@ -39,6 +39,13 @@ export class TransactionArgumentLCS {
         return transactionArg
     }
 
+    static fromByteArray(source:Buffer): TransactionArgumentLCS {
+        let transactionArg = new TransactionArgumentLCS()
+        transactionArg.type = TransactionArgument.ArgType.BYTEARRAY
+        transactionArg.byteArray = source
+        return transactionArg
+    }
+
     toString():string {
         if(this.type === TransactionArgument.ArgType.ADDRESS) {
             return '{ADDRESS: ' + this.address.toString() + '}'
@@ -46,7 +53,9 @@ export class TransactionArgumentLCS {
             return '{U64: ' + this.u64.toString() + '}'
         } else if(this.type === TransactionArgument.ArgType.STRING) {
             return '{STRING: ' + this.string + '}'
+        } else if(this.type === TransactionArgument.ArgType.BYTEARRAY) {
+            return '{ByteArray: 0xb"' + this.byteArray.toString('hex') + '"}'
         }
-        return ''
+        throw new Error('unknow type')
     }
 }
