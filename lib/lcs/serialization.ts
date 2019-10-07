@@ -34,7 +34,7 @@ export class LCSSerialization {
     }
 
     static programToByte(source: ProgramLCS): Uint8Array {
-        const code = source.code
+        const code = this.byteArrayToByte(source.code)
         const argLen = this.uint32ToByte(source.transactionArgs.length)
         let result = this.concat(code, argLen)
         source.transactionArgs.forEach(x => {
@@ -69,19 +69,6 @@ export class LCSSerialization {
         result = this.concat(result, expire)
         return result
     }
-
-    /*
-    static listByteArrayToByte(sources: Buffer[]): Buffer {
-        const len = this.uint32ToByte(sources.length)
-        let result = Buffer.concat([len])
-        sources.forEach(x => {
-            const len = this.uint32ToByte(x.length)
-            const data = Buffer.from(x.toString('hex'))
-            result = Buffer.concat([result, len, data])
-        })
-        return result
-    }
-    */
 
     static listByteArrayToByte(sources: Uint8Array[]): Uint8Array {
         const len = this.uint32ToByte(sources.length)

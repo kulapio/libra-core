@@ -47,7 +47,7 @@ describe('LibraClient', () => {
     const account1 = wallet.newAccount();
     const account1Address = account1.getAddress().toHex();
     console.log('Account 1 address', account1Address);
-    await client.transferCoins(account1, 'c4d04d41ea1453db808e2e3a559f49a39d78fcefd6b87ebd41a0440b6017ff79', 10)
+    await client.transferCoins(account1, 'c4d04d41ea1453db808e2e3a559f49a39d78fcefd6b87ebd41a0440b6017ff79', 1000000)
   }, 5000);
 
   /*

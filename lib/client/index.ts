@@ -229,6 +229,7 @@ export class LibraClient {
 
 
   private signRawTransaction(rawTransaction: Uint8Array, keyPair: KeyPair): Signature {
+    console.log(LCSSerialization.toHexString(rawTransaction))
     const saltHash = new SHA3(256)
       .update(HashSaltValues.rawTransactionHashSalt, 'utf-8')
       .digest();
