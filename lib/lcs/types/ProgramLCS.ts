@@ -1,23 +1,24 @@
 import { TransactionArgumentLCS } from "./TransactionArgumentLCS"
 //import { Buffer } from 'safe-buffer'
 import {EOL} from 'os'
+import { LCSSerialization } from "../serialization"
 
 export class ProgramLCS {
-    code: Buffer
+    code: Uint8Array
     transactionArgs: TransactionArgumentLCS[]
-    modules: Buffer[]
+    modules: Uint8Array[]
 
     constructor() {
-        this.code = Buffer.from('')
+        this.code = new Uint8Array()
         this.transactionArgs = []
         this.modules = []
     }
 
     setCode(code: string) {
-        this.code = Buffer.from(code)
+        this.code = LCSSerialization.stringToByte(code)
     }
 
-    setCodeFromBuffer(code: Buffer) {
+    setCodeFromBuffer(code: Uint8Array) {
         this.code = code
     }
 
@@ -26,7 +27,7 @@ export class ProgramLCS {
     }
 
     addModule(module: string) {
-        this.modules.push(Buffer.from(module.toLowerCase(), 'hex'))
+        this.modules.push(LCSSerialization.hexToByte(module))
     }
 
     toString(): string {
@@ -41,7 +42,7 @@ export class ProgramLCS {
         result += 'args: ' + argStr + ',' + EOL
         let modules:string[] = []
         this.modules.forEach(x => {
-            modules.push('[' + x.toString('hex') + ']')
+            modules.push('[' + LCSSerialization.toHexString(x) + ']')
         })
         let moduleStr = modules.join('')
         moduleStr = '[' + moduleStr + ']'

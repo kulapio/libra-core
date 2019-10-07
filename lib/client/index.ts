@@ -204,15 +204,15 @@ export class LibraClient {
     const publicKeyLen = LCSSerialization.uint32ToByte(senderSignature.publicKey.length)
     const signatureLen = LCSSerialization.uint32ToByte(senderSignature.signature.length)
     const rawTxn = LCSSerialization.rawTransactionToByte(senderSignature.transaction)
-    let signedTxn = Buffer.concat([rawTxn, publicKeyLen])
-    signedTxn = Buffer.concat([signedTxn, signatureLen])
-    signedTxn = Buffer.concat([signedTxn, senderSignature.signature])
+    let signedTxn = LCSSerialization.concat(rawTxn, publicKeyLen)
+    signedTxn = LCSSerialization.concat(signedTxn, signatureLen)
+    signedTxn = LCSSerialization.concat(signedTxn, senderSignature.signature)
 
     let signedTransaction = new SignedTransaction()
-    signedTransaction.setSignedTxn(Uint8Array.from(signedTxn))
+    signedTransaction.setSignedTxn(signedTxn)
     request.setSignedTxn(signedTransaction)
     const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
-    console.log(response)
+    console.log(LCSSerialization.toHexString(signedTxn))
     console.log(response.getAcStatus())
     console.log(response.getVmStatus())
     console.log(response.getStatusCase())
@@ -232,10 +232,10 @@ export class LibraClient {
   }
 
 
-  private signRawTransaction(rawTransaction: Buffer, keyPair: KeyPair): Signature {
+  private signRawTransaction(rawTransaction: Uint8Array, keyPair: KeyPair): Signature {
     const hash = new SHA3(256)
       .update(HashSaltValues.rawTransactionHashSalt,'hex')
-      .update(rawTransaction)
+      .update(LCSSerialization.toHexString(rawTransaction), 'hex')
       .digest();
 
     return keyPair.sign(hash);

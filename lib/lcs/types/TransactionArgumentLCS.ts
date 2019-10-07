@@ -2,19 +2,20 @@
 import {TransactionArgument} from '../../__generated__/transaction_pb'
 import { AddressLCS } from './AddressLCS'
 import {BigNumber} from 'bignumber.js'
+import { LCSSerialization } from '../serialization'
 
 export class TransactionArgumentLCS {
     u64: BigNumber
     address: AddressLCS
     string: string
-    byteArray: Buffer
+    byteArray: Uint8Array
     type: TransactionArgument.ArgType
 
     constructor() {
         this.u64 = new BigNumber(0)
         this.address = new AddressLCS('')
         this.string = ''
-        this.byteArray = Buffer.from('')
+        this.byteArray = new Uint8Array()
         this.type = TransactionArgument.ArgType.U64
     }
 
@@ -39,7 +40,7 @@ export class TransactionArgumentLCS {
         return transactionArg
     }
 
-    static fromByteArray(source:Buffer): TransactionArgumentLCS {
+    static fromByteArray(source:Uint8Array): TransactionArgumentLCS {
         let transactionArg = new TransactionArgumentLCS()
         transactionArg.type = TransactionArgument.ArgType.BYTEARRAY
         transactionArg.byteArray = source
@@ -54,7 +55,7 @@ export class TransactionArgumentLCS {
         } else if(this.type === TransactionArgument.ArgType.STRING) {
             return '{STRING: ' + this.string + '}'
         } else if(this.type === TransactionArgument.ArgType.BYTEARRAY) {
-            return '{ByteArray: 0xb"' + this.byteArray.toString('hex') + '"}'
+            return '{ByteArray: 0xb"' + LCSSerialization.toHexString(this.byteArray) + '"}'
         }
         throw new Error('unknow type')
     }

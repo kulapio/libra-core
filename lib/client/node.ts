@@ -26,10 +26,8 @@ export async function updateToLatestLedger(acClient: AdmissionControlClient, req
 }
 
 export async function submitTransaction(acClient: AdmissionControlClient, request: SubmitTransactionRequest): Promise<SubmitTransactionResponse> {
-  console.log(request)
   return new Promise<SubmitTransactionResponse>((resolve, reject) => {
     acClient.submitTransaction(request, (error: ServiceError | null, response: SubmitTransactionResponse) => {
-      console.log(error)
       if (error) {
         return reject(error);
       }
