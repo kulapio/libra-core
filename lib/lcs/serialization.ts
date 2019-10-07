@@ -1,7 +1,6 @@
 import {AddressLCS} from './types/AddressLCS'
 import {ProgramLCS} from './types/ProgramLCS'
 import {TransactionArgumentLCS} from './types/TransactionArgumentLCS'
-//import { Buffer } from 'safe-buffer'
 import { Uint64LE } from 'int64-buffer'
 import { TransactionArgument } from '../__generated__/transaction_pb'
 import BigNumber from 'bignumber.js'
@@ -128,6 +127,10 @@ export class LCSSerialization {
     static hexToByte(source: string): Uint8Array {
         let data = source.match(/.{1,2}/g)!.map(x => parseInt(x, 16))
         return new Uint8Array(data)
+    }
+
+    static base64ToByte(source: string): Uint8Array {
+        return Uint8Array.from(atob(source), c => c.charCodeAt(0))
     }
 
     static toHexString(sources:Uint8Array): string {

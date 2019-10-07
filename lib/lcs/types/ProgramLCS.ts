@@ -1,5 +1,4 @@
 import { TransactionArgumentLCS } from "./TransactionArgumentLCS"
-//import { Buffer } from 'safe-buffer'
 import {EOL} from 'os'
 import { LCSSerialization } from "../serialization"
 

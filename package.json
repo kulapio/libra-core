@@ -43,7 +43,6 @@
     "int64-buffer": "^0.99.1007",
     "js-sha3": "^0.8.0",
     "protobufjs": "^6.8.8",
-    "safe-buffer": "^5.2.0",
     "sha3": "^2.0.4"
   },
   "devDependencies": {

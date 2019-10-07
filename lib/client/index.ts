@@ -26,7 +26,6 @@ import { KeyPair, Signature } from '../crypto/Eddsa';
 import SHA3 from 'sha3';
 import HashSaltValues from '../constants/HashSaltValues';
 import { LCSSerialization } from '../lcs/serialization';
-//import {Buffer} from 'safe-buffer'
 import { SignedTransaction } from '../__generated__/transaction_pb';
 
 
@@ -201,12 +200,11 @@ export class LibraClient {
     
     const request = new SubmitTransactionRequest()
     const senderSignature = await this.signTransaction(transaction, sender.keyPair)
-    const publicKeyLen = LCSSerialization.uint32ToByte(senderSignature.publicKey.length)
-    const signatureLen = LCSSerialization.uint32ToByte(senderSignature.signature.length)
     const rawTxn = LCSSerialization.rawTransactionToByte(senderSignature.transaction)
-    let signedTxn = LCSSerialization.concat(rawTxn, publicKeyLen)
-    signedTxn = LCSSerialization.concat(signedTxn, signatureLen)
-    signedTxn = LCSSerialization.concat(signedTxn, senderSignature.signature)
+    const publicKeyLCS = LCSSerialization.byteArrayToByte(senderSignature.publicKey)
+    let signedTxn = LCSSerialization.concat(rawTxn, publicKeyLCS)
+    const signatureLCS = LCSSerialization.byteArrayToByte(senderSignature.signature)
+    signedTxn = LCSSerialization.concat(signedTxn, signatureLCS)
 
     let signedTransaction = new SignedTransaction()
     signedTransaction.setSignedTxn(signedTxn)
@@ -214,8 +212,6 @@ export class LibraClient {
     const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
     console.log(LCSSerialization.toHexString(signedTxn))
     console.log(response.getAcStatus())
-    console.log(response.getVmStatus())
-    console.log(response.getStatusCase())
     return false
   }
 
@@ -233,9 +229,12 @@ export class LibraClient {
 
 
   private signRawTransaction(rawTransaction: Uint8Array, keyPair: KeyPair): Signature {
+    const saltHash = new SHA3(256)
+      .update(HashSaltValues.rawTransactionHashSalt, 'utf-8')
+      .digest();
+    const data = LCSSerialization.concat(saltHash, rawTransaction)
     const hash = new SHA3(256)
-      .update(HashSaltValues.rawTransactionHashSalt,'hex')
-      .update(LCSSerialization.toHexString(rawTransaction), 'hex')
+      .update(LCSSerialization.toHexString(data), 'hex')
       .digest();
 
     return keyPair.sign(hash);

@@ -5,12 +5,12 @@ import ProgamBase64Codes from '../constants/ProgamBase64Codes';
 import { AccountAddress } from '../wallet/Accounts';
 import { LibraVMStatusError } from './Errors';
 import { ProgramLCS } from '../lcs/types/ProgramLCS';
-//import { Buffer } from 'safe-buffer'
 import { TransactionArgumentLCS } from '../lcs/types/TransactionArgumentLCS';
 import { AddressLCS } from '../lcs/types/AddressLCS';
 import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
 import { TransactionPayloadLCS } from '../lcs/types/TransactionPayloadLCS';
 import {Account} from '../wallet/Accounts'
+import { LCSSerialization } from '../lcs/serialization';
 
 
 export interface LibraGasConstraint {
@@ -24,7 +24,8 @@ export class LibraTransaction {
   static createTransfer(sender: Account, recipientAddress: string, numAccount: BigNumber, sequence: BigNumber): RawTransactionLCS {
     // construct program
     let prog = new ProgramLCS()
-    prog.setCodeFromBuffer(Buffer.from(ProgamBase64Codes.peerToPeerTxn,'base64'))
+    //prog.setCodeFromBuffer(Buffer.from(ProgamBase64Codes.peerToPeerTxn,'base64'))
+    prog.setCodeFromBuffer(LCSSerialization.base64ToByte(ProgamBase64Codes.peerToPeerTxn))
     const recipientAddressLCS = new AddressLCS(recipientAddress)
     prog.addTransactionArg(TransactionArgumentLCS.fromAddress(recipientAddressLCS))
     prog.addTransactionArg(TransactionArgumentLCS.fromU64(numAccount.toString()))
