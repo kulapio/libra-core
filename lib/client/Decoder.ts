@@ -1,52 +1,8 @@
-import {
-  Program,
-  RawTransaction,
-  SignedTransaction,
-  SignedTransactionWithProof,
-} from '../__generated__/transaction_pb';
-
 import { CursorBuffer } from '../common/CursorBuffer';
 
 import PathValues from '../constants/PathValues';
 
-import {
-  LibraDeserializationError,
-  LibraExecutionError,
-  LibraExecutionErrorType,
-  LibraGasConstraint,
-  LibraInvariantViolationError,
-  LibraProgram,
-  LibraProgramArgumentType,
-  LibraSignedTransaction,
-  LibraSignedTransactionWithProof,
-  LibraTransaction,
-  LibraTransactionEvent,
-  LibraValidationStatusCode,
-  LibraValidationStatusError,
-  LibraVerificationError,
-  LibraVerificationStatusError,
-  LibraVerificationStatusKind,
-  LibraVMStatusError,
-} from '..';
-
-import { EventsList } from '../__generated__/events_pb';
-
 import { AccountAddress, AccountState } from '../wallet/Accounts';
-
-import { AccessPath } from '../__generated__/access_path_pb';
-
-import BigNumber from 'bignumber.js';
-
-import {
-  BinaryError,
-  ExecutionStatus,
-  VMInvariantViolationError,
-  VMStatus,
-  VMValidationStatus,
-  VMVerificationStatusList,
-} from '../__generated__/vm_errors_pb';
-
-import * as jspb from "google-protobuf"
 
 /**
  * Internal class used by LibraClient
@@ -78,7 +34,8 @@ export class ClientDecoder {
 
     return AccountState.fromBytes(state[PathValues.AccountStatePath]);
   }
-
+  
+  /*
   public decodeSignedTransactionWithProof(
     signedTransactionWP: SignedTransactionWithProof,
   ): LibraSignedTransactionWithProof {
@@ -203,4 +160,5 @@ export class ClientDecoder {
       executionError,
     );
   }
+  */
 }

@@ -24,6 +24,7 @@ export class AccountState {
       EventHandle.default(),
       EventHandle.default(),
       new BigNumber(0),
+      true,
       true
     );
   }
@@ -34,11 +35,14 @@ export class AccountState {
     const authenticationKeyLen = cursor.read32();
     const authenticationKey = cursor.readXBytes(authenticationKeyLen);
     const balance = cursor.read64();
+    const delegatedKeyRotationCapability = cursor.readBool();
     const delegatedWithdrawalCapability = cursor.readBool();
-    const receivedEventsCount = cursor.read64();
+    const receivedEventsCount = new BigNumber(cursor.read32());
+    cursor.read32();
     const receivedEventsKeyLen = cursor.read32();
     const receivedEventsKey = cursor.readXBytes(receivedEventsKeyLen);
-    const sentEventsCount = cursor.read64();
+    const sentEventsCount = new BigNumber(cursor.read32());
+    cursor.read32();
     const sentEventsKeyLen = cursor.read32();
     const sentEventsKey = cursor.readXBytes(sentEventsKeyLen);
     const sequenceNumber = cursor.read64();
@@ -49,7 +53,8 @@ export class AccountState {
       new EventHandle(receivedEventsKey,receivedEventsCount),
       new EventHandle(sentEventsKey,sentEventsCount),
       sequenceNumber,
-      delegatedWithdrawalCapability);
+      delegatedWithdrawalCapability,
+      delegatedKeyRotationCapability);
   }
   public readonly authenticationKey: Uint8Array;
   public readonly balance: BigNumber;
@@ -57,6 +62,7 @@ export class AccountState {
   public readonly sentEvents: EventHandle;
   public readonly sequenceNumber: BigNumber;
   public readonly delegatedWithdrawalCapability: boolean;
+  public readonly delegatedKeyRotationCapability: boolean;
 
   private constructor(
     authenticationKey: Uint8Array,
@@ -65,6 +71,7 @@ export class AccountState {
     sentEvents: EventHandle,
     sequenceNumber: BigNumber,
     delegatedWithdrawalCapability: boolean,
+    delegatedKeyRotationCapability: boolean
   ) {
     this.balance = balance;
     this.sequenceNumber = sequenceNumber;
@@ -72,6 +79,7 @@ export class AccountState {
     this.sentEvents = sentEvents;
     this.receivedEvents = receivedEvents;
     this.delegatedWithdrawalCapability = delegatedWithdrawalCapability;
+    this.delegatedKeyRotationCapability = delegatedKeyRotationCapability;
   }
 }
 

@@ -12,10 +12,11 @@ describe('LibraClient', () => {
     //   port: '443',
     //   dataProtocol: 'grpc-web-text'
     // })
-    client = new LibraClient({ network: LibraNetwork.Testnet });
+    client = new LibraClient({ network: LibraNetwork.Testnet, port: '8000' });
     // client = new LibraClient({ port: '8000' });
   })
 
+  /*
   it('should use minter address and sanity test calling getAccountTransaction()', async () => {
     const account1Address = AccountAddress.default().toHex();
 
@@ -24,7 +25,32 @@ describe('LibraClient', () => {
     expect(trans!.signedTransaction.transaction.sendersAddress.toString()).toEqual(account1Address);
 
   }, 5000);
+  */
 
+  it('should get accountState correctly', async () => {
+    const wallet = new LibraWallet();
+    
+    // TEST ACCOUNT CREATION
+    const account1 = wallet.generateAccount(10)
+    const account1Address = account1.getAddress().toHex();
+    let account1State = await client.getAccountState(account1Address);
+    expect(account1State.balance.toString()).toBe('0')
+  }, 5000);
+
+  it('should transfer coin correctly', async () => {
+    const wallet = new LibraWallet({
+      mnemonic:
+        'lend arm arm addict trust release grid unlock exhibit surround deliver front link bean night dry tuna pledge expect net ankle process mammal great',
+    });
+    
+    // TEST ACCOUNT CREATION
+    const account1 = wallet.newAccount();
+    const account1Address = account1.getAddress().toHex();
+    console.log('Account 1 address', account1Address);
+    await client.transferCoins(account1, 'c4d04d41ea1453db808e2e3a559f49a39d78fcefd6b87ebd41a0440b6017ff79', 1000000)
+  }, 5000);
+
+  /*
   it('should query account state and transfer', async () => {
     const wallet = new LibraWallet({
       mnemonic:
@@ -69,4 +95,5 @@ describe('LibraClient', () => {
     expect(lastTransaction!.signedTransaction.transaction.sequenceNumber).toEqual(account1State.sequenceNumber);
     // // TODO test events from transactions queried
   }, 50000);
+  */
 });
