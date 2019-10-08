@@ -27,6 +27,7 @@ import SHA3 from 'sha3';
 import HashSaltValues from '../constants/HashSaltValues';
 import { LCSSerialization } from '../lcs/serialization';
 import { SignedTransaction } from '../__generated__/transaction_pb';
+import {BufferUtil} from '../common/BufferUtil'
 
 
 interface LibraLibConfig {
@@ -202,15 +203,14 @@ export class LibraClient {
     const senderSignature = await this.signTransaction(transaction, sender.keyPair)
     const rawTxn = LCSSerialization.rawTransactionToByte(senderSignature.transaction)
     const publicKeyLCS = LCSSerialization.byteArrayToByte(senderSignature.publicKey)
-    let signedTxn = LCSSerialization.concat(rawTxn, publicKeyLCS)
+    let signedTxn = BufferUtil.concat(rawTxn, publicKeyLCS)
     const signatureLCS = LCSSerialization.byteArrayToByte(senderSignature.signature)
-    signedTxn = LCSSerialization.concat(signedTxn, signatureLCS)
+    signedTxn = BufferUtil.concat(signedTxn, signatureLCS)
 
     let signedTransaction = new SignedTransaction()
     signedTransaction.setSignedTxn(signedTxn)
     request.setSignedTxn(signedTransaction)
     const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
-    console.log(LCSSerialization.toHexString(signedTxn))
     console.log(response.getAcStatus())
     return false
   }
@@ -229,13 +229,12 @@ export class LibraClient {
 
 
   private signRawTransaction(rawTransaction: Uint8Array, keyPair: KeyPair): Signature {
-    console.log(LCSSerialization.toHexString(rawTransaction))
     const saltHash = new SHA3(256)
       .update(HashSaltValues.rawTransactionHashSalt, 'utf-8')
       .digest();
-    const data = LCSSerialization.concat(saltHash, rawTransaction)
+    const data = BufferUtil.concat(saltHash, rawTransaction)
     const hash = new SHA3(256)
-      .update(LCSSerialization.toHexString(data), 'hex')
+      .update(BufferUtil.toHex(data), 'hex')
       .digest();
 
     return keyPair.sign(hash);
