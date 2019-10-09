@@ -5,7 +5,7 @@ export class BufferUtil {
     }
 
     public static fromBase64(source: string): Uint8Array {
-        return Uint8Array.from(atob(source), c => c.charCodeAt(0))
+      return Uint8Array.from(Buffer.from(source, 'base64'))
     }
 
     public static fromString(source: string): Uint8Array {
