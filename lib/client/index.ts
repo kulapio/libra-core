@@ -188,7 +188,7 @@ export class LibraClient {
     sender: Account,
     recipientAddress: string,
     numCoins: number | string | BigNumber,
-  ): Promise<boolean> {
+  ): Promise<SubmitTransactionResponse> {
     const state = await this.getAccountState(sender.getAddress().toHex())
     return await this.execute(LibraTransaction.createTransfer(sender, recipientAddress, new BigNumber(numCoins), state.sequenceNumber), sender);
   }
@@ -197,7 +197,7 @@ export class LibraClient {
    * Execute a transaction by sender.
    *
    */
-  public async execute(transaction: RawTransactionLCS, sender:Account): Promise<boolean> {
+  public async execute(transaction: RawTransactionLCS, sender:Account): Promise<SubmitTransactionResponse> {
     
     const request = new SubmitTransactionRequest()
     const senderSignature = await this.signTransaction(transaction, sender.keyPair)
@@ -211,8 +211,8 @@ export class LibraClient {
     signedTransaction.setSignedTxn(signedTxn)
     request.setSignedTxn(signedTransaction)
     const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
-    console.log(response.getAcStatus())
-    return false
+    console.log('getAcStatus: ', response.getAcStatus())
+    return response
   }
 
   /**

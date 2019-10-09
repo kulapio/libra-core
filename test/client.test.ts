@@ -50,7 +50,7 @@ describe('LibraClient', () => {
     await client.transferCoins(account1, 'c4d04d41ea1453db808e2e3a559f49a39d78fcefd6b87ebd41a0440b6017ff79', 1000000)
   }, 5000);
 
-  /*
+  
   it('should query account state and transfer', async () => {
     const wallet = new LibraWallet({
       mnemonic:
@@ -76,24 +76,27 @@ describe('LibraClient', () => {
     // ensure its balance is +xAmount
     expect(newAccount1State.balance.toString(10)).toEqual(account1State.balance.plus(amountToTransfer).toString(10));
 
-    // TEST TRANSFER TRANSACTION OF yAmount
+    // // TEST TRANSFER TRANSACTION OF yAmount
     account1State = await client.getAccountState(account1Address);
     const response = await client.transferCoins(account1, account2Address, amountToTransfer);
     console.log(response)
-    expect(response.acStatus).toEqual(LibraAdmissionControlStatus.ACCEPTED);
+    expect(response.getAcStatus()).toBeDefined();
+    expect(response.getAcStatus()!.getCode()).toEqual(LibraAdmissionControlStatus.ACCEPTED);
 
-    // ensure new account balance is +yAmount
-    await response.awaitConfirmation(client);
+    // // ensure new account balance is +yAmount
+    // await response.awaitConfirmation(client);
+    await new Promise((r) => setTimeout(r, 3000));
+
     const newAccount2State = await client.getAccountState(account2Address);
     expect(newAccount2State.balance.toString(10)).toEqual(account2State.balance.plus(amountToTransfer).toString(10));
 
-    // TEST QUERYING TRANSACTION
-    const lastTransaction = await client.getAccountTransaction(account1.getAddress(), account1State.sequenceNumber);
-    expect(lastTransaction).not.toBeNull();
-    // // ensure parameters are decoded properly
-    expect(lastTransaction!.signedTransaction.publicKey).bytesToEqual(account1.keyPair.getPublicKey());
-    expect(lastTransaction!.signedTransaction.transaction.sequenceNumber).toEqual(account1State.sequenceNumber);
+    // // TEST QUERYING TRANSACTION
+    // const lastTransaction = await client.getAccountTransaction(account1.getAddress(), account1State.sequenceNumber);
+    // expect(lastTransaction).not.toBeNull();
+    // // // ensure parameters are decoded properly
+    // expect(lastTransaction!.signedTransaction.publicKey).bytesToEqual(account1.keyPair.getPublicKey());
+    // expect(lastTransaction!.signedTransaction.transaction.sequenceNumber).toEqual(account1State.sequenceNumber);
     // // TODO test events from transactions queried
   }, 50000);
-  */
+  
 });

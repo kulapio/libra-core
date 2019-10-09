@@ -53,9 +53,10 @@ export class TransactionArgumentLCS {
             return '{U64: ' + this.u64.toString() + '}'
         } else if(this.type === TransactionArgument.ArgType.STRING) {
             return '{STRING: ' + this.string + '}'
-        } else if(this.type === TransactionArgument.ArgType.BYTEARRAY) {
-            return '{ByteArray: 0xb"' + LCSSerialization.toHexString(this.byteArray) + '"}'
         }
+        // } else if(this.type === TransactionArgument.ArgType.BYTEARRAY) {
+        //     return '{ByteArray: 0xb"' + LCSSerialization.toHexString(this.byteArray) + '"}'
+        // }
         throw new Error('unknow type')
     }
 }
