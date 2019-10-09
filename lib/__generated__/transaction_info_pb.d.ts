@@ -19,6 +19,9 @@ export class TransactionInfo extends jspb.Message {
   getGasUsed(): number;
   setGasUsed(value: number): void;
 
+  getMajorStatus(): number;
+  setMajorStatus(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionInfo.AsObject;
   static toObject(includeInstance: boolean, msg: TransactionInfo): TransactionInfo.AsObject;
@@ -33,6 +36,7 @@ export namespace TransactionInfo {
     stateRootHash: Uint8Array | string,
     eventRootHash: Uint8Array | string,
     gasUsed: number,
+    majorStatus: number,
   }
 }
 

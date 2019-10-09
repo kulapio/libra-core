@@ -1,27 +1,17 @@
 import BigNumber from 'bignumber.js';
 import LibraClient from '../client';
+import {BufferUtil} from '../common/BufferUtil';
 import Addresses from '../constants/Addresses';
 import ProgamBase64Codes from '../constants/ProgamBase64Codes';
-import { AccountAddress } from '../wallet/Accounts';
+import { LCSSerialization } from '../lcs/serialization';
+import { AddressLCS } from '../lcs/types/AddressLCS';
+import { ProgramLCS } from '../lcs/types/ProgramLCS';
+import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
+import { TransactionArgumentLCS } from '../lcs/types/TransactionArgumentLCS';
+import { TransactionPayloadLCS } from '../lcs/types/TransactionPayloadLCS';
+import { Account, AccountAddress } from '../wallet/Accounts';
 import { LibraVMStatusError } from './Errors';
 
-export interface LibraProgram {
-  code: Uint8Array;
-  arguments: LibraProgramArgument[];
-  modules: Array<Uint8Array | string>;
-}
-
-interface LibraProgramArgument {
-  type: LibraProgramArgumentType;
-  value: Uint8Array;
-}
-
-export enum LibraProgramArgumentType {
-  U64 = 0,
-  ADDRESS = 1,
-  STRING = 2,
-  BYTEARRAY = 3,
-}
 
 export interface LibraGasConstraint {
   maxGasAmount: BigNumber;
@@ -29,71 +19,19 @@ export interface LibraGasConstraint {
 }
 
 export class LibraTransaction {
-  public static createTransfer(recipientAddress: string, numAccount: BigNumber): LibraTransaction {
-    const amountBuffer = Buffer.from(
-      Number(numAccount)
-        .toString(16)
-        .padStart(16, '0')
-        .slice(0, 16),
-      'hex',
-    )
-    amountBuffer.reverse()
-
-    const programArguments: LibraProgramArgument[] = [
-      {
-        type: LibraProgramArgumentType.ADDRESS,
-        value: Uint8Array.from(Buffer.from(recipientAddress, 'hex')),
-      },
-      {
-        type: LibraProgramArgumentType.U64,
-        value: Uint8Array.from(amountBuffer),
-      },
-    ];
-    const program: LibraProgram = {
-      arguments: programArguments,
-      code: Uint8Array.from(Buffer.from(ProgamBase64Codes.peerToPeerTxn, 'base64')),
-      modules: [],
-    };
-    return new LibraTransaction(
-      program,
-      {
-        gasUnitPrice: new BigNumber(0),
-        maxGasAmount: new BigNumber(1000000),
-      },
-      `${Math.floor(new Date().getTime() / 1000) + 100}`,
-      new Uint8Array(Buffer.from(Addresses.AssociationAddress, 'hex')),
-      '-1',
-    );
-  }
-
-  // NOTE: Ensure this raw bytes is always set used internally
-  public program: LibraProgram;
-  public gasContraint: LibraGasConstraint;
-  public expirationTime: BigNumber;
-  public sendersAddress: AccountAddress;
-  public sequenceNumber: BigNumber;
-
-  /**
-   * Create a new Transaction
-   *
-   * @param program
-   * @param gasConstraint
-   * @param expirationTime
-   * @param sendersAddress
-   * @param sequenceNumber
-   */
-  constructor(
-    program: LibraProgram,
-    gasConstraint: LibraGasConstraint,
-    expirationTime: string | BigNumber,
-    sendersAddress: Uint8Array,
-    sequenceNumber: string | BigNumber,
-  ) {
-    this.program = program;
-    this.gasContraint = gasConstraint;
-    this.expirationTime = new BigNumber(expirationTime);
-    this.sendersAddress = new AccountAddress(sendersAddress);
-    this.sequenceNumber = new BigNumber(sequenceNumber);
+  public static createTransfer(sender: Account, recipientAddress: string, numAccount: BigNumber, sequence: BigNumber): RawTransactionLCS {
+    // construct program
+    const prog = new ProgramLCS()
+    // prog.setCodeFromBuffer(Buffer.from(ProgamBase64Codes.peerToPeerTxn,'base64'))
+    prog.setCodeFromBuffer(BufferUtil.fromBase64(ProgamBase64Codes.peerToPeerTxn))
+    const recipientAddressLCS = new AddressLCS(recipientAddress)
+    prog.addTransactionArg(TransactionArgumentLCS.fromAddress(recipientAddressLCS))
+    prog.addTransactionArg(TransactionArgumentLCS.fromU64(numAccount.toString()))
+    // construct payload
+    const payload = TransactionPayloadLCS.fromProgram(prog)
+    // raw transaction
+    const transaction = new RawTransactionLCS(sender.getAddress().toHex(), sequence.toString(), payload)
+    return transaction
   }
 }
 
@@ -118,12 +56,14 @@ export class LibraTransactionResponse {
     this.vmStatus = vmStatus;
   }
 
+  /*
   public async awaitConfirmation(client: LibraClient): Promise<void> {
     return client.waitForConfirmation(
       this.signedTransaction.transaction.sendersAddress,
       this.signedTransaction.transaction.sequenceNumber.plus(1),
     );
   }
+  */
 }
 
 export enum LibraAdmissionControlStatus {
@@ -143,11 +83,11 @@ export enum LibraMempoolTransactionStatus {
   UNKNOWN = -1,
 }
 export class LibraSignedTransaction {
-  public readonly transaction: LibraTransaction;
+  public readonly transaction: RawTransactionLCS;
   public readonly publicKey: Uint8Array;
   public readonly signature: Uint8Array;
 
-  constructor(transaction: LibraTransaction, publicKey: Uint8Array, signature: Uint8Array) {
+  constructor(transaction: RawTransactionLCS, publicKey: Uint8Array, signature: Uint8Array) {
     this.transaction = transaction;
     this.publicKey = publicKey;
     this.signature = signature;
