@@ -1,14 +1,42 @@
-import {TransactionArgument} from '../../__generated__/transaction_pb'
-import { AddressLCS } from './AddressLCS'
 import {BigNumber} from 'bignumber.js'
+import {TransactionArgument} from '../../__generated__/transaction_pb'
 import { LCSSerialization } from '../serialization'
+import { AddressLCS } from './AddressLCS'
 
 export class TransactionArgumentLCS {
-    u64: BigNumber
-    address: AddressLCS
-    string: string
-    byteArray: Uint8Array
-    type: TransactionArgument.ArgType
+    public static fromU64(source:string): TransactionArgumentLCS {
+      const transactionArg = new TransactionArgumentLCS()
+      transactionArg.type = TransactionArgument.ArgType.U64
+      transactionArg.u64 = new BigNumber(source)
+      return transactionArg
+    }
+
+    public static fromAddress(source:AddressLCS): TransactionArgumentLCS {
+        const transactionArg = new TransactionArgumentLCS()
+        transactionArg.type = TransactionArgument.ArgType.ADDRESS
+        transactionArg.address = source
+        return transactionArg
+    }
+
+    public static fromString(source:string): TransactionArgumentLCS {
+        const transactionArg = new TransactionArgumentLCS()
+        transactionArg.type = TransactionArgument.ArgType.STRING
+        transactionArg.string = source
+        return transactionArg
+    }
+
+    public static fromByteArray(source:Uint8Array): TransactionArgumentLCS {
+        const transactionArg = new TransactionArgumentLCS()
+        transactionArg.type = TransactionArgument.ArgType.BYTEARRAY
+        transactionArg.byteArray = source
+        return transactionArg
+    }
+
+    public u64: BigNumber
+    public address: AddressLCS
+    public string: string
+    public byteArray: Uint8Array
+    public type: TransactionArgument.ArgType
 
     constructor() {
         this.u64 = new BigNumber(0)
@@ -18,35 +46,7 @@ export class TransactionArgumentLCS {
         this.type = TransactionArgument.ArgType.U64
     }
 
-    static fromU64(source:string): TransactionArgumentLCS {
-        let transactionArg = new TransactionArgumentLCS()
-        transactionArg.type = TransactionArgument.ArgType.U64
-        transactionArg.u64 = new BigNumber(source)
-        return transactionArg
-    }
-
-    static fromAddress(source:AddressLCS): TransactionArgumentLCS {
-        let transactionArg = new TransactionArgumentLCS()
-        transactionArg.type = TransactionArgument.ArgType.ADDRESS
-        transactionArg.address = source
-        return transactionArg
-    }
-
-    static fromString(source:string): TransactionArgumentLCS {
-        let transactionArg = new TransactionArgumentLCS()
-        transactionArg.type = TransactionArgument.ArgType.STRING
-        transactionArg.string = source
-        return transactionArg
-    }
-
-    static fromByteArray(source:Uint8Array): TransactionArgumentLCS {
-        let transactionArg = new TransactionArgumentLCS()
-        transactionArg.type = TransactionArgument.ArgType.BYTEARRAY
-        transactionArg.byteArray = source
-        return transactionArg
-    }
-
-    toString():string {
+    public toString():string {
         if(this.type === TransactionArgument.ArgType.ADDRESS) {
             return '{ADDRESS: ' + this.address.toString() + '}'
         } else if(this.type === TransactionArgument.ArgType.U64) {

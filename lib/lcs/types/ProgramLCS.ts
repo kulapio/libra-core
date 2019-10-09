@@ -1,11 +1,11 @@
-import { TransactionArgumentLCS } from "./TransactionArgumentLCS"
 import {EOL} from 'os'
 import {BufferUtil} from '../../common/BufferUtil'
+import { TransactionArgumentLCS } from "./TransactionArgumentLCS"
 
 export class ProgramLCS {
-    code: Uint8Array
-    transactionArgs: TransactionArgumentLCS[]
-    modules: Uint8Array[]
+    public code: Uint8Array
+    public transactionArgs: TransactionArgumentLCS[]
+    public modules: Uint8Array[]
 
     constructor() {
         this.code = new Uint8Array()
@@ -13,33 +13,33 @@ export class ProgramLCS {
         this.modules = []
     }
 
-    setCode(code: string) {
+    public setCode(code: string) {
         this.code = BufferUtil.fromString(code)
     }
 
-    setCodeFromBuffer(code: Uint8Array) {
+    public setCodeFromBuffer(code: Uint8Array) {
         this.code = code
     }
 
-    addTransactionArg(arg:TransactionArgumentLCS) {
+    public addTransactionArg(arg:TransactionArgumentLCS) {
         this.transactionArgs.push(arg)
     }
 
-    addModule(module: string) {
+    public addModule(module: string) {
         this.modules.push(BufferUtil.fromHex(module))
     }
 
-    toString(): string {
+    public toString(): string {
         let result = '{' + EOL
         result += 'code: "' + this.code.toString() + '",' + EOL
-        let args:string[] = []
+        const args:string[] = []
         this.transactionArgs.forEach(x => {
             args.push(x.toString())
         })
         let argStr = args.join(', ')
         argStr = '[' + argStr + ']'
         result += 'args: ' + argStr + ',' + EOL
-        let modules:string[] = []
+        const modules:string[] = []
         this.modules.forEach(x => {
             modules.push('[' + BufferUtil.toHex(x) + ']')
         })

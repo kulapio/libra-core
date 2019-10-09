@@ -1,33 +1,33 @@
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
+import SHA3 from 'sha3';
+import {
+  AccountStateBlob,
+  AccountStateWithProof
+} from '../__generated__/account_state_blob_pb'
 import {
   AdmissionControlStatus,
   SubmitTransactionRequest,
   SubmitTransactionResponse,
 } from '../__generated__/admission_control_pb';
 import {
-  UpdateToLatestLedgerRequest,
-  UpdateToLatestLedgerResponse,
-  RequestItem,
   GetAccountStateRequest,
+  GetAccountStateResponse,
+  RequestItem,
   ResponseItem,
-  GetAccountStateResponse
+  UpdateToLatestLedgerRequest,
+  UpdateToLatestLedgerResponse
 } from '../__generated__/get_with_proof_pb';
-import {
-  AccountStateBlob,
-  AccountStateWithProof
-} from '../__generated__/account_state_blob_pb'
-import ServerHosts from '../constants/ServerHosts';
-import { Account, AccountAddress, AccountState, AccountStates, AccountAddressLike} from '../wallet/Accounts';
-import { LibraTransaction, LibraSignedTransaction } from '../transaction';
-import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
-import { ClientDecoder } from './Decoder';
-import { KeyPair, Signature } from '../crypto/Eddsa';
-import SHA3 from 'sha3';
-import HashSaltValues from '../constants/HashSaltValues';
-import { LCSSerialization } from '../lcs/serialization';
 import { SignedTransaction } from '../__generated__/transaction_pb';
 import {BufferUtil} from '../common/BufferUtil'
+import HashSaltValues from '../constants/HashSaltValues';
+import ServerHosts from '../constants/ServerHosts';
+import { KeyPair, Signature } from '../crypto/Eddsa';
+import { LCSSerialization } from '../lcs/serialization';
+import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
+import { LibraSignedTransaction, LibraTransaction } from '../transaction';
+import { Account, AccountAddress, AccountAddressLike, AccountState, AccountStates} from '../wallet/Accounts';
+import { ClientDecoder } from './Decoder';
 
 
 interface LibraLibConfig {
@@ -207,11 +207,11 @@ export class LibraClient {
     const signatureLCS = LCSSerialization.byteArrayToByte(senderSignature.signature)
     signedTxn = BufferUtil.concat(signedTxn, signatureLCS)
 
-    let signedTransaction = new SignedTransaction()
+    const signedTransaction = new SignedTransaction()
     signedTransaction.setSignedTxn(signedTxn)
     request.setSignedTxn(signedTransaction)
     const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
-    console.log('getAcStatus: ', response.getAcStatus())
+    // console.log('getAcStatus: ', response.getAcStatus())
     return response
   }
 

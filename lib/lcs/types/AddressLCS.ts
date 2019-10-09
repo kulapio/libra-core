@@ -1,13 +1,13 @@
 export class AddressLCS {
-    value: string
-    length: number
+    public value: string
+    public length: number
 
     constructor(address: string){
         this.value = address.toLowerCase()
         this.length = 32
     }
 
-    toString():string {
+    public toString():string {
         return this.value
     }
 }

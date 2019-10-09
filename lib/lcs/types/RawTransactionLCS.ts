@@ -3,12 +3,12 @@ import { AddressLCS } from "./AddressLCS";
 import { TransactionPayloadLCS } from "./TransactionPayloadLCS";
 
 export class RawTransactionLCS {
-    maxGasAmount: BigNumber
-    gasUnitPrice: BigNumber
-    expirtationTime: BigNumber
-    sender: AddressLCS
-    sequenceNumber: BigNumber
-    payload: TransactionPayloadLCS
+    public maxGasAmount: BigNumber
+    public gasUnitPrice: BigNumber
+    public expirtationTime: BigNumber
+    public sender: AddressLCS
+    public sequenceNumber: BigNumber
+    public payload: TransactionPayloadLCS
 
     constructor(sender: string, sequence:string, payload: TransactionPayloadLCS) {
         this.maxGasAmount = new BigNumber(1000000)
@@ -20,7 +20,7 @@ export class RawTransactionLCS {
     }
 
     // @TODO finish tostring method
-    toString():string {
+    public toString():string {
         return ''
     }
 }
