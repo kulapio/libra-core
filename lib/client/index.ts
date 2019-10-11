@@ -16,9 +16,11 @@ import {
   RequestItem,
   ResponseItem,
   UpdateToLatestLedgerRequest,
-  UpdateToLatestLedgerResponse
+  UpdateToLatestLedgerResponse,
+  GetAccountTransactionBySequenceNumberRequest,
+  GetAccountTransactionBySequenceNumberResponse
 } from '../__generated__/get_with_proof_pb';
-import { SignedTransaction } from '../__generated__/transaction_pb';
+import { SignedTransaction, SignedTransactionWithProof } from '../__generated__/transaction_pb';
 import {BufferUtil} from '../common/BufferUtil'
 import HashSaltValues from '../constants/HashSaltValues';
 import ServerHosts from '../constants/ServerHosts';
@@ -164,6 +166,77 @@ export class LibraClient {
       return AccountState.default(accountAddresses[index].toHex());
     })
   }
+
+  /**
+   * Returns the Accounts transaction done with sequenceNumber.
+   *
+   */
+  public async getAccountTransaction(
+    address: AccountAddressLike,
+    sequenceNumber: BigNumber | string | number,
+    fetchEvents: boolean = true,
+  ): Promise<boolean | null> {
+    const accountAddress = new AccountAddress(address);
+    const parsedSequenceNumber = new BigNumber(sequenceNumber);
+    const request = new UpdateToLatestLedgerRequest();
+
+    const requestItem = new RequestItem();
+    const getTransactionRequest = new GetAccountTransactionBySequenceNumberRequest();
+    getTransactionRequest.setAccount(accountAddress.toBytes());
+    getTransactionRequest.setSequenceNumber(parsedSequenceNumber.toNumber());
+    getTransactionRequest.setFetchEvents(fetchEvents);
+    requestItem.setGetAccountTransactionBySequenceNumberRequest(getTransactionRequest);
+    
+    request.addRequestedItems(requestItem);
+    const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
+    //console.log(response)
+    
+    const responseItems = response.getResponseItemsList();
+
+    if (responseItems.length === 0) {
+      return null;
+    }
+
+    //console.log(responseItems)
+    const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
+    const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
+
+    //console.log(signedTransactionWP)
+    
+    return false
+  }
+  /*
+  public async getAccountTransaction(
+    address: AccountAddressLike,
+    sequenceNumber: BigNumber | string | number,
+    fetchEvents: boolean = true,
+  ): Promise<LibraSignedTransactionWithProof | null> {
+    const accountAddress = new AccountAddress(address);
+    const parsedSequenceNumber = new BigNumber(sequenceNumber);
+    const request = new UpdateToLatestLedgerRequest();
+
+    const requestItem = new RequestItem();
+    const getTransactionRequest = new GetAccountTransactionBySequenceNumberRequest();
+    getTransactionRequest.setAccount(accountAddress.toBytes());
+    getTransactionRequest.setSequenceNumber(parsedSequenceNumber.toNumber());
+    getTransactionRequest.setFetchEvents(fetchEvents);
+    requestItem.setGetAccountTransactionBySequenceNumberRequest(getTransactionRequest);
+
+    request.addRequestedItems(requestItem);
+
+    const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
+
+    const responseItems = response.getResponseItemsList();
+
+    if (responseItems.length === 0) {
+      return null;
+    }
+
+    const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
+    const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
+    return this.decoder.decodeSignedTransactionWithProof(signedTransactionWP);
+  }
+  */
 
   /**
    * Sign the transaction with keyPair and returns a promise that resolves to a LibraSignedTransaction

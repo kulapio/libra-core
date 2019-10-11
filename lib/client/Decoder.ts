@@ -3,6 +3,8 @@ import { CursorBuffer } from '../common/CursorBuffer';
 import PathValues from '../constants/PathValues';
 
 import { AccountAddress, AccountState } from '../wallet/Accounts';
+import { SignedTransactionWithProof, SignedTransaction } from '../__generated__/transaction_pb';
+import { LibraSignedTransactionWithProof } from '../transaction/Transactions';
 
 /**
  * Internal class used by LibraClient
@@ -41,7 +43,7 @@ export class ClientDecoder {
   ): LibraSignedTransactionWithProof {
     // decode transaction
     const signedTransaction = signedTransactionWP.getSignedTransaction() as SignedTransaction;
-    const libraTransaction = this.decodeRawTransactionBytes(signedTransaction.getRawTxnBytes_asU8());
+    //const libraTransaction = this.decodeRawTransactionBytes(signedTransaction.getRawTxnBytes_asU8());
 
     const libraSignedtransaction = new LibraSignedTransaction(
       libraTransaction,
@@ -67,7 +69,8 @@ export class ClientDecoder {
 
     return new LibraSignedTransactionWithProof(libraSignedtransaction, signedTransactionWP.getProof(), eventsList);
   }
-
+*/
+  /*
   public decodeRawTransactionBytes(rawTxnBytes: Uint8Array): LibraTransaction {
     const rawTxn = RawTransaction.deserializeBinary(rawTxnBytes);
     const rawProgram = rawTxn.getProgram() as Program;

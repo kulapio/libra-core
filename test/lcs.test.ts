@@ -1,4 +1,5 @@
 import {LCSSerialization} from '../lib/lcs/serialization'
+import {LCSDeserialization} from '../lib/lcs/deserialization'
 import {AddressLCS} from '../lib/lcs/types/AddressLCS'
 import {BufferUtil} from '../lib/common/BufferUtil'
 import { TransactionArgumentLCS } from '../lib/lcs/types/TransactionArgumentLCS'
@@ -6,6 +7,7 @@ import { TransactionPayloadLCS } from '../lib/lcs/types/TransactionPayloadLCS'
 import { ProgramLCS } from '../lib/lcs/types/ProgramLCS';
 import { RawTransactionLCS } from '../lib/lcs/types/RawTransactionLCS'
 import BigNumber from 'bignumber.js'
+import { CursorBuffer } from '../lib/common/CursorBuffer'
 
 describe('LCS', () => {
     beforeAll(() => {
@@ -89,6 +91,33 @@ describe('LCS', () => {
         transaction.expirtationTime = new BigNumber(86400)
         const actual = LCSSerialization.rawTransactionToByte(transaction)
         expect(BufferUtil.toHex(actual)).toBe(expected)
+    });
+
+    it('should deserialize address correctly', () => {
+        const expected = 'CA820BF9305EB97D0D784F71B3955457FBF6911F5300CEAA5D7E8621529EAE19'.toLowerCase()
+        const source = '20000000CA820BF9305EB97D0D784F71B3955457FBF6911F5300CEAA5D7E8621529EAE19'.toLowerCase()
+        let cursor = new CursorBuffer(BufferUtil.fromHex(source))
+        const actual = LCSDeserialization.getAddress(cursor)
+        expect(actual.value.toLowerCase()).toBe(expected)
+    });
+
+    it('should deserialize TransactionArgumentString correctly', () => {
+        const expected = 'Hello, World!'
+        const source = '020000000D00000048656C6C6F2C20576F726C6421'.toLowerCase()
+        let cursor = new CursorBuffer(BufferUtil.fromHex(source))
+        const actual = LCSDeserialization.getTransactionArgument(cursor)
+        expect(actual.string).toBe(expected)
+    });
+    
+    it('should deserialize Program correctly', () => {
+        const source = '040000006D6F766502000000020000000900000043414645204430304402000000090000006361666520643030640300000001000000CA02000000FED0010000000D'.toLowerCase()
+        let cursor = new CursorBuffer(BufferUtil.fromHex(source))
+        const actual = LCSDeserialization.getProgram(cursor)
+        expect(BufferUtil.toString(actual.code)).toBe('move')
+        expect(actual.transactionArgs.length).toBe(2)
+        expect(actual.transactionArgs[0].string).toBe('CAFE D00D')
+        expect(actual.modules.length).toBe(3)
+        expect(BufferUtil.toHex(actual.modules[1])).toBe('FED0'.toLowerCase())
     });
 });
   

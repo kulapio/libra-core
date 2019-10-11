@@ -1,3 +1,5 @@
+import { stringLiteral } from "@babel/types"
+
 export class BufferUtil {
     public static fromHex(source: string): Uint8Array {
         const data = source.match(/.{1,2}/g)!.map(x => parseInt(x, 16))
@@ -15,6 +17,14 @@ export class BufferUtil {
             view.setUint8(i,source.charCodeAt(i))
         }
         return new Uint8Array(buffer)
+    }
+
+    public static toString(source: Uint8Array): string {
+        const data: string[] = []
+        source.forEach( x => {
+            data.push(String.fromCharCode(x))
+        })
+        return data.join('')
     }
 
     public static toHex(sources:Uint8Array): string {
