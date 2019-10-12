@@ -4,7 +4,12 @@ import PathValues from '../constants/PathValues';
 
 import { AccountAddress, AccountState } from '../wallet/Accounts';
 import { SignedTransactionWithProof, SignedTransaction } from '../__generated__/transaction_pb';
-import { LibraSignedTransactionWithProof } from '../transaction/Transactions';
+import { LibraSignedTransactionWithProof, LibraSignedTransaction, LibraTransactionEvent } from '../transaction/Transactions';
+import { LCSDeserialization } from '../lcs/deserialization';
+import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
+import { BufferUtil } from '../common/BufferUtil';
+import { EventsList } from '../__generated__/events_pb';
+import BigNumber from 'bignumber.js';
 
 /**
  * Internal class used by LibraClient
@@ -37,131 +42,25 @@ export class ClientDecoder {
     return AccountState.fromBytes(state[PathValues.AccountStatePath]);
   }
   
-  /*
   public decodeSignedTransactionWithProof(
-    signedTransactionWP: SignedTransactionWithProof,
-  ): LibraSignedTransactionWithProof {
-    // decode transaction
-    const signedTransaction = signedTransactionWP.getSignedTransaction() as SignedTransaction;
-    //const libraTransaction = this.decodeRawTransactionBytes(signedTransaction.getRawTxnBytes_asU8());
-
-    const libraSignedtransaction = new LibraSignedTransaction(
-      libraTransaction,
-      signedTransaction.getSenderPublicKey_asU8(),
-      signedTransaction.getSenderSignature_asU8(),
-    );
-
+    signedTransactionWP: SignedTransactionWithProof
+  ): LibraSignedTransactionWithProof  {
+    const signedTransactionProtobuf = signedTransactionWP.getSignedTransaction() as SignedTransaction
+    const rawTxnBytes = signedTransactionProtobuf.getSignedTxn_asU8()
+    const transactionCursor = new CursorBuffer(rawTxnBytes)
+    const transaction = LCSDeserialization.getRawTransaction(transactionCursor)
+    const publicKey = LCSDeserialization.getByteArray(transactionCursor)
+    const signature = LCSDeserialization.getByteArray(transactionCursor)
+    const libraSignedTransaction = new LibraSignedTransaction(transaction, publicKey, signature)
     // decode event
-    let eventsList: LibraTransactionEvent[] | undefined;
-    if (signedTransactionWP.hasEvents()) {
-      const events = signedTransactionWP.getEvents() as EventsList;
-      eventsList = events.getEventsList().map(event => {
-        let key: Uint8Array | undefined;
-        key = event.getKey_asU8();
-
-        return new LibraTransactionEvent(
-          event.getEventData_asU8(),
-          new BigNumber(event.getSequenceNumber()),
-          key
-        );
-      });
+    let eventList: LibraTransactionEvent[] | undefined
+    if(signedTransactionWP.hasEvents()) {
+      const events = signedTransactionWP.getEvents() as EventsList
+      eventList = events.getEventsList().map(event => {
+        let key = event.getKey_asU8()
+        return new LibraTransactionEvent(event.getEventData_asU8(), new BigNumber(event.getSequenceNumber()), key)
+      })
     }
-
-    return new LibraSignedTransactionWithProof(libraSignedtransaction, signedTransactionWP.getProof(), eventsList);
+    return new LibraSignedTransactionWithProof(libraSignedTransaction, signedTransactionWP.getProof(), eventList)
   }
-*/
-  /*
-  public decodeRawTransactionBytes(rawTxnBytes: Uint8Array): LibraTransaction {
-    const rawTxn = RawTransaction.deserializeBinary(rawTxnBytes);
-    const rawProgram = rawTxn.getProgram() as Program;
-
-    const program: LibraProgram = {
-      arguments: rawProgram.getArgumentsList().map(argument => ({
-        type: (argument.getType() as unknown) as LibraProgramArgumentType,
-        value: argument.getData_asU8(),
-      })),
-      code: rawProgram.getCode_asU8(),
-      modules: rawProgram.getModulesList(),
-    };
-
-    const gasContraint: LibraGasConstraint = {
-      gasUnitPrice: new BigNumber(rawTxn.getGasUnitPrice()),
-      maxGasAmount: new BigNumber(rawTxn.getMaxGasAmount()),
-    };
-
-    return new LibraTransaction(
-      program,
-      gasContraint,
-      new BigNumber(rawTxn.getExpirationTime()),
-      rawTxn.getSenderAccount_asU8(),
-      new BigNumber(rawTxn.getSequenceNumber()),
-    );
-  }
-
-  public hasInvariantViolation (vmStatus: VMStatus) {
-    return jspb.Message.getField(vmStatus, 3) != null;
-  }
-
-  public hasDeserialization (vmStatus: VMStatus) {
-    return jspb.Message.getField(vmStatus, 4) != null;
-  }
-
-  public decodeVMStatus(vmStatus?: VMStatus): LibraVMStatusError | undefined {
-    if (vmStatus === undefined) {
-      return undefined;
-    }
-
-    let validationStatus: LibraValidationStatusError | undefined;
-    let verificationStatusErrors: LibraVerificationStatusError[] | undefined;
-    let invariantViolationError: LibraInvariantViolationError | undefined;
-    let deserializationError: LibraDeserializationError | undefined;
-    let executionError: LibraExecutionError | undefined;
-
-    if (vmStatus.hasValidation()) {
-      const validation = vmStatus.getValidation() as VMValidationStatus;
-      validationStatus = {
-        code: (validation.getCode() as unknown) as LibraValidationStatusCode,
-        message: validation.getMessage(),
-      };
-    }
-
-    if (vmStatus.hasVerification()) {
-      const verification = vmStatus.getVerification() as VMVerificationStatusList;
-      verificationStatusErrors = verification.getStatusListList().map(status => {
-        return new LibraVerificationStatusError(
-          (status.getErrorKind() as unknown) as LibraVerificationStatusKind,
-          status.getModuleIdx(),
-          (status.getErrorKind() as unknown) as LibraVerificationError,
-          status.getMessage(),
-        );
-      });
-    }
-
-    if (this.hasInvariantViolation(vmStatus)) {
-      const invariant = vmStatus.getInvariantViolation() as VMInvariantViolationError;
-      invariantViolationError = (invariant as unknown) as LibraInvariantViolationError;
-    }
-
-    if (this.hasDeserialization(vmStatus)) {
-      const deser = vmStatus.getDeserialization() as BinaryError;
-      deserializationError = (deser as unknown) as LibraDeserializationError;
-    }
-
-    if (vmStatus.hasExecution()) {
-      const execution = vmStatus.getExecution() as ExecutionStatus;
-      executionError = {
-        errorType: (execution.getExecutionStatusCase() as unknown) as LibraExecutionErrorType,
-      };
-    }
-
-    return new LibraVMStatusError(
-      vmStatus.getErrorTypeCase(),
-      validationStatus,
-      verificationStatusErrors,
-      invariantViolationError,
-      deserializationError,
-      executionError,
-    );
-  }
-  */
 }

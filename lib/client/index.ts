@@ -27,7 +27,7 @@ import ServerHosts from '../constants/ServerHosts';
 import { KeyPair, Signature } from '../crypto/Eddsa';
 import { LCSSerialization } from '../lcs/serialization';
 import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
-import { LibraSignedTransaction, LibraTransaction } from '../transaction';
+import { LibraSignedTransaction, LibraTransaction, LibraSignedTransactionWithProof } from '../transaction';
 import { Account, AccountAddress, AccountAddressLike, AccountState, AccountStates} from '../wallet/Accounts';
 import { ClientDecoder } from './Decoder';
 
@@ -175,7 +175,7 @@ export class LibraClient {
     address: AccountAddressLike,
     sequenceNumber: BigNumber | string | number,
     fetchEvents: boolean = true,
-  ): Promise<boolean | null> {
+  ): Promise<LibraSignedTransactionWithProof | null> {
     const accountAddress = new AccountAddress(address);
     const parsedSequenceNumber = new BigNumber(sequenceNumber);
     const request = new UpdateToLatestLedgerRequest();
@@ -203,54 +203,8 @@ export class LibraClient {
 
     //console.log(signedTransactionWP)
     
-    return false
+    return this.decoder.decodeSignedTransactionWithProof(signedTransactionWP)
   }
-  /*
-  public async getAccountTransaction(
-    address: AccountAddressLike,
-    sequenceNumber: BigNumber | string | number,
-    fetchEvents: boolean = true,
-  ): Promise<LibraSignedTransactionWithProof | null> {
-    const accountAddress = new AccountAddress(address);
-    const parsedSequenceNumber = new BigNumber(sequenceNumber);
-    const request = new UpdateToLatestLedgerRequest();
-
-    const requestItem = new RequestItem();
-    const getTransactionRequest = new GetAccountTransactionBySequenceNumberRequest();
-    getTransactionRequest.setAccount(accountAddress.toBytes());
-    getTransactionRequest.setSequenceNumber(parsedSequenceNumber.toNumber());
-    getTransactionRequest.setFetchEvents(fetchEvents);
-    requestItem.setGetAccountTransactionBySequenceNumberRequest(getTransactionRequest);
-
-    request.addRequestedItems(requestItem);
-
-    const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
-
-    const responseItems = response.getResponseItemsList();
-
-    if (responseItems.length === 0) {
-      return null;
-    }
-
-    const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
-    const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
-    return this.decoder.decodeSignedTransactionWithProof(signedTransactionWP);
-  }
-  */
-
-  /**
-   * Sign the transaction with keyPair and returns a promise that resolves to a LibraSignedTransaction
-   *
-   *
-   */
-  /*
-  public async signTransaction(transaction: LibraTransaction, keyPair: KeyPair): Promise<LibraSignedTransaction> {
-    const rawTxn = await this.encoder.encodeLibraTransaction(transaction, transaction.sendersAddress);
-    //const signature = this.signRawTransaction(rawTxn, keyPair);
-
-    return new LibraSignedTransaction(transaction, keyPair.getPublicKey(), signature);
-  }
-  */
 
   /**
    * Transfer coins from sender to receipient.

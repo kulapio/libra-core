@@ -1,6 +1,7 @@
 import { LibraAdmissionControlStatus, LibraClient, LibraNetwork, LibraWallet, Account } from '../lib';
 import './utils';
 import { AccountAddress } from '../lib/wallet/Accounts';
+import { BufferUtil } from '../lib/common/BufferUtil';
 
 describe('LibraClient', () => {
   let client: LibraClient;
@@ -93,6 +94,7 @@ describe('LibraClient', () => {
     // // TEST QUERYING TRANSACTION
     const lastTransaction = await client.getAccountTransaction(account1.getAddress(), account1State.sequenceNumber);
     expect(lastTransaction).not.toBeNull();
+    console.log(lastTransaction)
     // // // ensure parameters are decoded properly
     // expect(lastTransaction!.signedTransaction.publicKey).bytesToEqual(account1.keyPair.getPublicKey());
     // expect(lastTransaction!.signedTransaction.transaction.sequenceNumber).toEqual(account1State.sequenceNumber);
