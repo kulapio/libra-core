@@ -197,6 +197,9 @@ async function main() {
   const account2 = wallet.newAccont();
   const account2Address = account2.getAddress().toHex();
   const response = await client.rotateKey(account1, account2Address);
+
+  // transfer coin with newly updated key
+  const response2 = await client.transferCoins(account1, account2Address, 1e6, account2.keyPair)
 }
 
 await main();
