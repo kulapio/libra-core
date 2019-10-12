@@ -5,6 +5,7 @@ import { TransactionArgumentLCS } from "./types/TransactionArgumentLCS";
 import { TransactionPayloadType, TransactionPayloadLCS } from "./types/TransactionPayloadLCS";
 import { TransactionArgument } from "../__generated__/transaction_pb";
 import { ProgramLCS } from "./types/ProgramLCS";
+import { RawTransactionLCS } from "./types/RawTransactionLCS";
 
 export class LCSDeserialization {
     static getAddress(cursor: CursorBuffer): AddressLCS {
@@ -53,6 +54,20 @@ export class LCSDeserialization {
             prog.addModule(BufferUtil.toHex(mod))
         })
         return prog
+    }
+
+    public static getRawTransaction(cursor: CursorBuffer): RawTransactionLCS {
+        const sender = this.getAddress(cursor)
+        const sequence = cursor.read64()
+        const payload = this.getTransactionPayload(cursor)
+        const maxGasAmount = cursor.read64()
+        const gasUnitPrice = cursor.read64()
+        const expiryTime = cursor.read64()
+        let transaction = new RawTransactionLCS(sender.value, sequence.toString(), payload)
+        transaction.maxGasAmount = maxGasAmount
+        transaction.gasUnitPrice = gasUnitPrice
+        transaction.expirtationTime = expiryTime
+        return transaction
     }
 
     public static getTransactionPayload(cursor: CursorBuffer): TransactionPayloadLCS {

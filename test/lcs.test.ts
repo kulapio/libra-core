@@ -8,6 +8,7 @@ import { ProgramLCS } from '../lib/lcs/types/ProgramLCS';
 import { RawTransactionLCS } from '../lib/lcs/types/RawTransactionLCS'
 import BigNumber from 'bignumber.js'
 import { CursorBuffer } from '../lib/common/CursorBuffer'
+import { executionAsyncId } from 'async_hooks'
 
 describe('LCS', () => {
     beforeAll(() => {
@@ -130,6 +131,23 @@ describe('LCS', () => {
         expect(actual.program.transactionArgs[0].string).toBe('CAFE D00D')
         expect(actual.program.modules.length).toBe(3)
         expect(BufferUtil.toHex(actual.program.modules[1])).toBe('FED0'.toLowerCase())
+    });
+
+    it('should deserialize RawTransactionWithProgram correctly', () => {
+        const source = '200000003A24A61E05D129CACE9E0EFC8BC9E33831FEC9A9BE66F50FD352A2638A49B9EE200000000000000000000000040000006D6F766502000000020000000900000043414645204430304402000000090000006361666520643030640300000001000000CA02000000FED0010000000D1027000000000000204E0000000000008051010000000000'.toLowerCase()
+        let cursor = new CursorBuffer(BufferUtil.fromHex(source))
+        const actual = LCSDeserialization.getRawTransaction(cursor)
+        expect(actual.sender.value).toBe('3a24a61e05d129cace9e0efc8bc9e33831fec9a9be66f50fd352a2638a49b9ee')
+        expect(actual.sequenceNumber.toString()).toBe('32')
+        expect(actual.maxGasAmount.toString()).toBe('10000')
+        expect(actual.gasUnitPrice.toString()).toBe('20000')
+        expect(actual.expirtationTime.toString()).toBe('86400')
+        expect(actual.payload.payloadType).toBe(TransactionPayloadType.Program)
+        expect(BufferUtil.toString(actual.payload.program.code)).toBe('move')
+        expect(actual.payload.program.transactionArgs.length).toBe(2)
+        expect(actual.payload.program.transactionArgs[0].string).toBe('CAFE D00D')
+        expect(actual.payload.program.modules.length).toBe(3)
+        expect(BufferUtil.toHex(actual.payload.program.modules[1])).toBe('FED0'.toLowerCase())
     });
 });
   
