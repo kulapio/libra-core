@@ -14,19 +14,7 @@ describe('LibraClient', () => {
     //   dataProtocol: 'grpc-web-text'
     // })
     client = new LibraClient({ network: LibraNetwork.Testnet, port: '8000' });
-    // client = new LibraClient({ port: '8000' });
   })
-
-  /*
-  it('should use minter address and sanity test calling getAccountTransaction()', async () => {
-    const account1Address = AccountAddress.default().toHex();
-
-    // It should be safe to assume that the minter has done the 0 sequence
-    const trans = await client.getAccountTransaction(account1Address, 0);
-    expect(trans!.signedTransaction.transaction.sendersAddress.toString()).toEqual(account1Address);
-
-  }, 5000);
-  */
 
   it('should get accountState correctly', async () => {
     const wallet = new LibraWallet();
@@ -37,26 +25,9 @@ describe('LibraClient', () => {
     let account1State = await client.getAccountState(account1Address);
     expect(account1State.balance.toString()).toBe('0')
   }, 5000);
-
-  it('should transfer coin correctly', async () => {
-    const wallet = new LibraWallet({
-      mnemonic:
-        'lend arm arm addict trust release grid unlock exhibit surround deliver front link bean night dry tuna pledge expect net ankle process mammal great',
-    });
-    
-    // TEST ACCOUNT CREATION
-    const account1 = wallet.newAccount();
-    const account1Address = account1.getAddress().toHex();
-    console.log('Account 1 address', account1Address);
-    await client.transferCoins(account1, 'c4d04d41ea1453db808e2e3a559f49a39d78fcefd6b87ebd41a0440b6017ff79', 1000000)
-  }, 5000);
-
   
   it('should query account state and transfer', async () => {
-    const wallet = new LibraWallet({
-      mnemonic:
-        'lend arm arm addict trust release grid unlock exhibit surround deliver front link bean night dry tuna pledge expect net ankle process mammal great',
-    });
+    const wallet = new LibraWallet();
 
     // TEST ACCOUNT CREATION
     const account1 = wallet.newAccount();
@@ -94,11 +65,48 @@ describe('LibraClient', () => {
     // // TEST QUERYING TRANSACTION
     const lastTransaction = await client.getAccountTransaction(account1.getAddress(), account1State.sequenceNumber);
     expect(lastTransaction).not.toBeNull();
-    console.log(lastTransaction)
     // // // ensure parameters are decoded properly
-    // expect(lastTransaction!.signedTransaction.publicKey).bytesToEqual(account1.keyPair.getPublicKey());
-    // expect(lastTransaction!.signedTransaction.transaction.sequenceNumber).toEqual(account1State.sequenceNumber);
+    expect(lastTransaction!.signedTransaction.publicKey).bytesToEqual(account1.keyPair.getPublicKey());
+    expect(lastTransaction!.signedTransaction.transaction.sequenceNumber).toEqual(account1State.sequenceNumber);
     // // TODO test events from transactions queried
+
+    //await client.rotateKey(account1, account2.keyPair.getSecretKey())
+  }, 50000);
+
+  it('should rotatekey and transfer correctly', async () => {
+    const wallet = new LibraWallet();
+
+    // TEST ACCOUNT CREATION
+    const account1 = wallet.newAccount();
+    const account1Address = account1.getAddress().toHex();
+    let account1State = await client.getAccountState(account1Address);
+    console.log('Account 1 address', account1Address);
+
+    const account2 = wallet.newAccount();
+    const account2Address = account2.getAddress().toHex();
+    const account2State = await client.getAccountState(account2Address);
+    console.log('Account 2 address', account2Address);
+
+    const amountToTransfer = 1e6;
+
+    // TEST MINITNG Amount
+    await client.mintWithFaucetService(account1Address, 2 * amountToTransfer);
+    
+    // begin rotate key
+    const response = await client.rotateKey(account1, account2Address)
+    expect(response.getAcStatus()!.getCode()).toEqual(LibraAdmissionControlStatus.ACCEPTED);
+    await new Promise((r) => setTimeout(r, 3000));
+
+    // begin use new key to transfer
+    const response2 = await client.transferCoins(account1, account2Address, amountToTransfer, account2.keyPair)
+    expect(response2.getAcStatus()!.getCode()).toEqual(LibraAdmissionControlStatus.ACCEPTED);
+    // await response.awaitConfirmation(client);
+    await new Promise((r) => setTimeout(r, 3000));
+
+    const newAccount2State = await client.getAccountState(account2Address);
+    expect(newAccount2State.balance.toString(10)).toEqual(account2State.balance.plus(amountToTransfer).toString(10));
+
+    //await client.rotateKey(account1, account2.keyPair.getSecretKey())
   }, 50000);
   
 });

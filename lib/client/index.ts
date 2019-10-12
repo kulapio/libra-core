@@ -215,19 +215,36 @@ export class LibraClient {
     sender: Account,
     recipientAddress: string,
     numCoins: number | string | BigNumber,
+    additionalKey?: KeyPair
   ): Promise<SubmitTransactionResponse> {
     const state = await this.getAccountState(sender.getAddress().toHex())
-    return await this.execute(LibraTransaction.createTransfer(sender, recipientAddress, new BigNumber(numCoins), state.sequenceNumber), sender);
+    let keypair: KeyPair = sender.keyPair
+    if(additionalKey != null) 
+      keypair = additionalKey
+    return await this.execute(LibraTransaction.createTransfer(sender, recipientAddress, new BigNumber(numCoins), state.sequenceNumber), keypair);
+  }
+
+  /**
+   * 
+   * @param transaction 
+   * @param sender 
+   */
+  public async rotateKey(
+    sender: Account,
+    newAddress: string
+  ): Promise<SubmitTransactionResponse> {
+    const state = await this.getAccountState(sender.getAddress().toHex())
+    return await this.execute(LibraTransaction.createRotateKey(sender, newAddress, state.sequenceNumber), sender.keyPair)
   }
 
   /**
    * Execute a transaction by sender.
    *
    */
-  public async execute(transaction: RawTransactionLCS, sender:Account): Promise<SubmitTransactionResponse> {
+  public async execute(transaction: RawTransactionLCS, sender:KeyPair): Promise<SubmitTransactionResponse> {
     
     const request = new SubmitTransactionRequest()
-    const senderSignature = await this.signTransaction(transaction, sender.keyPair)
+    const senderSignature = await this.signTransaction(transaction, sender)
     const rawTxn = LCSSerialization.rawTransactionToByte(senderSignature.transaction)
     const publicKeyLCS = LCSSerialization.byteArrayToByte(senderSignature.publicKey)
     let signedTxn = BufferUtil.concat(rawTxn, publicKeyLCS)

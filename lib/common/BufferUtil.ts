@@ -1,4 +1,5 @@
 import { stringLiteral } from "@babel/types"
+import { Buffer } from "buffer"
 
 export class BufferUtil {
     public static fromHex(source: string): Uint8Array {
@@ -33,6 +34,10 @@ export class BufferUtil {
             data.push(x.toString(16).padStart(2, '0'))
         })
         return data.join('')
+    }
+
+    public static toBase64(sources:Uint8Array): string {
+        return Buffer.from(sources).toString('base64')
     }
 
     public static concat(a:Uint8Array, b:Uint8Array): Uint8Array {
