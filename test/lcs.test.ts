@@ -3,7 +3,7 @@ import {LCSDeserialization} from '../lib/lcs/deserialization'
 import {AddressLCS} from '../lib/lcs/types/AddressLCS'
 import {BufferUtil} from '../lib/common/BufferUtil'
 import { TransactionArgumentLCS } from '../lib/lcs/types/TransactionArgumentLCS'
-import { TransactionPayloadLCS } from '../lib/lcs/types/TransactionPayloadLCS'
+import { TransactionPayloadLCS, TransactionPayloadType } from '../lib/lcs/types/TransactionPayloadLCS'
 import { ProgramLCS } from '../lib/lcs/types/ProgramLCS';
 import { RawTransactionLCS } from '../lib/lcs/types/RawTransactionLCS'
 import BigNumber from 'bignumber.js'
@@ -118,6 +118,18 @@ describe('LCS', () => {
         expect(actual.transactionArgs[0].string).toBe('CAFE D00D')
         expect(actual.modules.length).toBe(3)
         expect(BufferUtil.toHex(actual.modules[1])).toBe('FED0'.toLowerCase())
+    });
+
+    it('should deserialize TransactionPayloadWithProgram correctly', () => {
+        const source = '00000000040000006D6F766502000000020000000900000043414645204430304402000000090000006361666520643030640300000001000000CA02000000FED0010000000D'.toLowerCase()
+        let cursor = new CursorBuffer(BufferUtil.fromHex(source))
+        const actual = LCSDeserialization.getTransactionPayload(cursor)
+        expect(actual.payloadType).toBe(TransactionPayloadType.Program)
+        expect(BufferUtil.toString(actual.program.code)).toBe('move')
+        expect(actual.program.transactionArgs.length).toBe(2)
+        expect(actual.program.transactionArgs[0].string).toBe('CAFE D00D')
+        expect(actual.program.modules.length).toBe(3)
+        expect(BufferUtil.toHex(actual.program.modules[1])).toBe('FED0'.toLowerCase())
     });
 });
   

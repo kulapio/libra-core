@@ -2,7 +2,7 @@ import { AddressLCS } from "./types/AddressLCS";
 import { CursorBuffer } from "../common/CursorBuffer";
 import { BufferUtil } from "../common/BufferUtil";
 import { TransactionArgumentLCS } from "./types/TransactionArgumentLCS";
-import { TransactionPayloadType } from "./types/TransactionPayloadLCS";
+import { TransactionPayloadType, TransactionPayloadLCS } from "./types/TransactionPayloadLCS";
 import { TransactionArgument } from "../__generated__/transaction_pb";
 import { ProgramLCS } from "./types/ProgramLCS";
 
@@ -53,6 +53,17 @@ export class LCSDeserialization {
             prog.addModule(BufferUtil.toHex(mod))
         })
         return prog
+    }
+
+    public static getTransactionPayload(cursor: CursorBuffer): TransactionPayloadLCS {
+        let payload = new TransactionPayloadLCS()
+        payload.payloadType = cursor.read32()
+        // now, only transaction with program payload is supported
+        if(payload.payloadType === TransactionPayloadType.Program) {
+            payload.program = this.getProgram(cursor)
+            return payload
+        }
+        throw new Error('unsupported TransactionPayload type')
     }
 
     public static getListByteArray(cursor: CursorBuffer): Uint8Array[] {
