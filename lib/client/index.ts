@@ -16,16 +16,18 @@ import {
   RequestItem,
   ResponseItem,
   UpdateToLatestLedgerRequest,
-  UpdateToLatestLedgerResponse
+  UpdateToLatestLedgerResponse,
+  GetAccountTransactionBySequenceNumberRequest,
+  GetAccountTransactionBySequenceNumberResponse
 } from '../__generated__/get_with_proof_pb';
-import { SignedTransaction } from '../__generated__/transaction_pb';
+import { SignedTransaction, SignedTransactionWithProof } from '../__generated__/transaction_pb';
 import {BufferUtil} from '../common/BufferUtil'
 import HashSaltValues from '../constants/HashSaltValues';
 import ServerHosts from '../constants/ServerHosts';
 import { KeyPair, Signature } from '../crypto/Eddsa';
 import { LCSSerialization } from '../lcs/serialization';
 import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
-import { LibraSignedTransaction, LibraTransaction } from '../transaction';
+import { LibraSignedTransaction, LibraTransaction, LibraSignedTransactionWithProof } from '../transaction';
 import { Account, AccountAddress, AccountAddressLike, AccountState, AccountStates} from '../wallet/Accounts';
 import { ClientDecoder } from './Decoder';
 
@@ -166,18 +168,43 @@ export class LibraClient {
   }
 
   /**
-   * Sign the transaction with keyPair and returns a promise that resolves to a LibraSignedTransaction
-   *
+   * Returns the Accounts transaction done with sequenceNumber.
    *
    */
-  /*
-  public async signTransaction(transaction: LibraTransaction, keyPair: KeyPair): Promise<LibraSignedTransaction> {
-    const rawTxn = await this.encoder.encodeLibraTransaction(transaction, transaction.sendersAddress);
-    //const signature = this.signRawTransaction(rawTxn, keyPair);
+  public async getAccountTransaction(
+    address: AccountAddressLike,
+    sequenceNumber: BigNumber | string | number,
+    fetchEvents: boolean = true,
+  ): Promise<LibraSignedTransactionWithProof | null> {
+    const accountAddress = new AccountAddress(address);
+    const parsedSequenceNumber = new BigNumber(sequenceNumber);
+    const request = new UpdateToLatestLedgerRequest();
 
-    return new LibraSignedTransaction(transaction, keyPair.getPublicKey(), signature);
+    const requestItem = new RequestItem();
+    const getTransactionRequest = new GetAccountTransactionBySequenceNumberRequest();
+    getTransactionRequest.setAccount(accountAddress.toBytes());
+    getTransactionRequest.setSequenceNumber(parsedSequenceNumber.toNumber());
+    getTransactionRequest.setFetchEvents(fetchEvents);
+    requestItem.setGetAccountTransactionBySequenceNumberRequest(getTransactionRequest);
+    
+    request.addRequestedItems(requestItem);
+    const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
+    //console.log(response)
+    
+    const responseItems = response.getResponseItemsList();
+
+    if (responseItems.length === 0) {
+      return null;
+    }
+
+    //console.log(responseItems)
+    const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
+    const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
+
+    //console.log(signedTransactionWP)
+    
+    return this.decoder.decodeSignedTransactionWithProof(signedTransactionWP)
   }
-  */
 
   /**
    * Transfer coins from sender to receipient.
@@ -188,19 +215,36 @@ export class LibraClient {
     sender: Account,
     recipientAddress: string,
     numCoins: number | string | BigNumber,
+    additionalKey?: KeyPair
   ): Promise<SubmitTransactionResponse> {
     const state = await this.getAccountState(sender.getAddress().toHex())
-    return await this.execute(LibraTransaction.createTransfer(sender, recipientAddress, new BigNumber(numCoins), state.sequenceNumber), sender);
+    let keypair: KeyPair = sender.keyPair
+    if(additionalKey != null) 
+      keypair = additionalKey
+    return await this.execute(LibraTransaction.createTransfer(sender, recipientAddress, new BigNumber(numCoins), state.sequenceNumber), keypair);
+  }
+
+  /**
+   * 
+   * @param transaction 
+   * @param sender 
+   */
+  public async rotateKey(
+    sender: Account,
+    newAddress: string
+  ): Promise<SubmitTransactionResponse> {
+    const state = await this.getAccountState(sender.getAddress().toHex())
+    return await this.execute(LibraTransaction.createRotateKey(sender, newAddress, state.sequenceNumber), sender.keyPair)
   }
 
   /**
    * Execute a transaction by sender.
    *
    */
-  public async execute(transaction: RawTransactionLCS, sender:Account): Promise<SubmitTransactionResponse> {
+  public async execute(transaction: RawTransactionLCS, sender:KeyPair): Promise<SubmitTransactionResponse> {
     
     const request = new SubmitTransactionRequest()
-    const senderSignature = await this.signTransaction(transaction, sender.keyPair)
+    const senderSignature = await this.signTransaction(transaction, sender)
     const rawTxn = LCSSerialization.rawTransactionToByte(senderSignature.transaction)
     const publicKeyLCS = LCSSerialization.byteArrayToByte(senderSignature.publicKey)
     let signedTxn = BufferUtil.concat(rawTxn, publicKeyLCS)

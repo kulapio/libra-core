@@ -22,7 +22,6 @@ export class LibraTransaction {
   public static createTransfer(sender: Account, recipientAddress: string, numAccount: BigNumber, sequence: BigNumber): RawTransactionLCS {
     // construct program
     const prog = new ProgramLCS()
-    // prog.setCodeFromBuffer(Buffer.from(ProgamBase64Codes.peerToPeerTxn,'base64'))
     prog.setCodeFromBuffer(BufferUtil.fromBase64(ProgamBase64Codes.peerToPeerTxn))
     const recipientAddressLCS = new AddressLCS(recipientAddress)
     prog.addTransactionArg(TransactionArgumentLCS.fromAddress(recipientAddressLCS))
@@ -31,6 +30,20 @@ export class LibraTransaction {
     const payload = TransactionPayloadLCS.fromProgram(prog)
     // raw transaction
     const transaction = new RawTransactionLCS(sender.getAddress().toHex(), sequence.toString(), payload)
+    return transaction
+  }
+
+  public static createRotateKey(sender: Account, newAddress: string, sequence: BigNumber): RawTransactionLCS {
+    // construct program
+    //const publicKeyNewLCS = LCSSerialization.byteArrayToByte(publicKeyNew)
+    const prog = new ProgramLCS()
+    prog.setCodeFromBuffer(BufferUtil.fromBase64(ProgamBase64Codes.rotateAuthenticationKeyTxn))
+    prog.addTransactionArg(TransactionArgumentLCS.fromByteArray(BufferUtil.fromHex(newAddress)))
+    // construct payload
+    const payload = TransactionPayloadLCS.fromProgram(prog)
+    // raw transaction
+    const transaction = new RawTransactionLCS(sender.getAddress().toHex(), sequence.toString(), payload)
+    transaction.gasUnitPrice = new BigNumber(1)
     return transaction
   }
 }

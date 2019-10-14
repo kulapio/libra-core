@@ -1,7 +1,7 @@
 import {BigNumber} from 'bignumber.js'
 import {TransactionArgument} from '../../__generated__/transaction_pb'
-import { LCSSerialization } from '../serialization'
 import { AddressLCS } from './AddressLCS'
+import { BufferUtil } from '../../common/BufferUtil'
 
 export class TransactionArgumentLCS {
     public static fromU64(source:string): TransactionArgumentLCS {
@@ -53,10 +53,9 @@ export class TransactionArgumentLCS {
             return '{U64: ' + this.u64.toString() + '}'
         } else if(this.type === TransactionArgument.ArgType.STRING) {
             return '{STRING: ' + this.string + '}'
+        } else if(this.type === TransactionArgument.ArgType.BYTEARRAY) {
+            return '{ByteArray: 0xb"' + BufferUtil.toHex(this.byteArray) + '"}'
         }
-        // } else if(this.type === TransactionArgument.ArgType.BYTEARRAY) {
-        //     return '{ByteArray: 0xb"' + LCSSerialization.toHexString(this.byteArray) + '"}'
-        // }
         throw new Error('unknow type')
     }
 }

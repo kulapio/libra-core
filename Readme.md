@@ -20,6 +20,7 @@ Usable both in node and on browser clients.
   * [Transferring Libra Coins](#transferring-libra-coins)
   * [Executing Transactions with Custom Program](#executing-transactions-with-custom-program)
   * [Query Transaction with Sequence Number](#query-transaction-with-sequence-number)
+  * [Rotate Key](#rotate-key)
 - [Development](#development)
 - [Contribution](#contribution)
 - [License](#license)
@@ -145,8 +146,6 @@ async function main() {
   const account2Address = '854563c50d20788fb6c11fac1010b553d722edb0c02f87c2edbdd3923726d13f';
   const response = await client.transferCoins(account, account2Address, 1e6);
 
-  // wait for transaction confirmation
-  await response.awaitConfirmation(client);
 }
 
 await main();
@@ -173,6 +172,34 @@ async function main() {
   const sequenceNumber = 43; //can also use a string for really large sequence numbers;
 
   const transaction = await client.getAccountTransaction(accountAddress, sequenceNumber);
+}
+```
+
+### Rotate Key
+```javascript
+async function main() {
+  // On Browser
+  // const client = new LibraClient({
+  //   transferProtocol: 'https',
+  //   host: 'ac-libra-testnet.kulap.io',
+  //   port: '443',
+  //   dataProtocol: 'grpc-web-text'
+  // })
+  // On Node
+  const client = new LibraClient({ network: LibraNetwork.Testnet })
+
+  const wallet = new LibraWallet({
+    mnemonic:
+     'lend arm arm addict trust release grid unlock exhibit surround deliver front link bean night dry tuna pledge expect net ankle process mammal great',
+
+  });
+  const account = wallet.newAccount();
+  const account2 = wallet.newAccont();
+  const account2Address = account2.getAddress().toHex();
+  const response = await client.rotateKey(account1, account2Address);
+
+  // transfer coin with newly updated key
+  const response2 = await client.transferCoins(account1, account2Address, 1e6, account2.keyPair)
 }
 
 await main();
