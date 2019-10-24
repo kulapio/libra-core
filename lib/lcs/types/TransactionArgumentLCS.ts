@@ -1,7 +1,7 @@
 import {BigNumber} from 'bignumber.js'
 import {TransactionArgument} from '../../__generated__/transaction_pb'
-import { AddressLCS } from './AddressLCS'
 import { BufferUtil } from '../../common/BufferUtil'
+import { AddressLCS } from './AddressLCS'
 
 export class TransactionArgumentLCS {
     public static fromU64(source:string): TransactionArgumentLCS {

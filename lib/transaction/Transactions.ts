@@ -35,7 +35,7 @@ export class LibraTransaction {
 
   public static createRotateKey(sender: Account, newAddress: string, sequence: BigNumber): RawTransactionLCS {
     // construct program
-    //const publicKeyNewLCS = LCSSerialization.byteArrayToByte(publicKeyNew)
+    // const publicKeyNewLCS = LCSSerialization.byteArrayToByte(publicKeyNew)
     const prog = new ProgramLCS()
     prog.setCodeFromBuffer(BufferUtil.fromBase64(ProgamBase64Codes.rotateAuthenticationKeyTxn))
     prog.addTransactionArg(TransactionArgumentLCS.fromByteArray(BufferUtil.fromHex(newAddress)))

@@ -13,12 +13,12 @@ import {
 import {
   GetAccountStateRequest,
   GetAccountStateResponse,
+  GetAccountTransactionBySequenceNumberRequest,
+  GetAccountTransactionBySequenceNumberResponse,
   RequestItem,
   ResponseItem,
   UpdateToLatestLedgerRequest,
-  UpdateToLatestLedgerResponse,
-  GetAccountTransactionBySequenceNumberRequest,
-  GetAccountTransactionBySequenceNumberResponse
+  UpdateToLatestLedgerResponse
 } from '../__generated__/get_with_proof_pb';
 import { SignedTransaction, SignedTransactionWithProof } from '../__generated__/transaction_pb';
 import {BufferUtil} from '../common/BufferUtil'
@@ -27,7 +27,7 @@ import ServerHosts from '../constants/ServerHosts';
 import { KeyPair, Signature } from '../crypto/Eddsa';
 import { LCSSerialization } from '../lcs/serialization';
 import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
-import { LibraSignedTransaction, LibraTransaction, LibraSignedTransactionWithProof } from '../transaction';
+import { LibraSignedTransaction, LibraSignedTransactionWithProof, LibraTransaction } from '../transaction';
 import { Account, AccountAddress, AccountAddressLike, AccountState, AccountStates} from '../wallet/Accounts';
 import { ClientDecoder } from './Decoder';
 
@@ -189,7 +189,6 @@ export class LibraClient {
     
     request.addRequestedItems(requestItem);
     const response = await this.admissionControlProxy.updateToLatestLedger(this.acClient, request);
-    //console.log(response)
     
     const responseItems = response.getResponseItemsList();
 
@@ -197,11 +196,8 @@ export class LibraClient {
       return null;
     }
 
-    //console.log(responseItems)
     const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
     const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
-
-    //console.log(signedTransactionWP)
     
     return this.decoder.decodeSignedTransactionWithProof(signedTransactionWP)
   }
@@ -219,8 +215,9 @@ export class LibraClient {
   ): Promise<SubmitTransactionResponse> {
     const state = await this.getAccountState(sender.getAddress().toHex())
     let keypair: KeyPair = sender.keyPair
-    if(additionalKey != null) 
+    if (additionalKey != null) {
       keypair = additionalKey
+    }
     return await this.execute(LibraTransaction.createTransfer(sender, recipientAddress, new BigNumber(numCoins), state.sequenceNumber), keypair);
   }
 

@@ -1,14 +1,14 @@
-import { AddressLCS } from "./types/AddressLCS";
-import { CursorBuffer } from "../common/CursorBuffer";
-import { BufferUtil } from "../common/BufferUtil";
-import { TransactionArgumentLCS } from "./types/TransactionArgumentLCS";
-import { TransactionPayloadType, TransactionPayloadLCS } from "./types/TransactionPayloadLCS";
 import { TransactionArgument } from "../__generated__/transaction_pb";
+import { BufferUtil } from "../common/BufferUtil";
+import { CursorBuffer } from "../common/CursorBuffer";
+import { AddressLCS } from "./types/AddressLCS";
 import { ProgramLCS } from "./types/ProgramLCS";
 import { RawTransactionLCS } from "./types/RawTransactionLCS";
+import { TransactionArgumentLCS } from "./types/TransactionArgumentLCS";
+import { TransactionPayloadLCS, TransactionPayloadType } from "./types/TransactionPayloadLCS";
 
 export class LCSDeserialization {
-    static getAddress(cursor: CursorBuffer): AddressLCS {
+    public static getAddress(cursor: CursorBuffer): AddressLCS {
         const len = cursor.read32()
         const data = cursor.readXBytes(len)
         return new AddressLCS(BufferUtil.toHex(data))
@@ -16,7 +16,7 @@ export class LCSDeserialization {
 
     public static getTransactionArgumentList(cursor: CursorBuffer): TransactionArgumentLCS[] {
         const argLen = cursor.read32()
-        let transactionArgs: TransactionArgumentLCS[] = []
+        const transactionArgs: TransactionArgumentLCS[] = []
         for(let i = 0;i<argLen;i++) {
             transactionArgs.push(this.getTransactionArgument(cursor))
         }
@@ -45,7 +45,7 @@ export class LCSDeserialization {
         const code = this.getByteArray(cursor)
         const transactionArgs = this.getTransactionArgumentList(cursor)
         const modules = this.getListByteArray(cursor)
-        let prog = new ProgramLCS()
+        const prog = new ProgramLCS()
         prog.setCodeFromBuffer(code)
         transactionArgs.forEach(arg => {
             prog.addTransactionArg(arg)
@@ -63,7 +63,7 @@ export class LCSDeserialization {
         const maxGasAmount = cursor.read64()
         const gasUnitPrice = cursor.read64()
         const expiryTime = cursor.read64()
-        let transaction = new RawTransactionLCS(sender.value, sequence.toString(), payload)
+        const transaction = new RawTransactionLCS(sender.value, sequence.toString(), payload)
         transaction.maxGasAmount = maxGasAmount
         transaction.gasUnitPrice = gasUnitPrice
         transaction.expirtationTime = expiryTime
@@ -71,7 +71,7 @@ export class LCSDeserialization {
     }
 
     public static getTransactionPayload(cursor: CursorBuffer): TransactionPayloadLCS {
-        let payload = new TransactionPayloadLCS()
+        const payload = new TransactionPayloadLCS()
         payload.payloadType = cursor.read32()
         // now, only transaction with program payload is supported
         if(payload.payloadType === TransactionPayloadType.Program) {
@@ -83,7 +83,7 @@ export class LCSDeserialization {
 
     public static getListByteArray(cursor: CursorBuffer): Uint8Array[] {
         const len = cursor.read32()
-        let byteList = []
+        const byteList = []
         for(let i=0;i<len;i++) {
             byteList.push(this.getByteArray(cursor))
         }
@@ -98,7 +98,7 @@ export class LCSDeserialization {
     
     public static getString(cursor: CursorBuffer): string {
         const len = cursor.read32()
-        let data = []
+        const data = []
         for(let i=0;i<len;i++) {
             data.push(cursor.read8())
         }

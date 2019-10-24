@@ -1,15 +1,13 @@
+import BigNumber from 'bignumber.js';
+import { EventsList } from '../__generated__/events_pb';
+import { SignedTransaction, SignedTransactionWithProof } from '../__generated__/transaction_pb';
+import { BufferUtil } from '../common/BufferUtil';
 import { CursorBuffer } from '../common/CursorBuffer';
-
 import PathValues from '../constants/PathValues';
-
-import { AccountAddress, AccountState } from '../wallet/Accounts';
-import { SignedTransactionWithProof, SignedTransaction } from '../__generated__/transaction_pb';
-import { LibraSignedTransactionWithProof, LibraSignedTransaction, LibraTransactionEvent } from '../transaction/Transactions';
 import { LCSDeserialization } from '../lcs/deserialization';
 import { RawTransactionLCS } from '../lcs/types/RawTransactionLCS';
-import { BufferUtil } from '../common/BufferUtil';
-import { EventsList } from '../__generated__/events_pb';
-import BigNumber from 'bignumber.js';
+import { LibraSignedTransaction, LibraSignedTransactionWithProof, LibraTransactionEvent } from '../transaction/Transactions';
+import { AccountAddress, AccountState } from '../wallet/Accounts';
 
 /**
  * Internal class used by LibraClient
@@ -57,7 +55,7 @@ export class ClientDecoder {
     if(signedTransactionWP.hasEvents()) {
       const events = signedTransactionWP.getEvents() as EventsList
       eventList = events.getEventsList().map(event => {
-        let key = event.getKey_asU8()
+        const key = event.getKey_asU8()
         return new LibraTransactionEvent(event.getEventData_asU8(), new BigNumber(event.getSequenceNumber()), key)
       })
     }
