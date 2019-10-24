@@ -8,6 +8,12 @@
     "build/**/*",
     "lib/**/*"
   ],
+  "react-native": {
+    "./build/client/Node.js": "./build/client/Browser.js"
+  },
+  "browser": {
+    "./build/client/Node.js": "./build/client/Browser.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/kulapio/libra-core.git"
