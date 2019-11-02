@@ -3,13 +3,10 @@ import * as jspb from "google-protobuf"
 import * as transaction_info_pb from './transaction_info_pb';
 
 export class AccumulatorProof extends jspb.Message {
-  getBitmap(): number;
-  setBitmap(value: number): void;
-
-  getNonDefaultSiblingsList(): Array<Uint8Array | string>;
-  setNonDefaultSiblingsList(value: Array<Uint8Array | string>): void;
-  clearNonDefaultSiblingsList(): void;
-  addNonDefaultSiblings(value: Uint8Array | string, index?: number): void;
+  getSiblingsList(): Array<Uint8Array | string>;
+  setSiblingsList(value: Array<Uint8Array | string>): void;
+  clearSiblingsList(): void;
+  addSiblings(value: Uint8Array | string, index?: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccumulatorProof.AsObject;
@@ -21,8 +18,7 @@ export class AccumulatorProof extends jspb.Message {
 
 export namespace AccumulatorProof {
   export type AsObject = {
-    bitmap: number,
-    nonDefaultSiblingsList: Array<Uint8Array | string>,
+    siblingsList: Array<Uint8Array | string>,
   }
 }
 
@@ -32,15 +28,10 @@ export class SparseMerkleProof extends jspb.Message {
   getLeaf_asB64(): string;
   setLeaf(value: Uint8Array | string): void;
 
-  getBitmap(): Uint8Array | string;
-  getBitmap_asU8(): Uint8Array;
-  getBitmap_asB64(): string;
-  setBitmap(value: Uint8Array | string): void;
-
-  getNonDefaultSiblingsList(): Array<Uint8Array | string>;
-  setNonDefaultSiblingsList(value: Array<Uint8Array | string>): void;
-  clearNonDefaultSiblingsList(): void;
-  addNonDefaultSiblings(value: Uint8Array | string, index?: number): void;
+  getSiblingsList(): Array<Uint8Array | string>;
+  setSiblingsList(value: Array<Uint8Array | string>): void;
+  clearSiblingsList(): void;
+  addSiblings(value: Uint8Array | string, index?: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SparseMerkleProof.AsObject;
@@ -53,24 +44,15 @@ export class SparseMerkleProof extends jspb.Message {
 export namespace SparseMerkleProof {
   export type AsObject = {
     leaf: Uint8Array | string,
-    bitmap: Uint8Array | string,
-    nonDefaultSiblingsList: Array<Uint8Array | string>,
+    siblingsList: Array<Uint8Array | string>,
   }
 }
 
 export class AccumulatorConsistencyProof extends jspb.Message {
-  getFrozenSubtreeRootsList(): Array<Uint8Array | string>;
-  setFrozenSubtreeRootsList(value: Array<Uint8Array | string>): void;
-  clearFrozenSubtreeRootsList(): void;
-  addFrozenSubtreeRoots(value: Uint8Array | string, index?: number): void;
-
-  getNumSiblings(): number;
-  setNumSiblings(value: number): void;
-
-  getNonDefaultSiblingsList(): Array<Uint8Array | string>;
-  setNonDefaultSiblingsList(value: Array<Uint8Array | string>): void;
-  clearNonDefaultSiblingsList(): void;
-  addNonDefaultSiblings(value: Uint8Array | string, index?: number): void;
+  getSubtreesList(): Array<Uint8Array | string>;
+  setSubtreesList(value: Array<Uint8Array | string>): void;
+  clearSubtreesList(): void;
+  addSubtrees(value: Uint8Array | string, index?: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccumulatorConsistencyProof.AsObject;
@@ -82,13 +64,37 @@ export class AccumulatorConsistencyProof extends jspb.Message {
 
 export namespace AccumulatorConsistencyProof {
   export type AsObject = {
-    frozenSubtreeRootsList: Array<Uint8Array | string>,
-    numSiblings: number,
-    nonDefaultSiblingsList: Array<Uint8Array | string>,
+    subtreesList: Array<Uint8Array | string>,
   }
 }
 
-export class SignedTransactionProof extends jspb.Message {
+export class AccumulatorRangeProof extends jspb.Message {
+  getLeftSiblingsList(): Array<Uint8Array | string>;
+  setLeftSiblingsList(value: Array<Uint8Array | string>): void;
+  clearLeftSiblingsList(): void;
+  addLeftSiblings(value: Uint8Array | string, index?: number): void;
+
+  getRightSiblingsList(): Array<Uint8Array | string>;
+  setRightSiblingsList(value: Array<Uint8Array | string>): void;
+  clearRightSiblingsList(): void;
+  addRightSiblings(value: Uint8Array | string, index?: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AccumulatorRangeProof.AsObject;
+  static toObject(includeInstance: boolean, msg: AccumulatorRangeProof): AccumulatorRangeProof.AsObject;
+  static serializeBinaryToWriter(message: AccumulatorRangeProof, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AccumulatorRangeProof;
+  static deserializeBinaryFromReader(message: AccumulatorRangeProof, reader: jspb.BinaryReader): AccumulatorRangeProof;
+}
+
+export namespace AccumulatorRangeProof {
+  export type AsObject = {
+    leftSiblingsList: Array<Uint8Array | string>,
+    rightSiblingsList: Array<Uint8Array | string>,
+  }
+}
+
+export class TransactionProof extends jspb.Message {
   getLedgerInfoToTransactionInfoProof(): AccumulatorProof | undefined;
   setLedgerInfoToTransactionInfoProof(value?: AccumulatorProof): void;
   hasLedgerInfoToTransactionInfoProof(): boolean;
@@ -100,14 +106,14 @@ export class SignedTransactionProof extends jspb.Message {
   clearTransactionInfo(): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): SignedTransactionProof.AsObject;
-  static toObject(includeInstance: boolean, msg: SignedTransactionProof): SignedTransactionProof.AsObject;
-  static serializeBinaryToWriter(message: SignedTransactionProof, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): SignedTransactionProof;
-  static deserializeBinaryFromReader(message: SignedTransactionProof, reader: jspb.BinaryReader): SignedTransactionProof;
+  toObject(includeInstance?: boolean): TransactionProof.AsObject;
+  static toObject(includeInstance: boolean, msg: TransactionProof): TransactionProof.AsObject;
+  static serializeBinaryToWriter(message: TransactionProof, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TransactionProof;
+  static deserializeBinaryFromReader(message: TransactionProof, reader: jspb.BinaryReader): TransactionProof;
 }
 
-export namespace SignedTransactionProof {
+export namespace TransactionProof {
   export type AsObject = {
     ledgerInfoToTransactionInfoProof?: AccumulatorProof.AsObject,
     transactionInfo?: transaction_info_pb.TransactionInfo.AsObject,
@@ -175,6 +181,32 @@ export namespace EventProof {
     ledgerInfoToTransactionInfoProof?: AccumulatorProof.AsObject,
     transactionInfo?: transaction_info_pb.TransactionInfo.AsObject,
     transactionInfoToEventProof?: AccumulatorProof.AsObject,
+  }
+}
+
+export class TransactionListProof extends jspb.Message {
+  getLedgerInfoToTransactionInfosProof(): AccumulatorRangeProof | undefined;
+  setLedgerInfoToTransactionInfosProof(value?: AccumulatorRangeProof): void;
+  hasLedgerInfoToTransactionInfosProof(): boolean;
+  clearLedgerInfoToTransactionInfosProof(): void;
+
+  getTransactionInfosList(): Array<transaction_info_pb.TransactionInfo>;
+  setTransactionInfosList(value: Array<transaction_info_pb.TransactionInfo>): void;
+  clearTransactionInfosList(): void;
+  addTransactionInfos(value?: transaction_info_pb.TransactionInfo, index?: number): transaction_info_pb.TransactionInfo;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): TransactionListProof.AsObject;
+  static toObject(includeInstance: boolean, msg: TransactionListProof): TransactionListProof.AsObject;
+  static serializeBinaryToWriter(message: TransactionListProof, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TransactionListProof;
+  static deserializeBinaryFromReader(message: TransactionListProof, reader: jspb.BinaryReader): TransactionListProof;
+}
+
+export namespace TransactionListProof {
+  export type AsObject = {
+    ledgerInfoToTransactionInfosProof?: AccumulatorRangeProof.AsObject,
+    transactionInfosList: Array<transaction_info_pb.TransactionInfo.AsObject>,
   }
 }
 

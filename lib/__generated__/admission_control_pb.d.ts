@@ -5,11 +5,45 @@ import * as mempool_status_pb from './mempool_status_pb';
 import * as transaction_pb from './transaction_pb';
 import * as vm_errors_pb from './vm_errors_pb';
 
+export class AdmissionControlMsg extends jspb.Message {
+  getSubmitTransactionRequest(): SubmitTransactionRequest | undefined;
+  setSubmitTransactionRequest(value?: SubmitTransactionRequest): void;
+  hasSubmitTransactionRequest(): boolean;
+  clearSubmitTransactionRequest(): void;
+
+  getSubmitTransactionResponse(): SubmitTransactionResponse | undefined;
+  setSubmitTransactionResponse(value?: SubmitTransactionResponse): void;
+  hasSubmitTransactionResponse(): boolean;
+  clearSubmitTransactionResponse(): void;
+
+  getMessageCase(): AdmissionControlMsg.MessageCase;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AdmissionControlMsg.AsObject;
+  static toObject(includeInstance: boolean, msg: AdmissionControlMsg): AdmissionControlMsg.AsObject;
+  static serializeBinaryToWriter(message: AdmissionControlMsg, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AdmissionControlMsg;
+  static deserializeBinaryFromReader(message: AdmissionControlMsg, reader: jspb.BinaryReader): AdmissionControlMsg;
+}
+
+export namespace AdmissionControlMsg {
+  export type AsObject = {
+    submitTransactionRequest?: SubmitTransactionRequest.AsObject,
+    submitTransactionResponse?: SubmitTransactionResponse.AsObject,
+  }
+
+  export enum MessageCase { 
+    MESSAGE_NOT_SET = 0,
+    SUBMIT_TRANSACTION_REQUEST = 1,
+    SUBMIT_TRANSACTION_RESPONSE = 2,
+  }
+}
+
 export class SubmitTransactionRequest extends jspb.Message {
-  getSignedTxn(): transaction_pb.SignedTransaction | undefined;
-  setSignedTxn(value?: transaction_pb.SignedTransaction): void;
-  hasSignedTxn(): boolean;
-  clearSignedTxn(): void;
+  getTransaction(): transaction_pb.SignedTransaction | undefined;
+  setTransaction(value?: transaction_pb.SignedTransaction): void;
+  hasTransaction(): boolean;
+  clearTransaction(): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SubmitTransactionRequest.AsObject;
@@ -21,7 +55,7 @@ export class SubmitTransactionRequest extends jspb.Message {
 
 export namespace SubmitTransactionRequest {
   export type AsObject = {
-    signedTxn?: transaction_pb.SignedTransaction.AsObject,
+    transaction?: transaction_pb.SignedTransaction.AsObject,
   }
 }
 

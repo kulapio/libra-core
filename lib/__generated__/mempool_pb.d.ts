@@ -4,10 +4,10 @@ import * as transaction_pb from './transaction_pb';
 import * as mempool_status_pb from './mempool_status_pb';
 
 export class AddTransactionWithValidationRequest extends jspb.Message {
-  getSignedTxn(): transaction_pb.SignedTransaction | undefined;
-  setSignedTxn(value?: transaction_pb.SignedTransaction): void;
-  hasSignedTxn(): boolean;
-  clearSignedTxn(): void;
+  getTransaction(): transaction_pb.SignedTransaction | undefined;
+  setTransaction(value?: transaction_pb.SignedTransaction): void;
+  hasTransaction(): boolean;
+  clearTransaction(): void;
 
   getMaxGasCost(): number;
   setMaxGasCost(value: number): void;
@@ -28,7 +28,7 @@ export class AddTransactionWithValidationRequest extends jspb.Message {
 
 export namespace AddTransactionWithValidationRequest {
   export type AsObject = {
-    signedTxn?: transaction_pb.SignedTransaction.AsObject,
+    transaction?: transaction_pb.SignedTransaction.AsObject,
     maxGasCost: number,
     latestSequenceNumber: number,
     accountBalance: number,

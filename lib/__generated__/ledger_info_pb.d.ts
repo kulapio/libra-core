@@ -21,8 +21,8 @@ export class LedgerInfo extends jspb.Message {
   getConsensusBlockId_asB64(): string;
   setConsensusBlockId(value: Uint8Array | string): void;
 
-  getEpochNum(): number;
-  setEpochNum(value: number): void;
+  getEpoch(): number;
+  setEpoch(value: number): void;
 
   getTimestampUsecs(): number;
   setTimestampUsecs(value: number): void;
@@ -46,7 +46,7 @@ export namespace LedgerInfo {
     transactionAccumulatorHash: Uint8Array | string,
     consensusDataHash: Uint8Array | string,
     consensusBlockId: Uint8Array | string,
-    epochNum: number,
+    epoch: number,
     timestampUsecs: number,
     nextValidatorSet?: validator_set_pb.ValidatorSet.AsObject,
   }

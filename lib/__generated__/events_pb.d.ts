@@ -17,6 +17,11 @@ export class Event extends jspb.Message {
   getEventData_asB64(): string;
   setEventData(value: Uint8Array | string): void;
 
+  getTypeTag(): Uint8Array | string;
+  getTypeTag_asU8(): Uint8Array;
+  getTypeTag_asB64(): string;
+  setTypeTag(value: Uint8Array | string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Event.AsObject;
   static toObject(includeInstance: boolean, msg: Event): Event.AsObject;
@@ -30,6 +35,7 @@ export namespace Event {
     key: Uint8Array | string,
     sequenceNumber: number,
     eventData: Uint8Array | string,
+    typeTag: Uint8Array | string,
   }
 }
 
