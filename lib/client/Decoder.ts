@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { EventsList } from '../__generated__/events_pb';
-import { SignedTransaction, SignedTransactionWithProof } from '../__generated__/transaction_pb';
+import { SignedTransaction, TransactionWithProof, Transaction } from '../__generated__/transaction_pb';
 import { BufferUtil } from '../common/BufferUtil';
 import { CursorBuffer } from '../common/CursorBuffer';
 import PathValues from '../constants/PathValues';
@@ -41,10 +41,10 @@ export class ClientDecoder {
   }
   
   public decodeSignedTransactionWithProof(
-    signedTransactionWP: SignedTransactionWithProof
+    signedTransactionWP: TransactionWithProof
   ): LibraSignedTransactionWithProof  {
-    const signedTransactionProtobuf = signedTransactionWP.getSignedTransaction() as SignedTransaction
-    const rawTxnBytes = signedTransactionProtobuf.getSignedTxn_asU8()
+    const signedTransactionProtobuf = signedTransactionWP.getTransaction() as Transaction
+    const rawTxnBytes = signedTransactionProtobuf.getTransaction_asU8()
     const transactionCursor = new CursorBuffer(rawTxnBytes)
     const transaction = LCSDeserialization.getRawTransaction(transactionCursor)
     const publicKey = LCSDeserialization.getByteArray(transactionCursor)

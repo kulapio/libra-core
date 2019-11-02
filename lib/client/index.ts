@@ -20,7 +20,7 @@ import {
   UpdateToLatestLedgerRequest,
   UpdateToLatestLedgerResponse
 } from '../__generated__/get_with_proof_pb';
-import { SignedTransaction, SignedTransactionWithProof } from '../__generated__/transaction_pb';
+import { SignedTransaction, TransactionWithProof } from '../__generated__/transaction_pb';
 import {BufferUtil} from '../common/BufferUtil'
 import HashSaltValues from '../constants/HashSaltValues';
 import ServerHosts from '../constants/ServerHosts';
@@ -197,7 +197,7 @@ export class LibraClient {
     }
 
     const r = responseItems[0].getGetAccountTransactionBySequenceNumberResponse() as GetAccountTransactionBySequenceNumberResponse;
-    const signedTransactionWP = r.getSignedTransactionWithProof() as SignedTransactionWithProof;
+    const signedTransactionWP = r.getTransactionWithProof() as TransactionWithProof;
     
     return this.decoder.decodeSignedTransactionWithProof(signedTransactionWP)
   }
@@ -249,8 +249,8 @@ export class LibraClient {
     signedTxn = BufferUtil.concat(signedTxn, signatureLCS)
 
     const signedTransaction = new SignedTransaction()
-    signedTransaction.setSignedTxn(signedTxn)
-    request.setSignedTxn(signedTransaction)
+    signedTransaction.setTxnBytes(signedTxn)
+    request.setTransaction(signedTransaction)
     const response = await this.admissionControlProxy.submitTransaction(this.acClient, request);
     // console.log('getAcStatus: ', response.getAcStatus())
     return response
