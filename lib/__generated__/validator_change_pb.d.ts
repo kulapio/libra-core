@@ -4,15 +4,10 @@ import * as events_pb from './events_pb';
 import * as ledger_info_pb from './ledger_info_pb';
 
 export class ValidatorChangeEventWithProof extends jspb.Message {
-  getLedgerInfoWithSigs(): ledger_info_pb.LedgerInfoWithSignatures | undefined;
-  setLedgerInfoWithSigs(value?: ledger_info_pb.LedgerInfoWithSignatures): void;
-  hasLedgerInfoWithSigs(): boolean;
-  clearLedgerInfoWithSigs(): void;
-
-  getEventWithProof(): events_pb.EventWithProof | undefined;
-  setEventWithProof(value?: events_pb.EventWithProof): void;
-  hasEventWithProof(): boolean;
-  clearEventWithProof(): void;
+  getLedgerInfoWithSigsList(): Array<ledger_info_pb.LedgerInfoWithSignatures>;
+  setLedgerInfoWithSigsList(value: Array<ledger_info_pb.LedgerInfoWithSignatures>): void;
+  clearLedgerInfoWithSigsList(): void;
+  addLedgerInfoWithSigs(value?: ledger_info_pb.LedgerInfoWithSignatures, index?: number): ledger_info_pb.LedgerInfoWithSignatures;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ValidatorChangeEventWithProof.AsObject;
@@ -24,8 +19,7 @@ export class ValidatorChangeEventWithProof extends jspb.Message {
 
 export namespace ValidatorChangeEventWithProof {
   export type AsObject = {
-    ledgerInfoWithSigs?: ledger_info_pb.LedgerInfoWithSignatures.AsObject,
-    eventWithProof?: events_pb.EventWithProof.AsObject,
+    ledgerInfoWithSigsList: Array<ledger_info_pb.LedgerInfoWithSignatures.AsObject>,
   }
 }
 

@@ -28,10 +28,10 @@ export namespace TransactionArgument {
 }
 
 export class SignedTransaction extends jspb.Message {
-  getSignedTxn(): Uint8Array | string;
-  getSignedTxn_asU8(): Uint8Array;
-  getSignedTxn_asB64(): string;
-  setSignedTxn(value: Uint8Array | string): void;
+  getTxnBytes(): Uint8Array | string;
+  getTxnBytes_asU8(): Uint8Array;
+  getTxnBytes_asB64(): string;
+  setTxnBytes(value: Uint8Array | string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SignedTransaction.AsObject;
@@ -43,21 +43,41 @@ export class SignedTransaction extends jspb.Message {
 
 export namespace SignedTransaction {
   export type AsObject = {
-    signedTxn: Uint8Array | string,
+    txnBytes: Uint8Array | string,
   }
 }
 
-export class SignedTransactionWithProof extends jspb.Message {
+export class Transaction extends jspb.Message {
+  getTransaction(): Uint8Array | string;
+  getTransaction_asU8(): Uint8Array;
+  getTransaction_asB64(): string;
+  setTransaction(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Transaction.AsObject;
+  static toObject(includeInstance: boolean, msg: Transaction): Transaction.AsObject;
+  static serializeBinaryToWriter(message: Transaction, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Transaction;
+  static deserializeBinaryFromReader(message: Transaction, reader: jspb.BinaryReader): Transaction;
+}
+
+export namespace Transaction {
+  export type AsObject = {
+    transaction: Uint8Array | string,
+  }
+}
+
+export class TransactionWithProof extends jspb.Message {
   getVersion(): number;
   setVersion(value: number): void;
 
-  getSignedTransaction(): SignedTransaction | undefined;
-  setSignedTransaction(value?: SignedTransaction): void;
-  hasSignedTransaction(): boolean;
-  clearSignedTransaction(): void;
+  getTransaction(): Transaction | undefined;
+  setTransaction(value?: Transaction): void;
+  hasTransaction(): boolean;
+  clearTransaction(): void;
 
-  getProof(): proof_pb.SignedTransactionProof | undefined;
-  setProof(value?: proof_pb.SignedTransactionProof): void;
+  getProof(): proof_pb.TransactionProof | undefined;
+  setProof(value?: proof_pb.TransactionProof): void;
   hasProof(): boolean;
   clearProof(): void;
 
@@ -67,18 +87,18 @@ export class SignedTransactionWithProof extends jspb.Message {
   clearEvents(): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): SignedTransactionWithProof.AsObject;
-  static toObject(includeInstance: boolean, msg: SignedTransactionWithProof): SignedTransactionWithProof.AsObject;
-  static serializeBinaryToWriter(message: SignedTransactionWithProof, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): SignedTransactionWithProof;
-  static deserializeBinaryFromReader(message: SignedTransactionWithProof, reader: jspb.BinaryReader): SignedTransactionWithProof;
+  toObject(includeInstance?: boolean): TransactionWithProof.AsObject;
+  static toObject(includeInstance: boolean, msg: TransactionWithProof): TransactionWithProof.AsObject;
+  static serializeBinaryToWriter(message: TransactionWithProof, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TransactionWithProof;
+  static deserializeBinaryFromReader(message: TransactionWithProof, reader: jspb.BinaryReader): TransactionWithProof;
 }
 
-export namespace SignedTransactionWithProof {
+export namespace TransactionWithProof {
   export type AsObject = {
     version: number,
-    signedTransaction?: SignedTransaction.AsObject,
-    proof?: proof_pb.SignedTransactionProof.AsObject,
+    transaction?: Transaction.AsObject,
+    proof?: proof_pb.TransactionProof.AsObject,
     events?: events_pb.EventsList.AsObject,
   }
 }
@@ -142,10 +162,10 @@ export namespace AccountState {
 }
 
 export class TransactionToCommit extends jspb.Message {
-  getSignedTxn(): SignedTransaction | undefined;
-  setSignedTxn(value?: SignedTransaction): void;
-  hasSignedTxn(): boolean;
-  clearSignedTxn(): void;
+  getTransaction(): Transaction | undefined;
+  setTransaction(value?: Transaction): void;
+  hasTransaction(): boolean;
+  clearTransaction(): void;
 
   getAccountStatesList(): Array<AccountState>;
   setAccountStatesList(value: Array<AccountState>): void;
@@ -173,7 +193,7 @@ export class TransactionToCommit extends jspb.Message {
 
 export namespace TransactionToCommit {
   export type AsObject = {
-    signedTxn?: SignedTransaction.AsObject,
+    transaction?: Transaction.AsObject,
     accountStatesList: Array<AccountState.AsObject>,
     eventsList: Array<events_pb.Event.AsObject>,
     gasUsed: number,
@@ -182,15 +202,10 @@ export namespace TransactionToCommit {
 }
 
 export class TransactionListWithProof extends jspb.Message {
-  getTransactionsList(): Array<SignedTransaction>;
-  setTransactionsList(value: Array<SignedTransaction>): void;
+  getTransactionsList(): Array<Transaction>;
+  setTransactionsList(value: Array<Transaction>): void;
   clearTransactionsList(): void;
-  addTransactions(value?: SignedTransaction, index?: number): SignedTransaction;
-
-  getInfosList(): Array<transaction_info_pb.TransactionInfo>;
-  setInfosList(value: Array<transaction_info_pb.TransactionInfo>): void;
-  clearInfosList(): void;
-  addInfos(value?: transaction_info_pb.TransactionInfo, index?: number): transaction_info_pb.TransactionInfo;
+  addTransactions(value?: Transaction, index?: number): Transaction;
 
   getEventsForVersions(): events_pb.EventsForVersions | undefined;
   setEventsForVersions(value?: events_pb.EventsForVersions): void;
@@ -202,15 +217,10 @@ export class TransactionListWithProof extends jspb.Message {
   hasFirstTransactionVersion(): boolean;
   clearFirstTransactionVersion(): void;
 
-  getProofOfFirstTransaction(): proof_pb.AccumulatorProof | undefined;
-  setProofOfFirstTransaction(value?: proof_pb.AccumulatorProof): void;
-  hasProofOfFirstTransaction(): boolean;
-  clearProofOfFirstTransaction(): void;
-
-  getProofOfLastTransaction(): proof_pb.AccumulatorProof | undefined;
-  setProofOfLastTransaction(value?: proof_pb.AccumulatorProof): void;
-  hasProofOfLastTransaction(): boolean;
-  clearProofOfLastTransaction(): void;
+  getProof(): proof_pb.TransactionListProof | undefined;
+  setProof(value?: proof_pb.TransactionListProof): void;
+  hasProof(): boolean;
+  clearProof(): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TransactionListWithProof.AsObject;
@@ -222,12 +232,10 @@ export class TransactionListWithProof extends jspb.Message {
 
 export namespace TransactionListWithProof {
   export type AsObject = {
-    transactionsList: Array<SignedTransaction.AsObject>,
-    infosList: Array<transaction_info_pb.TransactionInfo.AsObject>,
+    transactionsList: Array<Transaction.AsObject>,
     eventsForVersions?: events_pb.EventsForVersions.AsObject,
     firstTransactionVersion?: google_protobuf_wrappers_pb.UInt64Value.AsObject,
-    proofOfFirstTransaction?: proof_pb.AccumulatorProof.AsObject,
-    proofOfLastTransaction?: proof_pb.AccumulatorProof.AsObject,
+    proof?: proof_pb.TransactionListProof.AsObject,
   }
 }
 

@@ -4,6 +4,7 @@ import * as access_path_pb from './access_path_pb';
 import * as account_state_blob_pb from './account_state_blob_pb';
 import * as events_pb from './events_pb';
 import * as ledger_info_pb from './ledger_info_pb';
+import * as proof_pb from './proof_pb';
 import * as transaction_pb from './transaction_pb';
 import * as validator_change_pb from './validator_change_pb';
 
@@ -90,10 +91,15 @@ export class UpdateToLatestLedgerResponse extends jspb.Message {
   hasLedgerInfoWithSigs(): boolean;
   clearLedgerInfoWithSigs(): void;
 
-  getValidatorChangeEventsList(): Array<validator_change_pb.ValidatorChangeEventWithProof>;
-  setValidatorChangeEventsList(value: Array<validator_change_pb.ValidatorChangeEventWithProof>): void;
-  clearValidatorChangeEventsList(): void;
-  addValidatorChangeEvents(value?: validator_change_pb.ValidatorChangeEventWithProof, index?: number): validator_change_pb.ValidatorChangeEventWithProof;
+  getValidatorChangeEvents(): validator_change_pb.ValidatorChangeEventWithProof | undefined;
+  setValidatorChangeEvents(value?: validator_change_pb.ValidatorChangeEventWithProof): void;
+  hasValidatorChangeEvents(): boolean;
+  clearValidatorChangeEvents(): void;
+
+  getLedgerConsistencyProof(): proof_pb.AccumulatorConsistencyProof | undefined;
+  setLedgerConsistencyProof(value?: proof_pb.AccumulatorConsistencyProof): void;
+  hasLedgerConsistencyProof(): boolean;
+  clearLedgerConsistencyProof(): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UpdateToLatestLedgerResponse.AsObject;
@@ -107,7 +113,8 @@ export namespace UpdateToLatestLedgerResponse {
   export type AsObject = {
     responseItemsList: Array<ResponseItem.AsObject>,
     ledgerInfoWithSigs?: ledger_info_pb.LedgerInfoWithSignatures.AsObject,
-    validatorChangeEventsList: Array<validator_change_pb.ValidatorChangeEventWithProof.AsObject>,
+    validatorChangeEvents?: validator_change_pb.ValidatorChangeEventWithProof.AsObject,
+    ledgerConsistencyProof?: proof_pb.AccumulatorConsistencyProof.AsObject,
   }
 }
 
@@ -228,10 +235,10 @@ export namespace GetAccountTransactionBySequenceNumberRequest {
 }
 
 export class GetAccountTransactionBySequenceNumberResponse extends jspb.Message {
-  getSignedTransactionWithProof(): transaction_pb.SignedTransactionWithProof | undefined;
-  setSignedTransactionWithProof(value?: transaction_pb.SignedTransactionWithProof): void;
-  hasSignedTransactionWithProof(): boolean;
-  clearSignedTransactionWithProof(): void;
+  getTransactionWithProof(): transaction_pb.TransactionWithProof | undefined;
+  setTransactionWithProof(value?: transaction_pb.TransactionWithProof): void;
+  hasTransactionWithProof(): boolean;
+  clearTransactionWithProof(): void;
 
   getProofOfCurrentSequenceNumber(): account_state_blob_pb.AccountStateWithProof | undefined;
   setProofOfCurrentSequenceNumber(value?: account_state_blob_pb.AccountStateWithProof): void;
@@ -248,7 +255,7 @@ export class GetAccountTransactionBySequenceNumberResponse extends jspb.Message 
 
 export namespace GetAccountTransactionBySequenceNumberResponse {
   export type AsObject = {
-    signedTransactionWithProof?: transaction_pb.SignedTransactionWithProof.AsObject,
+    transactionWithProof?: transaction_pb.TransactionWithProof.AsObject,
     proofOfCurrentSequenceNumber?: account_state_blob_pb.AccountStateWithProof.AsObject,
   }
 }

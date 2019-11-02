@@ -11,6 +11,9 @@ export class ValidatorPublicKeys extends jspb.Message {
   getConsensusPublicKey_asB64(): string;
   setConsensusPublicKey(value: Uint8Array | string): void;
 
+  getConsensusVotingPower(): number;
+  setConsensusVotingPower(value: number): void;
+
   getNetworkSigningPublicKey(): Uint8Array | string;
   getNetworkSigningPublicKey_asU8(): Uint8Array;
   getNetworkSigningPublicKey_asB64(): string;
@@ -33,6 +36,7 @@ export namespace ValidatorPublicKeys {
   export type AsObject = {
     accountAddress: Uint8Array | string,
     consensusPublicKey: Uint8Array | string,
+    consensusVotingPower: number,
     networkSigningPublicKey: Uint8Array | string,
     networkIdentityPublicKey: Uint8Array | string,
   }
