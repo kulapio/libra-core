@@ -11,9 +11,7 @@ import { TransactionPayloadLCS, TransactionPayloadType } from './types/Transacti
 export class LCSSerialization {
 
     public static addressToByte(source:AddressLCS): Uint8Array {
-        const len = this.uint32ToByte(source.length)
-        const data = BufferUtil.fromHex(source.value)
-        return BufferUtil.concat(len, data)
+        return BufferUtil.fromHex(source.value)
     }
 
     public static transactionArgumentToByte(source:TransactionArgumentLCS): Uint8Array {

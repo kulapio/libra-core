@@ -9,8 +9,7 @@ import { TransactionPayloadLCS, TransactionPayloadType } from "./types/Transacti
 
 export class LCSDeserialization {
     public static getAddress(cursor: CursorBuffer): AddressLCS {
-        const len = cursor.read32()
-        const data = cursor.readXBytes(len)
+        const data = cursor.readXBytes(32)
         return new AddressLCS(BufferUtil.toHex(data))
     }
 
