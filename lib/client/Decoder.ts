@@ -46,6 +46,8 @@ export class ClientDecoder {
     const signedTransactionProtobuf = signedTransactionWP.getTransaction() as Transaction
     const rawTxnBytes = signedTransactionProtobuf.getTransaction_asU8()
     const transactionCursor = new CursorBuffer(rawTxnBytes)
+    // skip first 4 byte
+    transactionCursor.read32()
     const transaction = LCSDeserialization.getRawTransaction(transactionCursor)
     const publicKey = LCSDeserialization.getByteArray(transactionCursor)
     const signature = LCSDeserialization.getByteArray(transactionCursor)
