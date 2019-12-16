@@ -16,6 +16,7 @@ describe('LibraClient', () => {
     client = new LibraClient({ network: LibraNetwork.Testnet, port: '8000' });
   })
 
+  /*
   it('should get accountState correctly', async () => {
     const wallet = new LibraWallet();
     
@@ -108,5 +109,49 @@ describe('LibraClient', () => {
 
     //await client.rotateKey(account1, account2.keyPair.getSecretKey())
   }, 50000);
-  
+  */
+
+  it('should query account state and transfer2', async () => {
+    const wallet = new LibraWallet({
+      mnemonic: 'palm reunion identify stomach anchor elegant course joy erosion palm unknown spike price zoo reward sunset sort lonely portion crash hurdle trouble grain edge'
+    });
+
+    // TEST ACCOUNT CREATION
+    const account1 = wallet.newAccount();
+    const account1Address = account1.getAddress().toHex();
+    console.log('Account 1 address', account1Address);
+    let account1State = await client.getAccountState(account1Address);
+    console.log('Account 1 balance', account1State.balance)
+
+    const account2 = wallet.newAccount();
+    const account2Address = account2.getAddress().toHex();
+    console.log('Account 2 address', account2Address);
+    const account2State = await client.getAccountState(account2Address);
+
+    const amountToTransfer = 1e6;
+
+    // // TEST TRANSFER TRANSACTION OF yAmount
+    account1State = await client.getAccountState(account1Address);
+    const response = await client.transferCoins(account1, account2Address, amountToTransfer);
+    console.log(response)
+    expect(response.getAcStatus()).toBeDefined();
+    expect(response.getAcStatus()!.getCode()).toEqual(LibraAdmissionControlStatus.ACCEPTED);
+
+    // // ensure new account balance is +yAmount
+    // await response.awaitConfirmation(client);
+    await new Promise((r) => setTimeout(r, 3000));
+
+    const newAccount2State = await client.getAccountState(account2Address);
+    expect(newAccount2State.balance.toString(10)).toEqual(account2State.balance.plus(amountToTransfer).toString(10));
+
+    // // TEST QUERYING TRANSACTION
+    const lastTransaction = await client.getAccountTransaction(account1.getAddress(), account1State.sequenceNumber);
+    expect(lastTransaction).not.toBeNull();
+    // // // ensure parameters are decoded properly
+    expect(lastTransaction!.signedTransaction.publicKey).bytesToEqual(account1.keyPair.getPublicKey());
+    expect(lastTransaction!.signedTransaction.transaction.sequenceNumber).toEqual(account1State.sequenceNumber);
+    // // TODO test events from transactions queried
+
+    //await client.rotateKey(account1, account2.keyPair.getSecretKey())
+  }, 50000);
 });
