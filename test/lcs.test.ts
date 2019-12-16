@@ -9,6 +9,7 @@ import { RawTransactionLCS } from '../lib/lcs/types/RawTransactionLCS'
 import BigNumber from 'bignumber.js'
 import { CursorBuffer } from '../lib/common/CursorBuffer'
 import { executionAsyncId } from 'async_hooks'
+import { ScriptLCS } from '../lib/lcs/types/ScriptLCS'
 
 describe('LCS', () => {
     beforeAll(() => {
@@ -72,6 +73,17 @@ describe('LCS', () => {
         prog.addModule('FED0')
         prog.addModule('0D')
         const payload = TransactionPayloadLCS.fromProgram(prog)
+        const actual = LCSSerialization.transactionPayloadToByte(payload)
+        expect(BufferUtil.toHex(actual)).toBe(expected)
+    });
+
+    it('should serialize TransactionPayloadWithScript correctly', () => {
+        const expected = '02000000040000006D6F76650200000002000000090000004341464520443030440200000009000000636166652064303064'.toLowerCase()
+        let script = new ScriptLCS()
+        script.setCode('move')
+        script.addTransactionArg(TransactionArgumentLCS.fromString('CAFE D00D'))
+        script.addTransactionArg(TransactionArgumentLCS.fromString('cafe d00d'))
+        const payload = TransactionPayloadLCS.fromScript(script)
         const actual = LCSSerialization.transactionPayloadToByte(payload)
         expect(BufferUtil.toHex(actual)).toBe(expected)
     });

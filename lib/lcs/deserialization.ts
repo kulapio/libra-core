@@ -6,6 +6,7 @@ import { ProgramLCS } from "./types/ProgramLCS";
 import { RawTransactionLCS } from "./types/RawTransactionLCS";
 import { TransactionArgumentLCS } from "./types/TransactionArgumentLCS";
 import { TransactionPayloadLCS, TransactionPayloadType } from "./types/TransactionPayloadLCS";
+import { ScriptLCS } from "./types/ScriptLCS";
 
 export class LCSDeserialization {
     public static getAddress(cursor: CursorBuffer): AddressLCS {
@@ -55,6 +56,17 @@ export class LCSDeserialization {
         return prog
     }
 
+    public static getScript(cursor: CursorBuffer): ScriptLCS {
+        const code = this.getByteArray(cursor)
+        const transactionArgs = this.getTransactionArgumentList(cursor)
+        const script = new ScriptLCS()
+        script.setCodeFromBuffer(code)
+        transactionArgs.forEach(arg => {
+            script.addTransactionArg(arg)
+        })
+        return script
+    }
+
     public static getRawTransaction(cursor: CursorBuffer): RawTransactionLCS {
         const sender = this.getAddress(cursor)
         const sequence = cursor.read64()
@@ -75,6 +87,9 @@ export class LCSDeserialization {
         // now, only transaction with program payload is supported
         if(payload.payloadType === TransactionPayloadType.Program) {
             payload.program = this.getProgram(cursor)
+            return payload
+        } else if(payload.payloadType === TransactionPayloadType.Script) {
+            payload.script = this.getScript(cursor)
             return payload
         }
         throw new Error('unsupported TransactionPayload type')

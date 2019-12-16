@@ -4,6 +4,7 @@ import { TransactionArgument } from '../__generated__/transaction_pb'
 import {BufferUtil} from '../common/BufferUtil'
 import {AddressLCS} from './types/AddressLCS'
 import {ProgramLCS} from './types/ProgramLCS'
+import {ScriptLCS} from './types/ScriptLCS'
 import { RawTransactionLCS } from './types/RawTransactionLCS'
 import {TransactionArgumentLCS} from './types/TransactionArgumentLCS'
 import { TransactionPayloadLCS, TransactionPayloadType } from './types/TransactionPayloadLCS'
@@ -45,10 +46,24 @@ export class LCSSerialization {
         return result
     }
 
+    public static scriptToByte(source: ScriptLCS): Uint8Array {
+        const code = this.byteArrayToByte(source.code)
+        const argLen = this.uint32ToByte(source.transactionArgs.length)
+        let result = BufferUtil.concat(code, argLen)
+        source.transactionArgs.forEach(x => {
+            const argData = this.transactionArgumentToByte(x)
+            result = BufferUtil.concat(result, argData)
+        })
+        return result
+    }
+
     public static transactionPayloadToByte(source: TransactionPayloadLCS): Uint8Array {
         const code = this.uint32ToByte(source.payloadType)
         if(source.payloadType === TransactionPayloadType.Program) {
             const data = this.programToByte(source.program)
+            return BufferUtil.concat(code, data)
+        } else if(source.payloadType === TransactionPayloadType.Script) {
+            const data = this.scriptToByte(source.script)
             return BufferUtil.concat(code, data)
         }
         return new Uint8Array()
