@@ -4,9 +4,9 @@ import { CursorBuffer } from "../common/CursorBuffer";
 import { AddressLCS } from "./types/AddressLCS";
 import { ProgramLCS } from "./types/ProgramLCS";
 import { RawTransactionLCS } from "./types/RawTransactionLCS";
+import { ScriptLCS } from "./types/ScriptLCS";
 import { TransactionArgumentLCS } from "./types/TransactionArgumentLCS";
 import { TransactionPayloadLCS, TransactionPayloadType } from "./types/TransactionPayloadLCS";
-import { ScriptLCS } from "./types/ScriptLCS";
 
 export class LCSDeserialization {
     public static getAddress(cursor: CursorBuffer): AddressLCS {

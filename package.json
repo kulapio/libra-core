@@ -1,6 +1,6 @@
 {
   "name": "kulap-libra",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Typescript Library for Libra",
   "main": "build/index.js",
   "types": "build/index.d.ts",
