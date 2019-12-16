@@ -16,7 +16,7 @@ describe('LibraClient', () => {
     client = new LibraClient({ network: LibraNetwork.Testnet, port: '8000' });
   })
 
-  /*
+  
   it('should get accountState correctly', async () => {
     const wallet = new LibraWallet();
     
@@ -45,6 +45,8 @@ describe('LibraClient', () => {
 
     // TEST MINITNG Amount
     await client.mintWithFaucetService(account1Address, amountToTransfer);
+    await new Promise((r) => setTimeout(r, 3000));
+
     const newAccount1State = await client.getAccountState(account1Address);
     // ensure its balance is +xAmount
     expect(newAccount1State.balance.toString(10)).toEqual(account1State.balance.plus(amountToTransfer).toString(10));
@@ -74,42 +76,42 @@ describe('LibraClient', () => {
     //await client.rotateKey(account1, account2.keyPair.getSecretKey())
   }, 50000);
 
-  it('should rotatekey and transfer correctly', async () => {
-    const wallet = new LibraWallet();
+  // it('should rotatekey and transfer correctly', async () => {
+  //   const wallet = new LibraWallet();
 
-    // TEST ACCOUNT CREATION
-    const account1 = wallet.newAccount();
-    const account1Address = account1.getAddress().toHex();
-    let account1State = await client.getAccountState(account1Address);
-    console.log('Account 1 address', account1Address);
+  //   // TEST ACCOUNT CREATION
+  //   const account1 = wallet.newAccount();
+  //   const account1Address = account1.getAddress().toHex();
+  //   let account1State = await client.getAccountState(account1Address);
+  //   console.log('Account 1 address', account1Address);
 
-    const account2 = wallet.newAccount();
-    const account2Address = account2.getAddress().toHex();
-    const account2State = await client.getAccountState(account2Address);
-    console.log('Account 2 address', account2Address);
+  //   const account2 = wallet.newAccount();
+  //   const account2Address = account2.getAddress().toHex();
+  //   const account2State = await client.getAccountState(account2Address);
+  //   console.log('Account 2 address', account2Address);
 
-    const amountToTransfer = 1e6;
+  //   const amountToTransfer = 1e6;
 
-    // TEST MINITNG Amount
-    await client.mintWithFaucetService(account1Address, 2 * amountToTransfer);
+  //   // TEST MINITNG Amount
+  //   await client.mintWithFaucetService(account1Address, 2 * amountToTransfer);
     
-    // begin rotate key
-    const response = await client.rotateKey(account1, account2Address)
-    expect(response.getAcStatus()!.getCode()).toEqual(LibraAdmissionControlStatus.ACCEPTED);
-    await new Promise((r) => setTimeout(r, 3000));
+  //   // begin rotate key
+  //   const response = await client.rotateKey(account1, account2Address)
+  //   expect(response.getAcStatus()!.getCode()).toEqual(LibraAdmissionControlStatus.ACCEPTED);
+  //   await new Promise((r) => setTimeout(r, 3000));
 
-    // begin use new key to transfer
-    const response2 = await client.transferCoins(account1, account2Address, amountToTransfer, account2.keyPair)
-    expect(response2.getAcStatus()!.getCode()).toEqual(LibraAdmissionControlStatus.ACCEPTED);
-    // await response.awaitConfirmation(client);
-    await new Promise((r) => setTimeout(r, 3000));
+  //   // begin use new key to transfer
+  //   const response2 = await client.transferCoins(account1, account2Address, amountToTransfer, account2.keyPair)
+  //   expect(response2.getAcStatus()!.getCode()).toEqual(LibraAdmissionControlStatus.ACCEPTED);
+  //   // await response.awaitConfirmation(client);
+  //   await new Promise((r) => setTimeout(r, 3000));
 
-    const newAccount2State = await client.getAccountState(account2Address);
-    expect(newAccount2State.balance.toString(10)).toEqual(account2State.balance.plus(amountToTransfer).toString(10));
+  //   const newAccount2State = await client.getAccountState(account2Address);
+  //   expect(newAccount2State.balance.toString(10)).toEqual(account2State.balance.plus(amountToTransfer).toString(10));
 
-    //await client.rotateKey(account1, account2.keyPair.getSecretKey())
-  }, 50000);
-  */
+  //   //await client.rotateKey(account1, account2.keyPair.getSecretKey())
+  // }, 50000);
+  
 
   it('should query account state and transfer2', async () => {
     const wallet = new LibraWallet({
