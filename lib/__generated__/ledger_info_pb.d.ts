@@ -24,6 +24,9 @@ export class LedgerInfo extends jspb.Message {
   getEpoch(): number;
   setEpoch(value: number): void;
 
+  getRound(): number;
+  setRound(value: number): void;
+
   getTimestampUsecs(): number;
   setTimestampUsecs(value: number): void;
 
@@ -47,6 +50,7 @@ export namespace LedgerInfo {
     consensusDataHash: Uint8Array | string,
     consensusBlockId: Uint8Array | string,
     epoch: number,
+    round: number,
     timestampUsecs: number,
     nextValidatorSet?: validator_set_pb.ValidatorSet.AsObject,
   }
